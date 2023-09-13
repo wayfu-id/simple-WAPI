@@ -1,0 +1,6 @@
+package-lock.json
+index.html
+
+.husky/_
+node_modules
+dist
