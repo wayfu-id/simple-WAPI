@@ -236,27 +236,47 @@ export default class WAPI {
             findChat: {
                 /** @type {(id:string | wid) => Promise<Chat | null>} */
                 value: async function findChat(id) {
-                    if (typeof id === "string") {
-                        /** @type {null | PhoneExist} */
-                        let check = await this.checkPhone(id);
-                        if (!check) return null;
-                        id = check.wid;
+                    let _id = await (async (e) => {
+                        if (typeof e === "string") {
+                            /** @type {null | PhoneExist} */
+                            let check = await this.checkPhone(e);
+                            if (!check) return null;
+                            return check.wid;
+                        }
+                        return e;
+                    })(id);
+                    if (!_id) return null;
+
+                    let chat;
+                    try {
+                        chat = await this.Chat.find(_id);
+                    } catch (e) {
+                        console.log(e);
                     }
-                    let chat = await this.Chat.find(id);
-                    return ChatFactory.create(this, chat);
+                    return chat ? ChatFactory.create(this, chat) : null;
                 },
             },
             findContact: {
                 /** @type {(id:string | wid) => Promise<Contact | null>} */
                 value: async function findContact(id) {
-                    if (typeof id === "string") {
-                        /** @type {null | PhoneExist} */
-                        let check = await this.checkPhone(id);
-                        if (!check) return null;
-                        id = check.wid;
+                    let _id = await (async (e) => {
+                        if (typeof e === "string") {
+                            /** @type {null | PhoneExist} */
+                            let check = await this.checkPhone(e);
+                            if (!check) return null;
+                            return check.wid;
+                        }
+                        return e;
+                    })(id);
+                    if (!_id) return null;
+
+                    let contact;
+                    try {
+                        contact = await this.Contact.find(_id);
+                    } catch (e) {
+                        console.log(e);
                     }
-                    let contact = await this.Contact.find(id);
-                    return ContactFactory.create(this, contact);
+                    return contact ? ContactFactory.create(this, contact) : null;
                 },
             },
             findCommonGroups: {
@@ -285,13 +305,18 @@ export default class WAPI {
                 },
             },
             openChat: {
-                /** @type {(id:string | Chat) => Promise<Contact | null>} */
+                /** @type {(id:string | Chat) => Promise<Chat | null>} */
                 value: async function openChat(id) {
-                    let chat = await (async (e) => {
-                        return await this.Chat.find(e instanceof Chat ? e.id : e);
-                    })(id);
-                    if (!chat) return;
+                    let _id = id instanceof Chat ? id.id : id,
+                        chat;
 
+                    try {
+                        chat = await this.Chat.find(_id);
+                    } catch (e) {
+                        console.log(e);
+                    }
+
+                    if (!chat) return;
                     await chat.open();
                     return chat;
                 },
