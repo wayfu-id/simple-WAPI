@@ -60,7 +60,7 @@ export default class WAPI {
         Object.assign(WAPI.prototype, store);
 
         const thisApp = this;
-        let { Chat, Cmd, Contact, MediaCollection, WapQuery } = thisApp;
+        let { Chat, Cmd, Contact, Debug, MediaCollection, WapQuery } = thisApp;
 
         if (Chat.modelClass.prototype.getModel === undefined) {
             Object.defineProperties(Chat.constructor.prototype, {
@@ -146,8 +146,19 @@ export default class WAPI {
 
                         return new Promise((done) => {
                             (async (f, c, r) => {
+                                const latest = (({ VERSION }) => {
+                                    return (
+                                        parseInt(VERSION.replaceAll(".", "")) >= 223409
+                                    );
+                                })(Debug);
+
                                 let mc = new MediaCollection(this);
-                                await mc.processAttachments([{ file: f }], this, 1);
+                                if (latest) {
+                                    await mc.processAttachments([{ file: f }], 1, this);
+                                } else {
+                                    await mc.processAttachments([{ file: f }], this, 1);
+                                }
+
                                 let [media] = mc.getModelsArray(),
                                     res = await media.sendToChat(this, { caption, c });
 
