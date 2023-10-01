@@ -21,6 +21,7 @@
   "files": [
     "index.*",
     "dist",
+    "src",
     "package.json"
   ],
   "author": "WayFu (https://github.com/wayfu-id)",
