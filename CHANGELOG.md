@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.3...v0.0.4) (2023-10-01)
+
+
+### Bug Fixes
+
+* **cd:** add source folder to npm package ([37343a7](https://github.com/wayfu-id/simple-WAPI/commit/37343a70fe8eecb2727976b2a81c6e23d974c658))
+
 ### [0.0.3](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.2...v0.0.3) (2023-09-22)
 
 
