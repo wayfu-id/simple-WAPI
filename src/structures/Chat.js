@@ -17,6 +17,18 @@ export default class Chat extends Base {
         this.id = data.id;
 
         /**
+         * Indicates current active status
+         * @type {boolean}
+         */
+        this.active = !!data.active;
+
+        /**
+         * Indicates current draft message status
+         * @type {boolean}
+         */
+        this.hasDraftMessage = data.hasDraftMessage;
+
+        /**
          * Title of the chat
          * @type {string}
          */
@@ -42,12 +54,29 @@ export default class Chat extends Base {
         return super._patch(data);
     }
 
+    /**
+     * Clearing draft message
+     * @returns {Chat}
+     */
+    clearDraft() {
+        let res = this.raw.clearDraft();
+        return res ? res.getModel() : this;
+    }
+
     async open() {
         await this.app.openChat(this);
     }
 
     async close() {
         await this.app.closeChat(this);
+    }
+
+    /**
+     * Input text message and send it to chat
+     * @param {string} text
+     */
+    async inputAndSendTextMessage(text) {
+        return await this.app.inputAndSendTextMsg(this, text);
     }
 
     /**
