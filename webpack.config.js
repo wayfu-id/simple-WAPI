@@ -17,6 +17,7 @@ export default {
             type: "umd",
             export: "default",
         },
+        globalObject: "this",
     },
     devtool: "source-map",
     plugins: [
@@ -27,6 +28,12 @@ export default {
     optimization: {
         minimizer: [
             new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        keep_classnames: false,
+                        keep_fnames: true,
+                    },
+                },
                 extractComments: false,
             }),
         ],
