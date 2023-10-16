@@ -313,6 +313,27 @@ export default class WAPI {
                     return chat ? ChatFactory.create(this, chat) : null;
                 },
             },
+            inputAndSendTextMsg: {
+                /** @type {(chatId: Chat | string | wid, text: string) => Promise<Chat | null>} */
+                value: async function inputAndSendTextMsg(chatId, text) {
+                    /** @type {Chat} */
+                    let chat = await (async (id) => {
+                        return id instanceof Chat ? id : await this.findChat(id);
+                    })(chatId);
+
+                    if (!chat.active) {
+                        if (chat.hasDraftMessage) chat.clearDraft();
+                        await chat.open();
+                        await this.sleep(250);
+                    }
+
+                    let { ComposeBox: Act } = this;
+                    await Act.paste(chat, `${text}`);
+                    await Act.send(chat);
+
+                    return chat;
+                },
+            },
             openChat: {
                 /** @type {(id:string | Chat) => Promise<Chat | null>} */
                 value: async function openChat(id) {
@@ -334,7 +355,13 @@ export default class WAPI {
                 /** @type {(id: string | Chat, message: string, options?: MessageSendOptions) => Promise<any>} */
                 value: async function sendMessage(id, message, options = {}) {
                     let chat = await (async (e) => {
-                        return await this.Chat.find(e instanceof Chat ? e.id : e);
+                        let ct;
+                        try {
+                            ct = await this.Chat.find(e instanceof Chat ? e.id : e);
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        return ct;
                     })(id);
 
                     if (!chat) return;
