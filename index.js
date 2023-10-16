@@ -90,6 +90,15 @@ export default class WAPI {
                         return result;
                     },
                 },
+                clearAllDraft: {
+                    value: function clearAllDraft() {
+                        return this.getModelsArray().every((c) => {
+                            let { hasDraftMessage } = c;
+                            if (hasDraftMessage) c.clearDraft();
+                            return !c.hasDraftMessage;
+                        });
+                    },
+                },
             });
 
             Object.defineProperties(Chat.modelClass.prototype, {
