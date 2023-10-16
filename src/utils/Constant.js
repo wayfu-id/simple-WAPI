@@ -10,6 +10,11 @@ const storeObjects = [
                 : null,
     },
     {
+        id: "ComposeBox",
+        conditions: (module) =>
+            module.ComposeBoxActions ? module.ComposeBoxActions : null,
+    },
+    {
         id: "Cmd",
         conditions: (module) => (module.Cmd ? module.Cmd : null),
     },
