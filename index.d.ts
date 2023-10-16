@@ -38,6 +38,13 @@ declare namespace WAPI {
         bizInfo: Object,
     }
 
+    interface Base {
+        /** Main WAPI app */
+        app: WAPI,
+        /** Class raw data */
+        raw: any
+    }
+
     /**
      * Represents a Contact on WhatsApp
      *
@@ -73,13 +80,22 @@ declare namespace WAPI {
         isEnterprise: boolean,
         /** Indicates if the contact is a group contact */
         isGroup: boolean,
-        /** Indicates if the contact is the current user's contact */
-        isMe: boolean,
-        /** Indicates if the number is saved in the current phone's contacts */
-        isMyContact: boolean
         /** Indicates if the contact is a user contact */
         isUser: boolean,
-        /** Indicates if the number is registered on WhatsApp */
+        /**
+         * Indicates if the contact is the current user's contact
+         * @deprecated
+         */
+        isMe: boolean, 
+        /** 
+         * Indicates if the number is saved in the current phone's contacts
+         * @deprecated
+         */
+        isMyContact: boolean
+        /**
+         * Indicates if the number is registered on WhatsApp
+         * @deprecated
+         */
         isWAContact: boolean,
         /** Indicates if you have blocked this contact */
         isBlocked: boolean,
@@ -121,16 +137,24 @@ declare namespace WAPI {
         id: ChatId,
         /** Indicates if the Chat is a Group Chat */
         isGroup: boolean,
+        /** Indicates current active status */
+        active: boolean,
+        /** Indicates current draft message status */
+        hasDraftMessage: boolean,
         /** Title of the chat */
         name: string,
         /** Unix timestamp for when the last activity occurred */
         timestamp: number,
         /** Contact model */
         contact: Contact,
+        /** Clearing draft message */
+        clearDraft(): Chat;
         /** Close this chat */
         close(): Promise<void>,
         /** Open this chat */
         open(): Promise<void>,
+        /** Input text message and send it to chat */
+        inputAndSendTextMessage(text: string): Promise<Chat | null>
         /** Send text message to this chat */
         sendText(message: string, ret?: boolean): Promise<any>,
         /** Send image message to this chat */
@@ -182,6 +206,10 @@ declare class WAPI {
     findCommonGroups(id: string | WAPI.wid): Promise<WAPI.Chat[] | []>;
     /** Get current active chat data */
     getActiveChat(): WAPI.Chat | null;
+    /** Input text message and send it to chat */
+    inputAndSendTextMsg(chat: WAPI.Chat, text: string): Promise<WAPI.Chat | null>;
+    inputAndSendTextMsg(chat: string, text: string): Promise<WAPI.Chat | null>;
+    inputAndSendTextMsg(chat: WAPI.wid, text: string): Promise<WAPI.Chat | null>;
     /** Close chat by id */
     closeChat(id: string | WAPI.Chat): Promise<any>;
     /** Open chat by id */

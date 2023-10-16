@@ -84,6 +84,10 @@ let activeChat = WwJS.getActiveChat(); // This will return our Chat object or nu
 await WwJS.openChat('85726xxx'); // for opening chatroom by id
 await WwJS.closeChat('85726xxx'); // for closing chatroom by id
 
+/** Opening Chat and send text message to chat */
+await WwJS.inputAndSendTextMsg('85726xxx', 'text message'); // This will open the chatroom and send the message
+
+// Sending Message without opening chat window
 /** Seindng message */
 await WwJS.sendMessage('85726xxx', 'test message'); // Sending a text message to id
 await WwJS.sendMessage('85726xxx', 'caption', {media: file}) // Sending a message media to id
@@ -98,6 +102,8 @@ Available properties in our `Chat` class
 ```ts
 id: ChatId, // ID that represents the chat
 isGroup: boolean, // Indicates if the Chat is a Group Chat
+active: boolean, // Indicates current active status
+hasDraftMessage: boolean, // Indicates current draft message status
 name: string, // Title of the chat
 timestamp: number, // Unix timestamp for when the last activity occurred
 contact: Contact, // Contact model
@@ -110,6 +116,13 @@ let WwJS = WAPI.init(window);
 let chat = await WwJS.findChat('85726xxx');
 /** or call `.getModel()` function on WhatsApp Chat object */
 let chat = await WwJS.Chat.find('85726xxx')?.getModel();
+
+/**
+ * Clearing chat draft message
+ * Only work when chat not active or opened
+ * this will return `Chat` instance
+*/
+chat.clearDraft();
 
 /** Opening and closing current chat object */
 await chat.open(); // opening chatroom
@@ -141,14 +154,16 @@ isBusiness: boolean, // Indicates if the contact is a business contact
 id: ContactId, // ID that represents the contact
 isEnterprise: boolean, // Indicates if the contact is an enterprise contact
 isGroup: boolean, // Indicates if the contact is a group contact
-isMe: boolean, // Indicates if the contact is the current user's contact
-isMyContact: boolean // Indicates if the number is saved in the current phone's contacts
 isUser: boolean, // Indicates if the contact is a user contact
-isWAContact: boolean, // Indicates if the number is registered on WhatsApp
 isBlocked: boolean, // Indicates if you have blocked this contact
 name: string | undefined, // The contact's name, as saved by the current user
 pushname: string, // The name that the contact has configured to be shown publically
 shortName: string | undefined, // A shortened version of name
+
+/** Deprecated properties */
+isMe: boolean, // Indicates if the contact is the current user's contact
+isMyContact: boolean // Indicates if the number is saved in the current phone's contacts
+isWAContact: boolean, // Indicates if the number is registered on WhatsApp
 ```
 Available function in our `Contact` class
 ```js
