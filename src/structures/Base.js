@@ -24,6 +24,11 @@ export default class Base {
     }
 
     _patch(data) {
+        /**
+         * Raw Data
+         * @type {any}
+         */
+        this.raw = data;
         return data;
     }
 }
