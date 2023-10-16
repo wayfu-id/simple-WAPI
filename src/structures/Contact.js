@@ -28,13 +28,13 @@ export default class Contact extends Base {
          * Indicates if the contact is a business contact
          * @type {boolean}
          */
-        this.isBusiness = data.isBusiness;
+        this.isBusiness = !!data.isBusiness;
 
         /**
          * Indicates if the contact is an enterprise contact
          * @type {boolean}
          */
-        this.isEnterprise = data.isEnterprise;
+        this.isEnterprise = !!data.isEnterprise;
 
         /**
          * The contact's name, as saved by the current user
@@ -55,40 +55,43 @@ export default class Contact extends Base {
         this.shortName = data.shortName;
 
         /**
-         * Indicates if the contact is the current user's contact
+         * Indicates if the contact is a group contact
          * @type {boolean}
          */
-        this.isMe = !!data.isMe;
+        this.isGroup = this.id.server === "g.us";
 
         /**
          * Indicates if the contact is a user contact
          * @type {boolean}
          */
-        this.isUser = !!data.isUser;
+        this.isUser = this.id.server === "c.us";
 
-        /**
-         * Indicates if the contact is a group contact
-         * @type {boolean}
-         */
-        this.isGroup = !!data.isGroup;
+        // /**
+        //  * Indicates if the contact is the current user's contact
+        //  * @type {boolean}
+        //  * @deprecated
+        //  */
+        // this.isMe = !!data.isMe;
 
-        /**
-         * Indicates if the number is registered on WhatsApp
-         * @type {boolean}
-         */
-        this.isWAContact = !!data.isWAContact;
+        // /**
+        //  * Indicates if the number is registered on WhatsApp
+        //  * @type {boolean}
+        //  * @deprecated
+        //  */
+        // this.isWAContact = !!data.isWAContact;
 
-        /**
-         * Indicates if the number is saved in the current phone's contacts
-         * @type {boolean}
-         */
-        this.isMyContact = !!data.isMyContact;
+        // /**
+        //  * Indicates if the number is saved in the current phone's contacts
+        //  * @type {boolean}
+        //  * @deprecated
+        //  */
+        // this.isMyContact = !!data.isMyContact;
 
         /**
          * Indicates if you have blocked this contact
          * @type {boolean}
          */
-        this.isBlocked = !!data.isBlocked;
+        this.isBlocked = !!data.isContactBlocked;
 
         return super._patch(data);
     }
