@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.5...v0.0.6) (2024-03-25)
+
+
+### Bug Fixes
+
+* Add loader for WhatsApp v2.3 ([0e3d7d8](https://github.com/wayfu-id/simple-WAPI/commit/0e3d7d8705d920e0360448075a3ef2be74f9880e))
+* Fix instantiation with keyword 'new' ([2f7fa3e](https://github.com/wayfu-id/simple-WAPI/commit/2f7fa3ee7f678159361edc8ca05ad9165368f31c))
+
 ### [0.0.5](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.4...v0.0.5) (2023-10-16)
 
 ### [0.0.4](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.3...v0.0.4) (2023-10-01)
