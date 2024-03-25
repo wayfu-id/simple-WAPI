@@ -35,6 +35,7 @@ export default class WAPI {
      * @returns
      */
     _init(store) {
+        if (store instanceof Window) return WAPI.init(store);
         if (!store && WAPI.prototype.Chat) return this._patch();
 
         let { WebClasses, WebClasses2, WebClasses3 } = store;
