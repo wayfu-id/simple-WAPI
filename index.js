@@ -1,4 +1,4 @@
-import { getStore } from "./src/utils/Loader.js";
+import { getStore, waitLoaderType } from "./src/utils/Loader.js";
 import { ChatFactory, ContactFactory } from "./src/factories/index.js";
 import { Chat, Contact } from "./src/structures/index.js";
 
@@ -391,22 +391,22 @@ export default class WAPI {
      * @param {Window} target
      * @returns
      */
-    static init(target) {
+    static async init(target) {
         target = target && target instanceof Window ? target : window;
-        const webpackKey = ((w) => {
-            for (let key of Object.keys(w)) {
-                if (/[^|]?webpack./g.test(key)) return key;
-            }
-            return null;
-        })(target);
+        const { type, chunk } = await waitLoaderType(target);
 
         if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
-            if (webpackKey && typeof target[webpackKey] === "object") {
+            if (!!type && (type === "meta" || type === "webpack")) {
                 let mID = `parasite${Date.now()}`,
                     modStore = {};
 
-                target[webpackKey].push([[mID], {}, (o) => getStore(o, modStore)]);
-                return new WAPI(modStore);
+                if (type === "meta") {
+                    getStore(chunk, modStore);
+                } else {
+                    chunk.push([[mID], {}, (o) => getStore(o, modStore)]);
+                }
+
+                return new WAPI(Object.assign({}, modStore, { Debug: target["Debug"] }));
             } else {
                 console.error("Failed to load WAPI Module!");
             }

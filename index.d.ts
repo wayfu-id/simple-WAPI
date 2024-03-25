@@ -1,4 +1,14 @@
-declare namespace WAPI { 
+declare namespace WAPI {
+    type webpackLoader = {
+        type: "webpack",
+        chunk: Array<any>
+    }
+    type metaLoader = {
+        type: "meta",
+        chunk: Object
+    }
+    export type LoaderType = webpackLoader | metaLoader;
+    
     export interface wid {
         /**
          * Whatsapp server domain
@@ -219,7 +229,7 @@ declare class WAPI {
     /** Delay some function */
     sleep(time: number): Promise<void>;
     /** Static methor for initiating WAPI class */
-    static init(target?: Window): WAPI;
+    static init(target?: Window): Promise<WAPI | undefined>;
 }
 
 export = WAPI;
