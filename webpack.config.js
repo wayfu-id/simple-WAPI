@@ -16,8 +16,8 @@ export default {
             name: "WAPI",
             type: "umd",
             export: "default",
+            umdNamedDefine: true,
         },
-        globalObject: "this",
     },
     devtool: "source-map",
     plugins: [
