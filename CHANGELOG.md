@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.6...v0.0.7) (2024-04-01)
+
+
+### Bug Fixes
+
+* **build:** add config for umdNamedDefine for library output ([2f2dd7f](https://github.com/wayfu-id/simple-WAPI/commit/2f2dd7fb754a50686fd33bcac40713eb51c2621c))
+* **build:** Bring back syncronous style, WAPI class no longer constructable ([c5e5e45](https://github.com/wayfu-id/simple-WAPI/commit/c5e5e4575822621d4435518f1d07b88a4c23a1dc))
+
 ### [0.0.6](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.5...v0.0.6) (2024-03-25)
 
 
