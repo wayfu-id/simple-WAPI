@@ -40,9 +40,6 @@ let WwJS = WAPI.init(window);
 
 /** or Global variable */
 window.WwJS = WAPI.init(window);
-
-/** You can use `new` operator like this */
-window.WwJS = new WAPI(window);
 ```
 You need 1 parameter for initiating WAPI. The parameter should be a `window` instance of the page. You can use this script to inject the WhatsApp Web on the browser too.
 

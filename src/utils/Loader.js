@@ -77,33 +77,29 @@ const getStore = (modules, result = {}) => {
  * Get LoaderType of WAPI Module
  * @param {window} target
  * @param {string} webpack
- * @returns {Promise<loaderType>}
+ * @returns {loaderType}
  */
-const waitLoaderType = async (target) => {
+const waitLoaderType = (target) => {
     target = target && target instanceof Window ? target : window;
     const chunkName = ((t) => webpackKey(t))(target),
         isArray = (e) => {
             return Array.isArray(e) && e.every((i) => Array.isArray(i) && i.length > 0);
         };
-    return new Promise((done) => {
-        const checkObjects = () => {
-            if (target.require || target.__d) {
-                let webpackRequire = target.require("__debug");
-                if (webpackRequire.modulesMap?.WAWebUserPrefsMeUser) {
-                    done({ type: "meta", chunk: webpackFactory(target) });
-                } else {
-                    setTimeout(checkObjects, 200);
-                }
-            } else {
-                if (target[chunkName] && isArray(target[chunkName])) {
-                    done({ type: "webpack", chunk: target[chunkName] });
-                } else {
-                    setTimeout(checkObjects, 200);
-                }
+
+    const checkObjects = () => {
+        if (target.require || target.__d) {
+            let webpackRequire = target.require("__debug");
+            if (webpackRequire.modulesMap?.WAWebUserPrefsMeUser) {
+                return { type: "meta", chunk: webpackFactory(target) };
             }
-        };
-        checkObjects();
-    });
+        } else if (target[chunkName] && isArray(target[chunkName])) {
+            return { type: "webpack", chunk: target[chunkName] };
+        } else {
+            setTimeout(checkObjects, 200);
+        }
+    };
+
+    return checkObjects();
 };
 
 export { getStore, waitLoaderType };

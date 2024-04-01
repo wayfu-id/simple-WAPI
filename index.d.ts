@@ -196,6 +196,11 @@ declare namespace WAPI {
 }
 
 declare class WAPI {
+    /** Create new WAPI Object */
+    private constructor();
+    /** Create new WAPI with store Object */
+    private constructor(store: any);
+
     BUILD_ID: string;
     DESKTOP_BETA: boolean;
     /** WhatsApp Web Version */
@@ -229,7 +234,7 @@ declare class WAPI {
     /** Delay some function */
     sleep(time: number): Promise<void>;
     /** Static methor for initiating WAPI class */
-    static init(target?: Window): Promise<WAPI | undefined>;
+    static init(target?: Window): WAPI;
 }
 
 export = WAPI;
