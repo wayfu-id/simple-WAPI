@@ -30,8 +30,4 @@ export default class GroupChat extends Chat {
         }
         return results;
     }
-
-    async getOwner() {
-        return await this.owner;
-    }
 }

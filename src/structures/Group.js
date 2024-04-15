@@ -1,5 +1,10 @@
 import Base from "./Base.js";
 
+/**
+ * @typedef {import("../../index").Chat} Chat
+ * @typedef {import("../../index").Contact} Contact
+ */
+
 /** @type {import("../../index").Group} */
 export default class Group extends Base {
     constructor(app, data) {
@@ -60,7 +65,27 @@ export default class Group extends Base {
         return results;
     }
 
+    /**
+     * Returns the Chat that corresponds to this Contact.
+     * @returns {Promise<Chat>}
+     */
+    async getChat() {
+        return await this.app.findChat(this.id);
+    }
+
+    /**
+     * Returns the Chat that corresponds to this Contact.
+     * @returns {Promise<Contact>}
+     */
+    async getContact() {
+        return await this.app.findContact(this.id);
+    }
+
+    /**
+     * Open chat that corresponds to this group
+     * @returns {Promise<Chat>}
+     */
     async openChat() {
-        return await this.raw.openChat();
+        return await this.app.openChat(this.id._serialized);
     }
 }
