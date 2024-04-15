@@ -89,12 +89,12 @@ export default class Chat extends Base {
     }
 
     /**
-     * Send Image with caption (optional)
+     * Send Media with caption (optional)
      * @param {File} file
      * @param {string?} caption
      * @param {boolean?} ret
      */
-    async sendImage(file, caption = "", ret) {
+    async sendMedia(file, caption = "", ret) {
         return await this.app.sendMessage(this, "", { media: file, caption, ret: !!ret });
     }
 }
