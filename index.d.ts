@@ -144,7 +144,6 @@ declare namespace WAPI {
         
         /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
         getCommonGroups(): Promise<Chat[]>
-
     }
 
     /**
@@ -222,6 +221,20 @@ declare namespace WAPI {
         size: Number;
         /** All Sub Groups Id */
         subGroupsId: GroupId[];
+
+        // Getter Function
+        /** Get Parent Group as object */
+        get ParentGroup(): Group | null;
+        /** Get child groups as array of Group */
+        get ChildGroups(): Group[];
+
+
+        /** Returns the Chat that corresponds to this Group. */
+        getChat(): Promise<Chat>;
+        /** Returns the Contact that corresponds to this Group. */
+        getContact(): Promise<Contact>;
+        /** Open chat that corresponds to this group. */
+        openChat(): Promise<Chat>;
     }
 
     export interface GroupParticipant {
@@ -232,11 +245,13 @@ declare namespace WAPI {
     }
 
     export interface GroupChat extends Chat {
-        /** Group owner */
-        owner: Contact | null;
         groupMetadata: GroupMetadata
+
+        // Getter Functions
+        /** Group owner */
+        get owner(): Contact | null;
         /** Group participants */
-        participants: GroupParticipant[];
+        get participants(): GroupParticipant[];
     }
 
     export interface GroupMetadata {
@@ -249,12 +264,6 @@ declare namespace WAPI {
     export interface ChatFactory extends BaseFactory<Chat | GroupChat, WA.ChatModel> {}
     export interface ContactFactory extends BaseFactory<Contact, WA.ContactModel> {}
     export interface GroupFactory extends BaseFactory<Group, WA.GroupModel> {}
-}
-
-declare module "../factories/index.js" {
-    export interface ChatFactory extends WAPI.ChatFactory {}
-    export interface ContactFactory extends WAPI.ContactFactory {}
-    export interface GroupFactory extends WAPI.GroupFactory {}
 }
 
 /** From Original WhatsApp Web */
