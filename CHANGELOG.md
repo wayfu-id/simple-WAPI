@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.8...v0.0.9) (2024-04-15)
+
+
+### Features
+
+* **group:** Add group participants feature to group class ([3c40956](https://github.com/wayfu-id/simple-WAPI/commit/3c40956a83d88e7c547a6f5aab0fe3713cbeee2d))
+
 ### [0.0.8](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.7...v0.0.8) (2024-04-15)
 
 
