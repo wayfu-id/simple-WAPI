@@ -223,10 +223,12 @@ declare namespace WAPI {
         subGroupsId: GroupId[];
 
         // Getter Function
+        /** Group participants */
+        get participants(): GroupParticipant[];
         /** Get Parent Group as object */
-        get ParentGroup(): Group | null;
+        get parentGroup(): Group | null;
         /** Get child groups as array of Group */
-        get ChildGroups(): Group[];
+        get childGroups(): Group[];
 
 
         /** Returns the Chat that corresponds to this Group. */

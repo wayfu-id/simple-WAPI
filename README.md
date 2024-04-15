@@ -203,8 +203,9 @@ size: number; /** Group Participant Size */
 subGroupsId: GroupId[]; /** All Sub Groups Id */
 
 // Getter Functions
-get ParentGroup(): Group | null; /** Get parent group as Group object */
-get ChildGroups(): Group[]; /** Get all Child group as Array of Group object */
+get participants(): GroupParticipant[]; /** Group participants */
+get parentGroup(): Group | null; /** Get parent group as Group object */
+get childGroups(): Group[]; /** Get all Child group as Array of Group object */
 ```
 Available function in our `Group` class
 ```js

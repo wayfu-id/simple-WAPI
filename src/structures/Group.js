@@ -1,4 +1,5 @@
 import Base from "./Base.js";
+import GroupParticipant from "./GroupParticipant.js";
 
 /**
  * @typedef {import("../../index").Chat} Chat
@@ -46,14 +47,24 @@ export default class Group extends Base {
         return super._patch(data);
     }
 
-    get ParentGroup() {
+    get participants() {
+        let participants = this.raw.participants,
+            results = [];
+
+        for (let data of participants.getModelsArray()) {
+            results.push(GroupParticipant.create(data));
+        }
+        return results;
+    }
+
+    get parentGroup() {
         let { parentGroupId: id } = this;
         if (!id) return null;
         let result = this.app.GroupMetadata.get(id);
         return result.getModel();
     }
 
-    get ChildGroups() {
+    get childGroups() {
         let { subGroupsId } = this,
             results = [];
 
