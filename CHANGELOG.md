@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.7...v0.0.8) (2024-04-15)
+
+
+### Features
+
+* **Group:** Add group feature based on GroupMetadata Object ([77a1f47](https://github.com/wayfu-id/simple-WAPI/commit/77a1f478a6dc142623a170e75997aec377dd393d))
+
 ### [0.0.7](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.6...v0.0.7) (2024-04-01)
 
 
