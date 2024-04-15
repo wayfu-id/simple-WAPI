@@ -44,8 +44,8 @@ window.WwJS = WAPI.init(window);
 You need 1 parameter for initiating WAPI. The parameter should be a `window` instance of the page. You can use this script to inject the WhatsApp Web on the browser too.
 
 ## API
-### WAPI
-Availible properties in `WAPI` class
+### #WAPI
+Available properties in `WAPI` class
 ```ts
 BUILD_ID: string; // Current WhatsApp web build ID
 DESKTOP_BETA: boolean; // Is it beta version?
@@ -72,10 +72,18 @@ let chat = await WwJS.Chat.find('85726xxx'); // This will return WhatsApp Chat o
 /** Finding Contact */
 /** There are 2 ways to finding Contact object */
 let contact = await WwJS.findContact('85726xxx'); // This will return our Contact object.
-let contact = await WwJS.Contact.find('85726xxx'); // This will return WhatsApp Chat object instead.
+let contact = await WwJS.Contact.find('85726xxx'); // This will return WhatsApp Contact object instead.
+
+/** Finding Group */
+/** There are 2 ways to finding Group object */
+let group = await WwJS.findGroup('120363xxx');  // This will return our Group object.
+let group = await WwJS.GroupMetadata.find('120363xxx'); // This will return WhatsApp Group object instead.
 
 /** Getting current active chat */
 let activeChat = WwJS.getActiveChat(); // This will return our Chat object or null if no chat were active.
+
+/** Getting all Groups Object */
+let allGroups = WwJS.getAllGroups(); // This will return Array of our Group object.
 
 /** Opening and closing chat */
 await WwJS.openChat('85726xxx'); // for opening chatroom by id
@@ -94,7 +102,7 @@ await WwJS.sendMessage('85726xxx', '', {media: file, caption: 'caption'}) // Sen
 await WwJS.sleep(2000); // Delaying for 2 seconds.
 ```
 
-### Chat
+### #Chat
 Available properties in our `Chat` class
 ```ts
 id: ChatId, // ID that represents the chat
@@ -129,22 +137,20 @@ await chat.close(); // closing chatroom
 await chat.sendText('test message');
 
 /** Sending a message media */
-await chat.sendImage(imgFile, 'caption');
+await chat.sendMedia(imgFile, 'caption');
 ```
 #### GroupChat
 Group chat is child of `Chat` class with extra properties and function. Available properties in our `GroupChat` class
 ```ts
 /** Group owner */
-owner: Contact | null; // Get owner Contact (if any)
 groupMetadata: GroupMetadata; // GroupMetadata detail
-participants: GroupParticipant[]; // Group participants
+
+// Getter function
+get owner(): Contact | null; // Get owner Contact (if any)
+get participants(): GroupParticipant[]; // Group participants
 ```
-Available function in our `GroupChat` class
-```js
-let groupOwner = await groupChat.getOwner();
-```
-### Contact
-Availible properties in our `Contact` class
+### #Contact
+Available properties in our `Contact` class
 ```ts
 number: string, // Contact's phone number
 isBusiness: boolean, // Indicates if the contact is a business contact
@@ -177,6 +183,44 @@ let chat = await contact.getChat();
 /** 
  * Gets the Contact's common groups with you. Returns empty array if you don't have any common group.  */
 let commonGroup = await contact.getCommonGroups();
+```
+### #Group
+Available properties in our `Group` class
+```ts
+announce: boolean; /** Indicates if the group is Announcement Group */
+creation: number; /** Group creation timestampt */
+desc: string; /** Group Description */
+descId: string; /** Group Description Id */
+descOwner: ContactId; /** Group Description Owner Contact Id */
+descTime: number; /** Group Description Updated Timestampt */
+displayedDesc: string; /** Group Displayed Description */
+groupType: string; /** Group Type */
+id: GroupId; /** Group Id */
+name: string; /** Group subject name */
+owner: ContactId; /** Group Owner ContactId */
+parentGroupId: GroupId; /** Parent GroupId */
+size: number; /** Group Participant Size */
+subGroupsId: GroupId[]; /** All Sub Groups Id */
+
+// Getter Functions
+get ParentGroup(): Group | null; /** Get parent group as Group object */
+get ChildGroups(): Group[]; /** Get all Child group as Array of Group object */
+```
+Available function in our `Group` class
+```js
+let WwJS = WAPI.init(window);
+/** There are 2 ways for getting our Group class object */
+/** Using WAPI.findGroup() function */
+let group = await WwJS.findGroup('120363xxx');
+/** or call `.getModel()` function on WhatsApp GroupMetadata object */
+let group = await WwJS.GroupMetadata.find('120363xxx')?.getModel();
+
+/** Returns the Chat that corresponds to this Group. */
+let chat = await group.getChat();
+/** Returns the Contact that corresponds to this Group. */
+let contact = await group.getContact();
+/** Open and return the chat that corresponds to this group */
+let chat = await group.openChat();
 ```
 ## TypeScript
 
