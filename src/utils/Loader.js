@@ -1,4 +1,6 @@
 import { storeObjects } from "./Constant.js";
+import { constructWAPI } from "./CustomProperties.js";
+import { constructStore } from "./StoreProperties.js";
 
 /**
  * @typedef { import("../../index").LoaderType } loaderType
@@ -95,11 +97,11 @@ const waitLoaderType = (target) => {
         } else if (target[chunkName] && isArray(target[chunkName])) {
             return { type: "webpack", chunk: target[chunkName] };
         } else {
-            setTimeout(checkObjects, 200);
+            return { type: undefined, chunk: undefined };
         }
     };
 
     return checkObjects();
 };
 
-export { getStore, waitLoaderType };
+export { getStore, waitLoaderType, constructWAPI, constructStore };
