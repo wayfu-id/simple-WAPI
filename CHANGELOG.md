@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.10...v0.0.11) (2024-04-16)
+
+
+### Bug Fixes
+
+* Fix typings error and add _serialized property for some structures ([729f127](https://github.com/wayfu-id/simple-WAPI/commit/729f127da9a619a99d2f1cfaf112269c30004430))
+
 ### [0.0.10](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.9...v0.0.10) (2024-04-16)
 
 
