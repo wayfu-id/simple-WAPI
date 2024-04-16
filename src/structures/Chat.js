@@ -17,6 +17,9 @@ export default class Chat extends Base {
     }
 
     _patch(data) {
+        /** Call Base._patch first! */
+        super._patch(data);
+
         /** Indicates current active status */
         this.active = !!data.active;
 
@@ -49,7 +52,7 @@ export default class Chat extends Base {
             timestamp: this.timestamp,
         };
 
-        return super._patch(data);
+        return this;
     }
 
     /**

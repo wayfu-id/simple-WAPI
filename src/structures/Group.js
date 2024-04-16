@@ -16,6 +16,9 @@ export default class Group extends Base {
     }
 
     _patch(data) {
+        /** Call Base._patch first! */
+        super._patch(data);
+
         /** Is Announcement Group */
         this.announce = data.announce;
 
@@ -64,7 +67,7 @@ export default class Group extends Base {
             subGroupsId: this.subGroupsId,
         };
 
-        return super._patch(data);
+        return this;
     }
 
     /** Group participants contact */

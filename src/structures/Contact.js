@@ -17,6 +17,9 @@ export default class Contact extends Base {
     }
 
     _patch(data) {
+        /** Call Base._patch first! */
+        super._patch(data);
+
         /** ID that represents the contact */
         this.id = data.id;
 
@@ -69,7 +72,7 @@ export default class Contact extends Base {
             shortName: this.shortName,
         };
 
-        return super._patch(data);
+        return this;
     }
 
     /**
