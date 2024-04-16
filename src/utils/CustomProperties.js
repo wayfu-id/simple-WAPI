@@ -2,10 +2,13 @@ import { ChatFactory, ContactFactory, GroupFactory } from "../factories/index.js
 import { Chat as WAPIChat, Contact as WAPIContact } from "../structures/index.js";
 
 /**
- * @typedef {import("../../index")} WAPI
- * @typedef {import("../../index").MessageSendOptions} MessageSendOptions
- * @typedef {import("../../index").MessageSendResult} MessageSendResult
- * @typedef {import("../../index").wid} wid
+ * @typedef {import("../../index").default} WAPI
+ * @typedef {import("../../index").default.Chat} Chat
+ * @typedef {import("../../index").default.Contact} Contact
+ * @typedef {import("../../index").default.Group} Group
+ * @typedef {import("../../index").default.MessageSendOptions} MessageSendOptions
+ * @typedef {import("../../index").default.MessageSendResult} MessageSendResult
+ * @typedef {import("../../index").default.wid} wid
  */
 
 /**
@@ -55,6 +58,7 @@ const constructWAPI = (app) => {
                 },
             },
             findChat: {
+                /** @type {(id:string | wid) => Promise<Chat | null>} */
                 value: async function findChat(id) {
                     let _id = await (async (e) => {
                         if (typeof e === "string") {
@@ -76,6 +80,7 @@ const constructWAPI = (app) => {
                 },
             },
             findContact: {
+                /** @type {(id:string | wid) => Promise<Contact | null>} */
                 value: async function findContact(id) {
                     let _id = await (async (e) => {
                         if (typeof e === "string") {
@@ -201,8 +206,8 @@ const constructWAPI = (app) => {
                         let ct;
                         try {
                             ct = await Chat.find(e instanceof WAPIChat ? e.id : e);
-                        } catch (e) {
-                            console.log(e);
+                        } catch (err) {
+                            throw new Error(`Can't find Chat. Reason: ${err.message || "Unknown"}`);
                         }
                         return ct;
                     })(id);

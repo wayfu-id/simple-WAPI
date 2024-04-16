@@ -1,6 +1,13 @@
 import Base from "./Base.js";
+
 /**
- * @type {import("../../index").Chat}
+ * @typedef {import("../../index").default} WAPI
+ * @typedef {import("../../index").default.Chat} WAPI.Chat
+ */
+
+/**
+ * Represents a Chat on WhatsApp
+ * @type {WAPI.Chat}
  */
 export default class Chat extends Base {
     constructor(app, data) {
@@ -10,46 +17,37 @@ export default class Chat extends Base {
     }
 
     _patch(data) {
-        /**
-         * ID that represents the chat
-         * @type {import("../../index").ChatId}
-         */
-        this.id = data.id;
-
-        /**
-         * Indicates current active status
-         * @type {boolean}
-         */
+        /** Indicates current active status */
         this.active = !!data.active;
 
-        /**
-         * Indicates current draft message status
-         * @type {boolean}
-         */
+        /** The contact model of this chat */
+        this.contact = data.contact.getModel();
+
+        /** Indicates current draft message status */
         this.hasDraftMessage = data.hasDraftMessage;
 
-        /**
-         * Title of the chat
-         * @type {string}
-         */
-        this.name = data.formattedTitle;
+        /** ID that represents the chat */
+        this.id = data.id;
 
-        /**
-         * Indicates if the Chat is a Group Chat
-         * @type {boolean}
-         */
+        /** Indicates if the Chat is a Group Chat */
         this.isGroup = data.isGroup;
 
-        /**
-         * Unix timestamp for when the last activity occurred
-         * @type {number}
-         */
+        /** Title of the chat */
+        this.name = data.formattedTitle;
+
+        /** Unix timestamp for when the last activity occurred */
         this.timestamp = data.t;
 
-        /**
-         * @type {import("../../index").Contact}
-         */
-        this.contact = data.contact.getModel();
+        /** Get serialized Chat object */
+        this._serialized = {
+            active: this.active,
+            contact: this.contact._serialized,
+            id: this.id,
+            isGroup: this.isGroup,
+            hasDraftMessage: this.hasDraftMessage,
+            name: this.name,
+            timestamp: this.timestamp,
+        };
 
         return super._patch(data);
     }

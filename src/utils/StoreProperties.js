@@ -2,9 +2,9 @@ import WAPI from "../../index.js";
 import { ChatFactory, ContactFactory, GroupFactory } from "../factories/index.js";
 
 /**
- * @typedef {import("../../index").MessageSendOptions} MessageSendOptions
- * @typedef {import("../../index").MessageSendResult} SendResult
- * @typedef {import("../../index").wid} wid
+ * @typedef {import("../../index").default.MessageSendOptions} MessageSendOptions
+ * @typedef {import("../../index").default.MessageSendResult} SendResult
+ * @typedef {import("../../index").default.wid} wid
  */
 
 /**
@@ -119,6 +119,8 @@ const constructChat = (app) => {
 
                             done(ret ? this.getModel() : res);
                         })(app, body);
+                    }).catch((err) => {
+                        throw new Error(`Couldn't Send Text Message. Reason: ${err.message || "Unknown"}`);
                     });
                 },
                 enumerable: true,
@@ -142,7 +144,7 @@ const constructChat = (app) => {
                             done(r ? this.getModel() : res);
                         })(file, caption, ret);
                     }).catch((err) => {
-                        console.log(err), done(false);
+                        throw new Error(`Couldn't Send Media Message. Reason: ${err.message || "Unknown"}`);
                     });
                 },
                 enumerable: true,

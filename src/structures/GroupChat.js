@@ -2,17 +2,17 @@ import Chat from "./Chat.js";
 import GroupParticipant from "./GroupParticipant.js";
 
 /**
- * @type {import("../../index").GroupChat}
+ * @type {import("../../index").default.GroupChat}
  */
 export default class GroupChat extends Chat {
     _patch(data) {
+        /** This group metadata */
         this.groupMetadata = data.groupMetadata;
 
         return super._patch(data);
     }
 
     get owner() {
-        /** @type {import("../../index").GroupMetadata} */
         let { owner } = this.groupMetadata;
         if (!owner) return null;
         let { _serialized: id } = owner,

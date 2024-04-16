@@ -1,28 +1,31 @@
+/**
+ * @type {import("../../index").default.GroupParticipant}
+ */
 export default class GroupParticipant {
     constructor(data) {
         return this._patch(data);
     }
 
     _patch(data) {
-        /**
-         * @type {import("../../index").wid}
-         */
+        /** The contact model of this participant */
+        this.contact = data.contact.getModel();
+
+        /** ID that represents the participant */
         this.id = data.id;
 
-        /**
-         * @type {boolean}
-         */
+        /** Is the participant Admin */
         this.isAdmin = data.isAdmin;
 
-        /**
-         * @type {boolean}
-         */
+        /** Is the participant Super Admin */
         this.isSuperAdmin = data.isSuperAdmin;
 
-        /**
-         * @type {import("../../index").Contact}
-         */
-        this.contact = data.contact.getModel();
+        /** Get serialized GroupParticipant object */
+        this._serialized = {
+            contact: this.contact._serialized,
+            id: this.id,
+            isAdmin: this.isAdmin,
+            isSuperAdmin: this.isSuperAdmin,
+        };
 
         return this;
     }

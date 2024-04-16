@@ -2,11 +2,12 @@ import Base from "./Base.js";
 import GroupParticipant from "./GroupParticipant.js";
 
 /**
- * @typedef {import("../../index").Chat} Chat
- * @typedef {import("../../index").Contact} Contact
+ * @typedef {import("../../index").default.Chat} WAPI.Chat
+ * @typedef {import("../../index").default.Contact} WAPI.Contact
+ * @typedef {import("../../index").default.Group} WAPI.Group
  */
 
-/** @type {import("../../index").Group} */
+/** @type {WAPI.Group} */
 export default class Group extends Base {
     constructor(app, data) {
         super(app);
@@ -17,36 +18,56 @@ export default class Group extends Base {
     _patch(data) {
         /** Is Announcement Group */
         this.announce = data.announce;
+
         /** Group creation timestampt */
         this.creation = data.creation;
+
         /** Group Description */
         this.desc = data.desc;
-        /** Group Description Id */
-        this.descId = data.descId;
-        /** Group Description Owner Contact Id */
-        this.descOwner = data.descOwner;
-        /** Group Description Updated Timestampt */
-        this.descTime = data.descTime;
+
         /** Group Displayed Description */
         this.displayedDesc = data.displayedDesc;
+
         /** Group Type */
         this.groupType = data.groupType;
+
         /** Group Id */
         this.id = data.id;
+
         /** Group subject name */
         this.name = data.subject;
+
         /** Group Owner Contact */
         this.owner = data.owner;
+
         /** Parent Group */
         this.parentGroupId = data.parentGroup;
+
         /** Group Participant Size */
         this.size = data.size;
+
         /** All Sub Groups Id */
         this.subGroupsId = data.joinedSubgroups;
+
+        this._serialized = {
+            announce: this.announce,
+            creation: this.creation,
+            desc: this.desc,
+            displayedDesc: this.displayedDesc,
+            groupType: this.groupType,
+            id: this.id,
+            name: this.name,
+            owner: this.owner,
+            parentGroupId: this.parentGroupId,
+            participants: this.participants,
+            size: this.size,
+            subGroupsId: this.subGroupsId,
+        };
 
         return super._patch(data);
     }
 
+    /** Group participants contact */
     get participants() {
         let participants = this.raw.participants,
             results = [];
@@ -57,6 +78,7 @@ export default class Group extends Base {
         return results;
     }
 
+    /** Parent group metadata */
     get parentGroup() {
         let { parentGroupId: id } = this;
         if (!id) return null;
@@ -64,6 +86,7 @@ export default class Group extends Base {
         return result.getModel();
     }
 
+    /** Child group metadata as array */
     get childGroups() {
         let { subGroupsId } = this,
             results = [];
@@ -78,7 +101,6 @@ export default class Group extends Base {
 
     /**
      * Returns the Chat that corresponds to this Contact.
-     * @returns {Promise<Chat>}
      */
     async getChat() {
         return await this.app.findChat(this.id);
@@ -86,7 +108,6 @@ export default class Group extends Base {
 
     /**
      * Returns the Chat that corresponds to this Contact.
-     * @returns {Promise<Contact>}
      */
     async getContact() {
         return await this.app.findContact(this.id);
@@ -94,7 +115,6 @@ export default class Group extends Base {
 
     /**
      * Open chat that corresponds to this group
-     * @returns {Promise<Chat>}
      */
     async openChat() {
         return await this.app.openChat(this.id._serialized);

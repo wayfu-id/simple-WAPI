@@ -1,7 +1,7 @@
 declare namespace WAPI {
     type BizInfo = {
         verifiedName: {
-            isApi: Boolean;
+            isApi: boolean;
             level: String;
             name: String;
             privacyMode: String | null;
@@ -27,7 +27,7 @@ declare namespace WAPI {
          */
         server: String;
         /**
-         * User whatsapp Number
+         * User whatsapp number
          * @example `554199999999`
          */
         user: String;
@@ -37,9 +37,9 @@ declare namespace WAPI {
          */
         _serialized: String;
         /** Is it group wid */
-        isGroup(): Boolean;
+        isGroup(): boolean;
         /** Is it User wid */
-        isUser(): Boolean;
+        isUser(): boolean;
     }
     export interface ContactId extends wid {}
     export interface ChatId extends wid {}
@@ -51,11 +51,11 @@ declare namespace WAPI {
         /** Media to be sent */
         media?: File;
         /** Return chat model */
-        ret?: Boolean;
+        ret?: boolean;
     }
 
     export type PhoneExist = {
-        biz: Boolean;
+        biz: boolean;
         bizInfo?: BizInfo;
         wid: wid;
     };
@@ -65,10 +65,63 @@ declare namespace WAPI {
         app: WAPI;
         /** Class raw data */
         raw: o;
+        /** Serialize Class Data */
+        _serialized: any;
         /** Cloning class */
         _clone(): any;
         /** Patching data */
         _patch(data: o): o;
+
+        /** Default properties */
+        [k: string]: any | undefined;
+    }
+
+    interface Serialized<o extends wid> {
+        id: o;
+        name: string | undefined;
+
+        /** Default properties */
+        [k: string]: any | undefined;
+    }
+
+    interface ContactSerialized extends Serialized<ContactId> {
+        isBlocked: boolean;
+        isBusiness: boolean;
+        isEnterprise: boolean;
+        isGroup: boolean;
+        isMe: boolean;
+        isMyContact: boolean;
+        isUser: boolean;
+        pushname: string;
+        phoneNumber: string;
+        shortName?: string;
+    }
+
+    interface ChatSerialized extends Serialized<ChatId> {
+        isGroup: boolean;
+        active: boolean;
+        hasDraftMessage: boolean;
+        timestamp: number;
+        contact: ContactSerialized;
+    }
+
+    interface GroupSerialized extends Serialized<GroupId> {
+        announce: boolean;
+        creation: number;
+        desc: string;
+        displayedDesc: string;
+        groupType: string;
+        owner: ContactId;
+        parentGroupId?: GroupId;
+        participants: GroupParticipant[];
+        size: number;
+        subGroupsId: GroupId[];
+    }
+
+    interface GroupParticipantSerialized extends Omit<Serialized<ContactId>, "name"> {
+        contact: ContactSerialized;
+        isAdmin: boolean;
+        isSuperAdmin: boolean;
     }
 
     /**
@@ -81,7 +134,7 @@ declare namespace WAPI {
      *     user: '554199999999',
      *     _serialized: `554199999999@c.us`
      *   },
-     *   Number: '554199999999',
+     *   number: '554199999999',
      *   isBusiness: false,
      *   isEnterprise: false,
      *   name: undefined,
@@ -90,48 +143,44 @@ declare namespace WAPI {
      *   isMe: false,
      *   isUser: true,
      *   isGroup: false,
-     *   isWAContact: true,
      *   isMyContact: false,
      *   isBlocked: false
      * }
      */
     export interface Contact extends Base<WA.ContactModel> {
-        /** Contact's phone Number */
-        number: String;
+        /** Get serialized object */
+        _serialized: ContactSerialized;
         /** Indicates if the contact is a business contact */
-        isBusiness: Boolean;
+        isBusiness: boolean;
         /** ID that represents the contact */
         id: ContactId;
         /** Indicates if the contact is an enterprise contact */
-        isEnterprise: Boolean;
+        isEnterprise: boolean;
         /** Indicates if the contact is a group contact */
-        isGroup: Boolean;
+        isGroup: boolean;
         /** Indicates if the contact is a user contact */
-        isUser: Boolean;
+        isUser: boolean;
+        /** Indicates if the contact is the current user's contact */
+        isMe: boolean;
+        /** Indicates if the number is saved in the current phone's contacts */
+        isMyContact: boolean;
         /**
-         * Indicates if the contact is the current user's contact
+         * Indicates if the number is registered on WhatsApp
          * @deprecated
          */
-        isMe: Boolean;
-        /**
-         * Indicates if the Number is saved in the current phone's contacts
-         * @deprecated
-         */
-        isMyContact: Boolean;
-        /**
-         * Indicates if the Number is registered on WhatsApp
-         * @deprecated
-         */
-        isWAContact: Boolean;
+        isWAContact: boolean;
         /** Indicates if you have blocked this contact */
-        isBlocked: Boolean;
+        isBlocked: boolean;
         /** The contact's name, as saved by the current user */
-        name?: String;
+        name?: string;
+        /** Contact's phone number */
+        phoneNumber: string;
         /** The name that the contact has configured to be shown publically */
-        pushname: String;
+        pushname: string;
         /** A shortened version of name */
-        shortName?: String;
+        shortName?: string;
 
+        // Available functions
         /**
          * Returns the Chat that corresponds to this Contact.
          * Will return null when getting chat for currently logged in user.
@@ -152,26 +201,32 @@ declare namespace WAPI {
      *     user: '554199999999',
      *     _serialized: `554199999999@c.us`
      *   },
-     *   name: '+55 41 9999-9999',
+     *   active: active
+     *   hasDraftMessage: false,
      *   isGroup: false,
+     *   name: '+55 41 9999-9999',
      *   timestamp: 1591484087,
      * }
      */
     export interface Chat extends Base<WA.ChatModel> {
+        /** Get serialized object */
+        _serialized: ChatSerialized;
+        /** Indicates current active status */
+        active: boolean | undefined;
+        /** Contact model */
+        contact: Contact;
+        /** Indicates current draft message status */
+        hasDraftMessage: boolean;
         /** ID that represents the chat */
         id: ChatId;
         /** Indicates if the Chat is a Group Chat */
-        isGroup: Boolean;
-        /** Indicates current active status */
-        active: Boolean;
-        /** Indicates current draft message status */
-        hasDraftMessage: Boolean;
+        isGroup: boolean;
         /** Title of the chat */
-        name: String;
+        name: string;
         /** Unix timestamp for when the last activity occurred */
-        timestamp: Number;
-        /** Contact model */
-        contact: Contact;
+        timestamp: number;
+
+        // Available functions
         /** Clearing draft message */
         clearDraft(): Chat;
         /** Close this chat */
@@ -179,42 +234,64 @@ declare namespace WAPI {
         /** Open this chat */
         open(): Promise<void>;
         /** Input text message and send it to chat */
-        inputAndSendTextMessage(text: String): Promise<Chat | null>;
+        inputAndSendTextMessage(text: string): Promise<Chat | null>;
         /** Send text message to this chat */
-        sendText(message: String): Promise<MessageSendResult>;
-        sendText(message: String, model: true): Promise<Chat>;
+        sendText(message: string): Promise<MessageSendResult>;
+        sendText(message: string, model: true): Promise<Chat>;
         /** Send image message to this chat */
-        sendMedia(file: File, caption: String): Promise<MessageSendResult>;
-        sendMedia(file: File, caption: String, model: true): Promise<Chat>;
+        sendMedia(file: File, caption: string): Promise<MessageSendResult>;
+        sendMedia(file: File, caption: string, model: true): Promise<Chat>;
     }
 
+    /**
+     * Represents a Group from GroupMetadata on WhatsApp
+     *
+     * @example
+     * {
+     *   id: {
+     *     server: 'g.us',
+     *     user: '554199999999',
+     *     _serialized: `554199999999@g.us`
+     *   },
+     *   announce: false,
+     *   creation: 1657054203,
+     *   desc: "John's Group",
+     *   displayedDesc: 'Lorem Ipsum',
+     *   name: "John's Group",
+     *   groupType: 'DEFAULT',
+     *   owner: {
+     *     server: 'c.us',
+     *     user: '554199999999',
+     *     _serialized: `554199999999@c.us`
+     *   },
+     *   parentGroupId: undefined,
+     *   size: 10,
+     *   subGroupsId: [],
+     * }
+     */
     export interface Group extends Base<WA.GroupModel> {
+        /** Get serialized object */
+        _serialized: GroupSerialized;
         /** Is Announcement Group */
-        announce: Boolean;
+        announce: boolean;
         /** Group creation timestampt */
-        creation: Number;
+        creation: number;
         /** Group Description */
-        desc: String;
-        /** Group Description Id */
-        descId: String;
-        /** Group Description Owner Contact Id */
-        descOwner: ContactId;
-        /** Group Description Updated Timestampt */
-        descTime: Number;
+        desc: string;
         /** Group Displayed Description */
-        displayedDesc: String;
+        displayedDesc: string;
         /** Group Type */
-        groupType: String;
+        groupType: string;
         /** Group Id */
         id: GroupId;
         /** Group subject name */
-        name: String;
+        name: string;
         /** Group Owner Contact */
         owner: ContactId;
         /** Parent Group */
         parentGroupId?: GroupId;
         /** Group Participant Size */
-        size: Number;
+        size: number;
         /** All Sub Groups Id */
         subGroupsId: GroupId[];
 
@@ -235,10 +312,18 @@ declare namespace WAPI {
     }
 
     export interface GroupParticipant {
-        id: ContactId;
+        /** Get serialized object */
+        _serialized: GroupParticipantSerialized;
+        /** The contact model of this participant */
         contact: Contact;
-        isAdmin: Boolean;
-        isSuperAdmin: Boolean;
+        /** ID that represents the participant */
+        id: ContactId;
+        /** Is the participant Admin */
+        isAdmin: boolean;
+        /** Is the participant SuperAdmin */
+        isSuperAdmin: boolean;
+
+        create(data: WA.Contact): GroupParticipant;
     }
 
     export interface GroupChat extends Chat {
@@ -254,7 +339,7 @@ declare namespace WAPI {
     export interface GroupMetadata {
         owner: wid | undefined;
         participants: {
-            getModelsArray: () => Array<any>;
+            getModelsArray: () => Array<WA.ContactModel>;
         };
     }
 }
@@ -262,16 +347,17 @@ declare namespace WAPI {
 /** From Original WhatsApp Web */
 declare namespace WA {
     export type MessageSendResult = {
-        count: Number | null;
-        messageSendResult: String;
-        t: Number;
+        count: number | null;
+        messageSendResult: string;
+        t: number;
     };
 
     type InsertData = {
-        createLocally: Boolean;
+        createLocally: boolean;
         id: WAPI.wid;
     };
-    type InsertOpt = { merge: Boolean };
+
+    type InsertOpt = { merge: boolean };
 
     interface BaseClass<t> {
         constructor: BaseClass<t>;
@@ -280,9 +366,9 @@ declare namespace WA {
         /** Insert data to Collection */
         add(data: InsertData, opt: InsertOpt): [t];
         /** Find a single data from Collection */
-        find(query: String | WAPI.wid): Promise<t | null>;
+        find(query: string | WAPI.wid): Promise<t | null>;
         /** Get a single data from Collection */
-        get(query: String | WAPI.wid): t | null;
+        get(query: string | WAPI.wid): t | null;
         /** Get all Collection Data */
         getModelsArray(): t[];
 
@@ -290,53 +376,55 @@ declare namespace WA {
     }
     interface ModelClass {
         id: WAPI.wid;
-        name?: String;
+        name?: string;
 
         prototype: this;
+        /** Default properties */
+        [k: string]: any | undefined;
     }
 
     export interface ChatModel extends ModelClass {
-        active?: Boolean;
-        hasDraftMessage: Boolean;
-        isGroup: Boolean;
+        active?: boolean;
+        hasDraftMessage: boolean;
+        isGroup: boolean;
         contact: ContactModel;
         groupMetadata?: WAPI.GroupMetadata;
         clearAllDraft(): void;
         close(): Promise<void>;
         getModel(): WAPI.Chat;
         open(): Promise<void>;
-        sendText(body: String): Promise<MessageSendResult>;
-        sendText(body: String, model: true): Promise<WAPI.Chat>;
-        sendMedia(file: File, caption: String): Promise<MessageSendResult>;
-        sendMedia(file: File, caption: String, model: true): Promise<WAPI.Chat>;
+        sendText(body: string): Promise<MessageSendResult>;
+        sendText(body: string, model: true): Promise<WAPI.Chat>;
+        sendMedia(file: File, caption: string): Promise<MessageSendResult>;
+        sendMedia(file: File, caption: string, model: true): Promise<WAPI.Chat>;
     }
 
     export interface ContactModel extends ModelClass {
         commonGroups?: ChatModel[];
-        isBusiness: Boolean;
-        isContactBlocked: Boolean;
-        phoneNumber?: String;
-        pushname?: String;
-        shortName?: String;
-        username?: String;
-        verifiedName?: String;
+        isBusiness: boolean;
+        isContactBlocked: boolean;
+        phonenumber?: string;
+        pushname?: string;
+        shortName?: string;
+        username?: string;
+        verifiedName?: string;
         getModel(): WAPI.Contact;
         openChat(): Promise<ChatModel>;
     }
 
     export interface GroupModel extends Omit<ModelClass, "name"> {
-        announce: Boolean;
-        creation: Number;
-        desc: String;
-        descId: String;
+        announce: boolean;
+        creation: number;
+        desc: string;
+        descId: string;
         descOwner: WAPI.wid;
-        descTime: Number;
-        displayedDesc: String;
-        groupType: String;
+        descTime: number;
+        displayedDesc: string;
+        groupType: string;
         joinedSubgroups?: Array<WAPI.wid>;
         owner: WAPI.wid;
         parentGroup?: WAPI.wid;
-        size: Number;
+        size: number;
         getModel(): WAPI.Group;
         getContactModel(): WAPI.Contact;
         getChatModel(): WAPI.Chat;
@@ -344,18 +432,18 @@ declare namespace WA {
     }
 
     export interface MessageModel extends Omit<ModelClass, "id"> {
-        ack: Number;
-        body: String;
+        ack: number;
+        body: string;
         id: {
-            fromMe: Boolean;
-            id: String;
+            fromMe: boolean;
+            id: string;
             remote: WAPI.wid;
-            _serialized: String;
+            _serialized: string;
         };
     }
 
     export interface MediaModel extends ModelClass {
-        sendToChat(chat: ChatModel, opt: { caption: String }): Promise<ChatModel>;
+        sendToChat(chat: ChatModel, opt: { caption: string }): Promise<ChatModel>;
     }
 
     export interface Chat extends BaseClass<ChatModel> {
@@ -368,7 +456,7 @@ declare namespace WA {
     export interface Message extends BaseClass<MessageModel> {}
 
     export interface MessageMedia extends BaseClass<MediaModel> {
-        processAttachments(files: [{ file: File }], ack: Number, chat: ChatModel): Promise<void>;
+        processAttachments(files: [{ file: File }], ack: number, chat: ChatModel): Promise<void>;
     }
 
     export class MediaCollection implements Omit<MessageMedia, "constructor"> {
@@ -376,16 +464,16 @@ declare namespace WA {
         modelClass: MediaModel;
         prototype: MessageMedia;
         add(data: InsertData, opt: InsertOpt): [MediaModel];
-        find(query: String): Promise<MediaModel | null>;
-        get(query: String | WAPI.wid): MediaModel | null;
+        find(query: string): Promise<MediaModel | null>;
+        get(query: string | WAPI.wid): MediaModel | null;
         getModelsArray(): MediaModel[];
-        processAttachments(files: [{ file: File }], ack: Number, chat: ChatModel): Promise<void>;
+        processAttachments(files: [{ file: File }], ack: number, chat: ChatModel): Promise<void>;
     }
 
     export type WapQueryResult = WAPI.PhoneExist & {
         disappearingMode: {
-            duration: Number;
-            settingTimestamp: Number;
+            duration: number;
+            settingTimestamp: number;
         };
     };
 }
@@ -400,7 +488,7 @@ declare class Store {
     /** Original WhatsApp Contact Object Collection */
     Contact: WA.Contact;
     /** Original WhatsApp Contact Object Collection */
-    Debug: { VERSION: String };
+    Debug: { VERSION: string };
     /** Original WhatsApp GroupMetadata Object Collection */
     GroupMetadata: WA.GroupMetadata;
     GroupUtils: {
@@ -413,11 +501,11 @@ declare class Store {
     /** Original WhatsApp Message Composing Functions */
     MsgUtils: {
         addAndSendTextMsg(chat: WA.ChatModel, message: WA.MessageModel): Promise<WA.MessageSendResult>;
-        createTextMsgData(chat: WA.ChatModel, body: String): Promise<WA.MessageModel>;
+        createTextMsgData(chat: WA.ChatModel, body: string): Promise<WA.MessageModel>;
     };
     /** Original WhatsApp WapQuery Functions */
     WapQuery: {
-        queryPhoneExists(query: String): Promise<WA.WapQueryResult | null>;
+        queryPhoneExists(query: string): Promise<WA.WapQueryResult | null>;
     };
     /** HTML classes that web are using */
     WebClasses1: { [k: string]: string };
@@ -445,7 +533,7 @@ declare class WAPI extends Store {
     WebClasses: {
         [k: string]: { [k: string]: String };
     };
-    /** Check given phone Number */
+    /** Check given phone number */
     checkPhone(phone: String): Promise<WA.WapQueryResult | null>;
     /** Find chat by Id */
     findChat(id: String | WAPI.wid): Promise<WAPI.Chat | null>;
@@ -464,13 +552,19 @@ declare class WAPI extends Store {
     inputAndSendTextMsg(chat: String, text: String): Promise<WAPI.Chat | null>;
     inputAndSendTextMsg(chat: WAPI.wid, text: String): Promise<WAPI.Chat | null>;
     /** Close chat by id */
-    closeChat(id: String | WAPI.Chat): Promise<any>;
+    closeChat(id: String | WAPI.Chat): Promise<WA.ChatModel>;
     /** Open chat by id */
-    openChat(id: String | WAPI.Chat): Promise<any>;
+    openChat(id: String | WAPI.Chat): Promise<WA.ChatModel>;
     /** Send message to id */
-    sendMessage(id: String | WAPI.Chat, message: String, option: WAPI.MessageSendOptions): Promise<any>;
+    sendMessage(id: String | WAPI.Chat, message: String): Promise<WA.MessageSendResult>;
+    sendMessage(
+        id: String | WAPI.Chat,
+        message: String,
+        option: WAPI.MessageSendOptions
+    ): Promise<WA.MessageSendResult>;
+    sendMessage(id: String | WAPI.Chat, message: String, option: { ret: true }): Promise<WAPI.Chat>;
     /** Delay some function */
-    sleep(time: Number): Promise<void>;
+    sleep(time: number): Promise<void>;
     /** Static methor for initiating WAPI class */
     static init(target?: Window): WAPI;
 }
