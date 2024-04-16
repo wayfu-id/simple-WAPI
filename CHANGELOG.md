@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.11...v0.0.12) (2024-04-16)
+
+
+### Features
+
+* **WA:** Add getFilteredContacts and getGroupContacts function in WA Contact ([4e77d02](https://github.com/wayfu-id/simple-WAPI/commit/4e77d02218934a9534950643ca0aed9630cfe7cb))
+
+
+### Bug Fixes
+
+* Error reading group participants ([4d8d130](https://github.com/wayfu-id/simple-WAPI/commit/4d8d130a251393af8ef307dd913ff28d8824acbb))
+
 ### [0.0.11](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.10...v0.0.11) (2024-04-16)
 
 
