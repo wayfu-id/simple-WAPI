@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.9...v0.0.10) (2024-04-16)
+
+
+### Bug Fixes
+
+* **docs:** Fix and improve types documentation ([7d3e4f7](https://github.com/wayfu-id/simple-WAPI/commit/7d3e4f7dabe0da19eeefb3f02937980c970faafb))
+
 ### [0.0.9](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.8...v0.0.9) (2024-04-15)
 
 
