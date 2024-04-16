@@ -60,10 +60,7 @@ const constructChat = (app) => {
 
                     let result = this.get(wid);
                     if (!result) {
-                        [result] = this.add(
-                            { createLocally: true, id: wid },
-                            { merge: true }
-                        );
+                        [result] = this.add({ createLocally: true, id: wid }, { merge: true });
                     }
 
                     return result;
@@ -183,10 +180,7 @@ const constructContact = (app) => {
 
                     let result = this.get(wid);
                     if (!result) {
-                        [result] = this.add(
-                            { createLocally: true, id: wid },
-                            { merge: true }
-                        );
+                        [result] = this.add({ createLocally: true, id: wid }, { merge: true });
                     }
 
                     return result;
@@ -278,11 +272,11 @@ const constructGroupMetadata = (app) => {
  */
 const constructWebClasses = (app) => {
     try {
-        let { WebClasses, WebClasses2, WebClasses3 } = app;
-        delProp(["WebClasses", "WebClasses2", "WebClasses3"], WAPI.prototype);
+        let { WebClasses1, WebClasses2, WebClasses3 } = app;
+        delProp(["WebClasses1", "WebClasses2", "WebClasses3"], WAPI.prototype);
         Object.defineProperty(WAPI.prototype, "WebClasses", {
             value: {
-                V1: { ...WebClasses },
+                V1: { ...WebClasses1 },
                 V2: { ...WebClasses2 },
                 V3: { ...WebClasses3 },
             },

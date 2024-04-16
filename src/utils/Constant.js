@@ -5,14 +5,11 @@ const storeObjects = [
     {
         id: "Store",
         conditions: (module) =>
-            module.default && module.default.Chat && module.default.Msg
-                ? module.default
-                : null,
+            module.default && module.default.Chat && module.default.Msg ? module.default : null,
     },
     {
         id: "ComposeBox",
-        conditions: (module) =>
-            module.ComposeBoxActions ? module.ComposeBoxActions : null,
+        conditions: (module) => (module.ComposeBoxActions ? module.ComposeBoxActions : null),
     },
     {
         id: "Cmd",
@@ -31,7 +28,7 @@ const storeObjects = [
         conditions: (module) => (module.sendTextMsgToChat ? module : null),
     },
     {
-        id: "WebClasses",
+        id: "WebClasses1",
         conditions: (module) =>
             module.default &&
             typeof module.default === "object" &&
@@ -53,29 +50,21 @@ const storeObjects = [
     {
         id: "WebClasses3",
         conditions: (module) =>
-            module.default &&
-            typeof module.default === "object" &&
-            module.default.chatHeader
+            module.default && typeof module.default === "object" && module.default.chatHeader
                 ? module.default
                 : null,
     },
     {
         id: "MediaCollection",
         conditions: (module) =>
-            module.default &&
-            module.default.prototype &&
-            module.default.prototype.processAttachments
+            module.default && module.default.prototype && module.default.prototype.processAttachments
                 ? module.default
                 : null,
     },
     {
         id: "WapQuery",
         conditions: (module) =>
-            module.queryExist
-                ? module
-                : module.default && module.default.queryExist
-                ? module.default
-                : null,
+            module.queryExist ? module : module.default && module.default.queryExist ? module.default : null,
     },
     {
         id: "Debug",
