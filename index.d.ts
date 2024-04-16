@@ -6,63 +6,63 @@ declare namespace WAPI {
             name: String;
             privacyMode: String | null;
             serial: String;
-        }
-    }
+        };
+    };
     type WebpackLoader = {
-        type: "webpack",
-        chunk: Array<any>
-    }
+        type: "webpack";
+        chunk: Array<any>;
+    };
     type MetaLoader = {
-        type: "meta",
-        chunk: Object
-    }
+        type: "meta";
+        chunk: Object;
+    };
     export type MessageSendResult = WA.MessageSendResult;
 
-    export type LoaderType = WebpackLoader | MetaLoader | {type: undefined; chunk: undefined};
-    
+    export type LoaderType = WebpackLoader | MetaLoader | { type: undefined; chunk: undefined };
+
     export interface wid {
         /**
          * Whatsapp server domain
          * @example `c.us`
          */
-        server: String,
+        server: String;
         /**
          * User whatsapp Number
          * @example `554199999999`
          */
-        user: String,
+        user: String;
         /**
          * Serialized id
          * @example `554199999999@c.us`
          */
-        _serialized: String,
+        _serialized: String;
         /** Is it group wid */
-        isGroup(): Boolean,
+        isGroup(): Boolean;
         /** Is it User wid */
-        isUser(): Boolean,
+        isUser(): Boolean;
     }
     export interface ContactId extends wid {}
     export interface ChatId extends wid {}
     export interface GroupId extends wid {}
-    
+
     export interface MessageSendOptions {
         /** Image caption */
-        caption?: String
+        caption?: String;
         /** Media to be sent */
-        media?: File
+        media?: File;
         /** Return chat model */
-        ret?: Boolean
+        ret?: Boolean;
     }
 
     export type PhoneExist = {
-        biz: Boolean,
-        bizInfo?: BizInfo,
-        wid: wid,
-    }
+        biz: Boolean;
+        bizInfo?: BizInfo;
+        wid: wid;
+    };
 
     interface Base<o> {
         /** Main WAPI app */
-        app: WAPI,
+        app: WAPI;
         /** Class raw data */
         raw: o;
         /** Cloning class */
@@ -71,14 +71,10 @@ declare namespace WAPI {
         _patch(data: o): o;
     }
 
-    interface BaseFactory<o, k> {
-        static create(app: WAPI, data: k): o;
-    }
-
     /**
      * Represents a Contact on WhatsApp
      *
-     * @example 
+     * @example
      * {
      *   id: {
      *     server: 'c.us',
@@ -101,49 +97,49 @@ declare namespace WAPI {
      */
     export interface Contact extends Base<WA.ContactModel> {
         /** Contact's phone Number */
-        Number: String,
+        number: String;
         /** Indicates if the contact is a business contact */
-        isBusiness: Boolean,
+        isBusiness: Boolean;
         /** ID that represents the contact */
-        id: ContactId,
+        id: ContactId;
         /** Indicates if the contact is an enterprise contact */
-        isEnterprise: Boolean,
+        isEnterprise: Boolean;
         /** Indicates if the contact is a group contact */
-        isGroup: Boolean,
+        isGroup: Boolean;
         /** Indicates if the contact is a user contact */
-        isUser: Boolean,
+        isUser: Boolean;
         /**
          * Indicates if the contact is the current user's contact
          * @deprecated
          */
-        isMe: Boolean, 
-        /** 
+        isMe: Boolean;
+        /**
          * Indicates if the Number is saved in the current phone's contacts
          * @deprecated
          */
-        isMyContact: Boolean
+        isMyContact: Boolean;
         /**
          * Indicates if the Number is registered on WhatsApp
          * @deprecated
          */
-        isWAContact: Boolean,
+        isWAContact: Boolean;
         /** Indicates if you have blocked this contact */
-        isBlocked: Boolean,
+        isBlocked: Boolean;
         /** The contact's name, as saved by the current user */
-        name?: String,
+        name?: String;
         /** The name that the contact has configured to be shown publically */
-        pushname: String,
+        pushname: String;
         /** A shortened version of name */
-        shortName?: String,
+        shortName?: String;
 
         /**
-         * Returns the Chat that corresponds to this Contact.  
+         * Returns the Chat that corresponds to this Contact.
          * Will return null when getting chat for currently logged in user.
          */
-        getChat(): Promise<Chat>,
-        
+        getChat(): Promise<Chat>;
+
         /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
-        getCommonGroups(): Promise<Chat[]>
+        getCommonGroups(): Promise<Chat[]>;
     }
 
     /**
@@ -163,33 +159,33 @@ declare namespace WAPI {
      */
     export interface Chat extends Base<WA.ChatModel> {
         /** ID that represents the chat */
-        id: ChatId,
+        id: ChatId;
         /** Indicates if the Chat is a Group Chat */
-        isGroup: Boolean,
+        isGroup: Boolean;
         /** Indicates current active status */
-        active: Boolean,
+        active: Boolean;
         /** Indicates current draft message status */
-        hasDraftMessage: Boolean,
+        hasDraftMessage: Boolean;
         /** Title of the chat */
-        name: String,
+        name: String;
         /** Unix timestamp for when the last activity occurred */
-        timestamp: Number,
+        timestamp: Number;
         /** Contact model */
-        contact: Contact,
+        contact: Contact;
         /** Clearing draft message */
         clearDraft(): Chat;
         /** Close this chat */
-        close(): Promise<void>,
+        close(): Promise<void>;
         /** Open this chat */
-        open(): Promise<void>,
+        open(): Promise<void>;
         /** Input text message and send it to chat */
-        inputAndSendTextMessage(text: String): Promise<Chat | null>
+        inputAndSendTextMessage(text: String): Promise<Chat | null>;
         /** Send text message to this chat */
-        sendText(message: String): Promise<MessageSendResult>,
-        sendText(message: String, model: true): Promise<Chat>,
+        sendText(message: String): Promise<MessageSendResult>;
+        sendText(message: String, model: true): Promise<Chat>;
         /** Send image message to this chat */
-        sendMedia(file: File, caption: String): Promise<MessageSendResult>,
-        sendMedia(file: File, caption: String, model: true): Promise<Chat>,
+        sendMedia(file: File, caption: String): Promise<MessageSendResult>;
+        sendMedia(file: File, caption: String, model: true): Promise<Chat>;
     }
 
     export interface Group extends Base<WA.GroupModel> {
@@ -230,7 +226,6 @@ declare namespace WAPI {
         /** Get child groups as array of Group */
         get childGroups(): Group[];
 
-
         /** Returns the Chat that corresponds to this Group. */
         getChat(): Promise<Chat>;
         /** Returns the Contact that corresponds to this Group. */
@@ -247,7 +242,7 @@ declare namespace WAPI {
     }
 
     export interface GroupChat extends Chat {
-        groupMetadata: GroupMetadata
+        groupMetadata: GroupMetadata;
 
         // Getter Functions
         /** Group owner */
@@ -257,15 +252,11 @@ declare namespace WAPI {
     }
 
     export interface GroupMetadata {
-        owner: wid | undefined,
+        owner: wid | undefined;
         participants: {
-            getModelsArray:() => Array<any>
-        }
+            getModelsArray: () => Array<any>;
+        };
     }
-
-    export interface ChatFactory extends BaseFactory<Chat | GroupChat, WA.ChatModel> {}
-    export interface ContactFactory extends BaseFactory<Contact, WA.ContactModel> {}
-    export interface GroupFactory extends BaseFactory<Group, WA.GroupModel> {}
 }
 
 /** From Original WhatsApp Web */
@@ -274,17 +265,17 @@ declare namespace WA {
         count: Number | null;
         messageSendResult: String;
         t: Number;
-    }
+    };
 
     type InsertData = {
-        createLocally: Boolean,
-        id: WAPI.wid,
+        createLocally: Boolean;
+        id: WAPI.wid;
     };
     type InsertOpt = { merge: Boolean };
 
-    interface BaseClass<t> {        
+    interface BaseClass<t> {
         constructor: BaseClass<t>;
-        
+
         modelClass: t;
         /** Insert data to Collection */
         add(data: InsertData, opt: InsertOpt): [t];
@@ -294,13 +285,13 @@ declare namespace WA {
         get(query: String | WAPI.wid): t | null;
         /** Get all Collection Data */
         getModelsArray(): t[];
-        
+
         prototype: this;
     }
     interface ModelClass {
         id: WAPI.wid;
         name?: String;
-        
+
         prototype: this;
     }
 
@@ -333,7 +324,7 @@ declare namespace WA {
         openChat(): Promise<ChatModel>;
     }
 
-    export interface GroupModel extends Omit<ModelClass, 'name'> {
+    export interface GroupModel extends Omit<ModelClass, "name"> {
         announce: Boolean;
         creation: Number;
         desc: String;
@@ -352,7 +343,7 @@ declare namespace WA {
         openChat(): Promise<ChatModel>;
     }
 
-    export interface MessageModel extends Omit<ModelClass, 'id'> {
+    export interface MessageModel extends Omit<ModelClass, "id"> {
         ack: Number;
         body: String;
         id: {
@@ -361,7 +352,6 @@ declare namespace WA {
             remote: WAPI.wid;
             _serialized: String;
         };
-
     }
 
     export interface MediaModel extends ModelClass {
@@ -376,18 +366,20 @@ declare namespace WA {
     }
     export interface GroupMetadata extends BaseClass<GroupModel> {}
     export interface Message extends BaseClass<MessageModel> {}
-    
+
     export interface MessageMedia extends BaseClass<MediaModel> {
-        processAttachments(files: [{file: File}], ack: Number, chat: ChatModel): Promise<void>;
+        processAttachments(files: [{ file: File }], ack: Number, chat: ChatModel): Promise<void>;
     }
 
-    export class MediaCollection implements MessageMedia {
+    export class MediaCollection implements Omit<MessageMedia, "constructor"> {
         constructor(chat: ChatModel);
+        modelClass: MediaModel;
+        prototype: MessageMedia;
         add(data: InsertData, opt: InsertOpt): [MediaModel];
         find(query: String): Promise<MediaModel | null>;
         get(query: String | WAPI.wid): MediaModel | null;
         getModelsArray(): MediaModel[];
-        processAttachments(files: [{ file: File; }], ack: Number, chat: ChatModel): Promise<void>;
+        processAttachments(files: [{ file: File }], ack: Number, chat: ChatModel): Promise<void>;
     }
 
     export type WapQueryResult = WAPI.PhoneExist & {
@@ -395,7 +387,7 @@ declare namespace WA {
             duration: Number;
             settingTimestamp: Number;
         };
-    }
+    };
 }
 
 declare class Store {
@@ -408,14 +400,14 @@ declare class Store {
     /** Original WhatsApp Contact Object Collection */
     Contact: WA.Contact;
     /** Original WhatsApp Contact Object Collection */
-    Debug: {VERSION: String};
+    Debug: { VERSION: String };
     /** Original WhatsApp GroupMetadata Object Collection */
     GroupMetadata: WA.GroupMetadata;
     GroupUtils: {
         findCommonGroups(contact: WA.ContactModel): Promise<WA.GroupModel[] | []>;
     };
     /** Original WhatsApp MediaCollection Class */
-    MediaCollection: typeof WA.MediaCollection; 
+    MediaCollection: typeof WA.MediaCollection;
     /** Original WhatsApp Msg Object */
     Msg: WA.Message;
     /** Original WhatsApp Message Composing Functions */
@@ -428,13 +420,13 @@ declare class Store {
         queryPhoneExists(query: String): Promise<WA.WapQueryResult | null>;
     };
     /** HTML classes that web are using */
-    WebClasses: {[k:String]:String};
-    WebClasses2: {[k:String]:String};
-    WebClasses3: {[k:String]:String};
+    WebClasses1: { [k: string]: string };
+    WebClasses2: { [k: string]: string };
+    WebClasses3: { [k: string]: string };
     /** Original WhatsApp WidFactory Functions */
     WidFactory: {
         createWid(id: String): WAPI.wid;
-    }
+    };
 }
 
 declare class WAPI extends Store {
@@ -443,18 +435,18 @@ declare class WAPI extends Store {
     /** Create new WAPI with store Object */
     private constructor(store: any);
 
-    BUILD_ID: String;
-    DESKTOP_BETA: Boolean;
+    BUILD_ID: string | undefined;
+    DESKTOP_BETA: boolean | undefined;
     /** WhatsApp Web Version */
     VERSION: String;
     /** Current contact info */
     ME: WAPI.Contact;
     /** HTML classes that web are using */
     WebClasses: {
-        [k:String]:{ [k:String]: String }
+        [k: string]: { [k: string]: String };
     };
     /** Check given phone Number */
-    checkPhone(phone:String): Promise<WA.WapQueryResult | null>;
+    checkPhone(phone: String): Promise<WA.WapQueryResult | null>;
     /** Find chat by Id */
     findChat(id: String | WAPI.wid): Promise<WAPI.Chat | null>;
     /** Find contact by Id */
@@ -483,4 +475,4 @@ declare class WAPI extends Store {
     static init(target?: Window): WAPI;
 }
 
-export = WAPI;
+export default WAPI;
