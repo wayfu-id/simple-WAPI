@@ -511,7 +511,7 @@ declare namespace WA {
     }
     export interface Contact extends BaseClass<ContactModel> {
         getMeContact(): ContactModel;
-        getFilteredContacts({ showMe: boolean }): ContactModel[];
+        getFilteredContacts(opt: { showMe: boolean }): ContactModel[];
         getGroupContacts(): ContactModel[];
     }
     export interface GroupMetadata extends BaseClass<GroupModel> {}
