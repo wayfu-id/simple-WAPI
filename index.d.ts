@@ -116,7 +116,8 @@ declare namespace WAPI {
         profilePicThumb: ProfilePicThumbSerialized;
         requestedPnTimestamp: number | undefined;
         sectionHeader: string | undefined;
-        shortName?: string;
+        shortName: string | undefined;
+        statusMute: string | boolean | undefined;
         textStatusLastUpdateTime: number;
         type: string;
         username: string | undefined;
@@ -205,6 +206,8 @@ declare namespace WAPI {
         pushname: string;
         /** A shortened version of name */
         shortName?: string;
+        /** Status Mute */
+        statusMute?: string | boolean;
 
         // Available functions
         /**

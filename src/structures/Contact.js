@@ -60,6 +60,9 @@ export default class Contact extends Base {
         /** A shortened version of name */
         this.shortName = data.shortName;
 
+        /** Status mute */
+        this.statusMute = data.statusMute;
+
         /** Get serialized Contact object */
         this._serialized = Object.assign({}, this.raw.toJSON(), {
             id: this.id,
@@ -70,11 +73,13 @@ export default class Contact extends Base {
             isMe: this.isMe,
             isMyContact: this.isMyContact,
             isUser: this.isUser,
+            msgs: null,
             name: this.name,
             phoneNumber: this.phoneNumber,
             pushname: this.pushname,
             profilePicThumbObj: this.profilePicThumb?._serialized || {},
             shortName: this.shortName,
+            statusMute: this.statusMute,
         });
 
         return this;
