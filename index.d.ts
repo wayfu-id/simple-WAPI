@@ -84,17 +84,44 @@ declare namespace WAPI {
         [k: string]: any | undefined;
     }
 
+    interface ProfilePicThumbSerialized {
+        eurl: string;
+        id: wid;
+        img: string;
+        imgFull: string;
+        raw: string;
+        tag: string;
+    }
+
     interface ContactSerialized extends Serialized<ContactId> {
+        disappearingModeDuration: number | undefined;
+        disappearingModeSettingTimestamp: number | undefined;
         isBlocked: boolean;
         isBusiness: boolean;
+        isContactSyncCompleted: number;
         isEnterprise: boolean;
         isGroup: boolean;
         isMe: boolean;
         isMyContact: boolean;
         isUser: boolean;
+        isSmb: boolean;
+        labels: Array<string>;
+        privacyMode: {
+            actualActors: number;
+            hostStorage: number;
+            privacyModeTs: number;
+        } | null;
         pushname: string;
         phoneNumber: string;
+        profilePicThumb: ProfilePicThumbSerialized;
+        requestedPnTimestamp: number | undefined;
+        sectionHeader: string | undefined;
         shortName?: string;
+        textStatusLastUpdateTime: number;
+        type: string;
+        username: string | undefined;
+        verifiedLevel: number;
+        verifiedName: string | undefined;
     }
 
     interface ChatSerialized extends Serialized<ChatId> {
@@ -150,6 +177,8 @@ declare namespace WAPI {
     export interface Contact extends Base<WA.ContactModel> {
         /** Get serialized object */
         _serialized: ContactSerialized;
+        /** Forrmated Name */
+        formatedName: string;
         /** Indicates if the contact is a business contact */
         isBusiness: boolean;
         /** ID that represents the contact */
@@ -164,17 +193,14 @@ declare namespace WAPI {
         isMe: boolean;
         /** Indicates if the number is saved in the current phone's contacts */
         isMyContact: boolean;
-        /**
-         * Indicates if the number is registered on WhatsApp
-         * @deprecated
-         */
-        isWAContact: boolean;
         /** Indicates if you have blocked this contact */
         isBlocked: boolean;
         /** The contact's name, as saved by the current user */
         name?: string;
         /** Contact's phone number */
         phoneNumber: string;
+        /** Profil pic thumb */
+        profilePicThumb: ProfilePicThumb;
         /** The name that the contact has configured to be shown publically */
         pushname: string;
         /** A shortened version of name */
@@ -326,6 +352,25 @@ declare namespace WAPI {
         create(data: WA.Contact): GroupParticipant;
     }
 
+    export interface ProfilePicThumb {
+        eurl: string;
+        filehash: string;
+        fullDirectPath: string;
+        id: wid;
+        img: string;
+        imgFull: string;
+        previewDirectPath: string;
+        previewEurl: string;
+        raw: string | undefined;
+        stale: boolean;
+        tag: string;
+        timestamp: number;
+
+        _serialized: ProfilePicThumbSerialized;
+
+        create(data: WA.ProfilePicThumb): ProfilePicThumb;
+    }
+
     export interface GroupChat extends Chat {
         groupMetadata: GroupMetadata;
 
@@ -410,6 +455,21 @@ declare namespace WA {
         verifiedName?: string;
         getModel(): WAPI.Contact;
         openChat(): Promise<ChatModel>;
+    }
+
+    export interface ProfilePicThumb extends Omit<ModelClass, "name"> {
+        eurl: string;
+        filehash: string;
+        fullDirectPath: string;
+        id: WAPI.wid;
+        img: string;
+        imgFull: string;
+        previewDirectPath: string;
+        previewEurl: string;
+        raw: string | undefined;
+        stale: boolean;
+        tag: string;
+        timestamp: number;
     }
 
     export interface GroupModel extends Omit<ModelClass, "name"> {

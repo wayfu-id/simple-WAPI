@@ -28,15 +28,15 @@ const reConstruct = (obj) => {
  * @returns
  */
 const constructWAPI = (app) => {
-    const { Chat, Contact, Debug, GroupMetadata, sleep, WapQuery, WidFactory } = app,
-        myContact = ContactFactory.create(app, Contact.getMeContact());
+    const { Chat, Contact, Debug, GroupMetadata, sleep, WapQuery, WidFactory } = app;
 
     try {
         Object.defineProperties(app, {
             ...reConstruct(Debug),
             ME: {
-                value: myContact,
-                enumerable: true,
+                get: function ME() {
+                    return Contact.getMeContact().getModel();
+                },
             },
             checkPhone: {
                 /** @type {(phone: String)} */

@@ -1,4 +1,5 @@
 import Base from "./Base.js";
+import ProfilePicThumb from "./ProfilePictThumb.js";
 
 /**
  * @typedef {import("../../index").default} WAPI
@@ -47,6 +48,9 @@ export default class Contact extends Base {
         /** The contact's name, as saved by the current user */
         this.name = data.name;
 
+        /** The contact's profile pic thumb */
+        this.profilePicThumb = data.profilePicThumb ? ProfilePicThumb.create(data.profilePicThumb) : {};
+
         /** Contact's phone number */
         this.phoneNumber = this.id.user;
 
@@ -57,7 +61,7 @@ export default class Contact extends Base {
         this.shortName = data.shortName;
 
         /** Get serialized Contact object */
-        this._serialized = {
+        this._serialized = Object.assign({}, this.raw.toJSON(), {
             id: this.id,
             isBlocked: this.isBlocked,
             isBusiness: this.isBusiness,
@@ -69,8 +73,9 @@ export default class Contact extends Base {
             name: this.name,
             phoneNumber: this.phoneNumber,
             pushname: this.pushname,
+            profilePicThumbObj: this.profilePicThumb?._serialized || {},
             shortName: this.shortName,
-        };
+        });
 
         return this;
     }
