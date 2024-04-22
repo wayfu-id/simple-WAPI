@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.13](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.12...v0.0.13) (2024-04-22)
+
+
+### Features
+
+* **Contact:** Add profilePicThumb property to Contact ([2099bdc](https://github.com/wayfu-id/simple-WAPI/commit/2099bdc6dba2f58e2d6678ca5bcae9415b5bb12c))
+
 ### [0.0.12](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.11...v0.0.12) (2024-04-16)
 
 
