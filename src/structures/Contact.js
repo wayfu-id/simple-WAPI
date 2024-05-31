@@ -37,7 +37,7 @@ export default class Contact extends Base {
         this.isGroup = this.id.server === "g.us";
 
         /** Indicates if the contact is the current user's contact */
-        this.isMe = this.id._serialized === this.app.Contact.getMeContact().id._serialized;
+        this.isMe = this.id._serialized === this.app.MeUtils.getMaybeMeUser()._serialized;
 
         /** Indicates if the number is saved in the current phone's contacts */
         this.isMyContact = !!data.isAddressBookContact;
@@ -49,7 +49,7 @@ export default class Contact extends Base {
         this.name = data.name;
 
         /** The contact's profile pic thumb */
-        this.profilePicThumb = data.profilePicThumb ? ProfilePicThumb.create(data.profilePicThumb) : {};
+        this.profilePicThumb = ProfilePicThumb.create(data);
 
         /** Contact's phone number */
         this.phoneNumber = this.id.user;

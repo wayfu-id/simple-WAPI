@@ -3,7 +3,9 @@
  */
 export default class ProfilePicThumb {
     constructor(data) {
-        return this._patch(data);
+        if (!data) throw new Error("No Data Objct");
+
+        return this._patch(data.getProfilePicThumb());
     }
 
     _patch(data) {
