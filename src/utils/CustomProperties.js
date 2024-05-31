@@ -28,7 +28,7 @@ const reConstruct = (obj) => {
  * @returns
  */
 const constructWAPI = (app) => {
-    const { Chat, Contact, Debug, GroupMetadata, sleep, WapQuery, WidFactory } = app;
+    const { Chat, Contact, Debug, GroupMetadata, sleep, WapQuery, WidFactory, WidUtils } = app;
 
     try {
         Contact.getMeContact()
@@ -42,15 +42,20 @@ const constructWAPI = (app) => {
 
         Object.defineProperties(app, {
             ...reConstruct(Debug),
-            ME: {
-                get: function ME() {
-                    return Contact.getMeContact().getModel();
-                },
-            },
             checkPhone: {
                 /** @type {(phone: String)} */
                 value: async function checkPhone(phone) {
-                    return await WapQuery.queryPhoneExists(phone);
+                    let result = await WapQuery.queryPhoneExists(phone);
+
+                    if (!result) {
+                        let _phone = phone.includes("@") ? phone : `${phone}@c.us`,
+                            validWid = WidUtils.validateWid(_phone, false),
+                            wid = validWid ? WidFactory.createWid(_phone) : null;
+
+                        result = wid ? await WapQuery.queryWidExists(wid) : null;
+                    }
+
+                    return result;
                 },
             },
             closeChat: {
@@ -69,19 +74,9 @@ const constructWAPI = (app) => {
             findChat: {
                 /** @type {(id:string | wid) => Promise<Chat | null>} */
                 value: async function findChat(id) {
-                    let _id = await (async (e) => {
-                        if (typeof e === "string") {
-                            let check = await WapQuery.queryPhoneExists(e);
-                            if (!check) return null;
-                            return check.wid;
-                        }
-                        return e;
-                    })(id);
-                    if (!_id) return null;
-
                     let chat;
                     try {
-                        chat = await Chat.find(_id);
+                        chat = await Chat.find(id);
                     } catch (e) {
                         console.log(e);
                     }
@@ -91,19 +86,9 @@ const constructWAPI = (app) => {
             findContact: {
                 /** @type {(id:string | wid) => Promise<Contact | null>} */
                 value: async function findContact(id) {
-                    let _id = await (async (e) => {
-                        if (typeof e === "string") {
-                            let check = await WapQuery.queryPhoneExists(e);
-                            if (!check) return null;
-                            return check.wid;
-                        }
-                        return e;
-                    })(id);
-                    if (!_id) return null;
-
                     let contact;
                     try {
-                        contact = await Contact.find(_id);
+                        contact = await Contact.find(id);
                     } catch (e) {
                         console.log(e);
                     }
@@ -151,6 +136,16 @@ const constructWAPI = (app) => {
                         console.log(e);
                     }
                     return group ? GroupFactory.create(app, group) : null;
+                },
+            },
+            findUserWid: {
+                /** @type {(id: string | wid)=> Promise<wid | null>} */
+                value: async function findUserWid(id) {
+                    if (typeof id === "string") {
+                        let isExists = await app.checkPhone(id);
+                        return isExists ? isExists.wid : null;
+                    }
+                    return id;
                 },
             },
             getActiveChat: {

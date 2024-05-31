@@ -29,7 +29,7 @@ const constructStore = (app) => {
             constructChat(app) &&
             constructContact(app) &&
             constructGroupMetadata(app) &&
-            constructWebClasses(app)
+            constructWebClasses()
         );
     }
     return true;
@@ -41,29 +41,15 @@ const constructStore = (app) => {
  * @returns
  */
 const constructChat = (app) => {
-    let { Chat, Cmd, MediaCollection, WapQuery } = app;
+    let { Chat, Cmd, MediaCollection } = app;
     try {
         Object.defineProperties(Chat.constructor.prototype, {
             findImpl: {
                 /** @type {(e: string | wid)} */
                 value: async function findImpl(e) {
-                    let wid = await (async (id) => {
-                        if (typeof id === "string") {
-                            let check = await WapQuery.queryPhoneExists(e);
-                            if (!check) return null;
-                            return check.wid;
-                        }
-                        return id;
-                    })(e);
-
+                    let wid = await app.findUserWid(e);
                     if (!wid) return null;
-
-                    let result = this.get(wid);
-                    if (!result) {
-                        [result] = this.add({ createLocally: true, id: wid }, { merge: true });
-                    }
-
-                    return result;
+                    return this.gadd(wid);
                 },
                 enumerable: true,
             },
@@ -169,23 +155,9 @@ const constructContact = (app) => {
             findContact: {
                 /** @type {(e: string | wid)} */
                 value: async function findContact(e) {
-                    let wid = await (async (id) => {
-                        if (typeof id === "string") {
-                            let check = await WapQuery.queryPhoneExists(e);
-                            if (!check) return null;
-                            return check.wid;
-                        }
-                        return id;
-                    })(e);
-
+                    let wid = await app.findUserWid(e);
                     if (!wid) return null;
-
-                    let result = this.get(wid);
-                    if (!result) {
-                        [result] = this.add({ createLocally: true, id: wid }, { merge: true });
-                    }
-
-                    return result;
+                    return this.gadd(wid);
                 },
                 enumerable: true,
             },
@@ -276,7 +248,6 @@ const constructGroupMetadata = (app) => {
 
 /**
  * Construct Custom Store WebClasses object
- * @param {WAPI} app
  * @returns
  */
 const constructWebClasses = () => {
