@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.13...v0.0.14) (2024-05-31)
+
+
+### Features
+
+* **Contact:** add function for fetch Profile Picture ([cf970d3](https://github.com/wayfu-id/simple-WAPI/commit/cf970d3193da9821e3c183f9f13dd66a1d342996))
+
 ### [0.0.13](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.12...v0.0.13) (2024-04-22)
 
 
