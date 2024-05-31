@@ -31,6 +31,15 @@ const constructWAPI = (app) => {
     const { Chat, Contact, Debug, GroupMetadata, sleep, WapQuery, WidFactory } = app;
 
     try {
+        Contact.getMeContact()
+            .fetchProfilePic()
+            .then(() => {
+                Object.defineProperty(app, "ME", {
+                    value: Contact.getMeContact().getModel(),
+                    enumerable: true,
+                });
+            });
+
         Object.defineProperties(app, {
             ...reConstruct(Debug),
             ME: {
