@@ -28,33 +28,6 @@ const storeObjects = [
         conditions: (module) => (module.sendTextMsgToChat ? module : null),
     },
     {
-        id: "WebClasses1",
-        conditions: (module) =>
-            module.default &&
-            typeof module.default === "object" &&
-            module.default.chat &&
-            module.default.active
-                ? module.default
-                : null,
-    },
-    {
-        id: "WebClasses2",
-        conditions: (module) =>
-            module.default &&
-            typeof module.default === "object" &&
-            module.default.menu &&
-            module.default.active
-                ? module.default
-                : null,
-    },
-    {
-        id: "WebClasses3",
-        conditions: (module) =>
-            module.default && typeof module.default === "object" && module.default.chatHeader
-                ? module.default
-                : null,
-    },
-    {
         id: "MediaCollection",
         conditions: (module) =>
             module.default && module.default.prototype && module.default.prototype.processAttachments
@@ -69,6 +42,28 @@ const storeObjects = [
     {
         id: "Debug",
         conditions: (module) => (module.Debug ? module.Debug : null),
+    },
+    // New Store Objects
+    {
+        id: "MeUtils",
+        conditions: (module) => (module.getMaybeMeUser ? module : null),
+    },
+    {
+        id: "MediaUtils",
+        conditions: (module) =>
+            module.getOrCreateMediaObject && module.disassociateMediaFromStickerPack ? module : null,
+    },
+    {
+        id: "Profile",
+        conditions: (module) => (module.sendSetPicture && module.requestDeletePicture ? module : null),
+    },
+    {
+        id: "UploadUtils",
+        conditions: (module) => (module.default && module.default.encryptAndUpload ? module.default : null),
+    },
+    {
+        id: "WidUtils",
+        conditions: (module) => (module.validateWid && module.validateAndGetParts ? module : null),
     },
 ];
 
