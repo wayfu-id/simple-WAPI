@@ -2,10 +2,10 @@ declare namespace WAPI {
     type BizInfo = {
         verifiedName: {
             isApi: boolean;
-            level: String;
-            name: String;
-            privacyMode: String | null;
-            serial: String;
+            level: string;
+            name: string;
+            privacyMode: string | null;
+            serial: string;
         };
     };
     type WebpackLoader = {
@@ -25,17 +25,17 @@ declare namespace WAPI {
          * Whatsapp server domain
          * @example `c.us`
          */
-        server: String;
+        server: string;
         /**
          * User whatsapp number
          * @example `554199999999`
          */
-        user: String;
+        user: string;
         /**
          * Serialized id
          * @example `554199999999@c.us`
          */
-        _serialized: String;
+        _serialized: string;
         /** Is it group wid */
         isGroup(): boolean;
         /** Is it User wid */
@@ -47,7 +47,7 @@ declare namespace WAPI {
 
     export interface MessageSendOptions {
         /** Image caption */
-        caption?: String;
+        caption?: string;
         /** Media to be sent */
         media?: File;
         /** Return chat model */
@@ -284,9 +284,9 @@ declare namespace WAPI {
      *   },
      *   announce: false,
      *   creation: 1657054203,
-     *   desc: "John's Group",
+     *   desc: "John's Group" |
      *   displayedDesc: 'Lorem Ipsum',
-     *   name: "John's Group",
+     *   name: "John's Group" |
      *   groupType: 'DEFAULT',
      *   owner: {
      *     server: 'c.us',
@@ -371,7 +371,7 @@ declare namespace WAPI {
 
         _serialized: ProfilePicThumbSerialized;
 
-        create(data: WA.ProfilePicThumb): ProfilePicThumb;
+        create(data: WA.ProfilePicThumbModel): ProfilePicThumb;
     }
 
     export interface GroupChat extends Chat {
@@ -399,6 +399,150 @@ declare namespace WA {
         messageSendResult: string;
         t: number;
     };
+
+    export type WebSCSSKey =
+        | "App"
+        | "LinkDeviceApiCmdTooltip"
+        | "LinkDeviceCodeView"
+        | "LinkDeviceQrcode"
+        | "LogoutReason"
+        | "LogoutLoadingScreen"
+        | "LoadingScreen"
+        | "StartupMd"
+        | "LinkDeviceQrVideo"
+        | "DrawerBlock"
+        | "Name"
+        | "DropdownItem"
+        | "CopyPasteSelectable"
+        | "CopyPasteCopyableArea"
+        | "MessageLargeEmoji"
+        | "Butterbar"
+        | "ImgWithFallback"
+        | "ProgressBar"
+        | "Dropdown"
+        | "ProfileImage"
+        | "Header"
+        | "ProductCatalogProductImageViewFlow"
+        | "BotCommandSuggestionResult"
+        | "ComposeBox"
+        | "AttachMenuBarItemMenuDropdown"
+        | "StickerSuggestionsPanelContent"
+        | "ConversationLoadMoreMessagesHistorySync"
+        | "ConversationMsgs"
+        | "MessageStickyDateMarker"
+        | "ConversationPanel"
+        | "GroupDescriptionBanner"
+        | "MediaPanelHeader"
+        | "MediaViewerModal"
+        | "ConversationPanelWrapper"
+        | "IntroPanel"
+        | "UserNoticeModal"
+        | "Main"
+        | "ChatlistHeader"
+        | "NavBar"
+        | "PhotoPicker"
+        | "ChatIcons"
+        | "ChatLastMsg"
+        | "ChatMsgAck"
+        | "ChatstateInfo"
+        | "MessageGroupNotification"
+        | "MoveResizeComponent"
+        | "PipCtwaSourceButton"
+        | "PipVideoControls"
+        | "MultiSelectBar"
+        | "PipYoutubeVideoPlayer"
+        | "MessageGroupedStickerCheckbox"
+        | "Wrapper"
+        | "MessageUnread"
+        | "MessageStickerLikeBubbleContainer"
+        | "ContentPlaceholder"
+        | "GuidePopup"
+        | "ChatlistPanel"
+        | "MixedMultiSelectBar"
+        | "OfflineResumeProgressToastbar"
+        | "PttButton"
+        | "PttMessageStatus"
+        | "MentionsPluginResult"
+        | "MessageText"
+        | "MediaVideoLinkPreview"
+        | "GalleryMsg"
+        | "QuotedMsgQuotedMedia"
+        | "PaymentAmount"
+        | "PaymentBackground"
+        | "MenuBar"
+        | "LazyLoadLoading"
+        | "CellFrame"
+        | "PaymentIcon"
+        | "PaymentType"
+        | "PanelsMenuTab"
+        | "ObjectFit"
+        | "EmojiPanel"
+        | "EmojiPanelContentEmojiRow"
+        | "EmojiPanelContentSectionScrollList"
+        | "PanelsSearchInput"
+        | "GifPanelGifPreview"
+        | "StickerPanelContent"
+        | "StickerPanelContentStickerItem"
+        | "Sticker"
+        | "EmojiPanelEmojiSuggestionsPanel"
+        | "MessageAuthor"
+        | "QuotedMsg"
+        | "QuotedMsgContent"
+        | "MediaLinkPreview"
+        | "ChatGroupMsgInfoCell"
+        | "RichTextField"
+        | "BizCtwaContextImagePreview"
+        | "MessageSpacerText"
+        | "MessageGif"
+        | "DrawerButton"
+        | "PhotoViewerModal"
+        | "ChatContact"
+        | "SectionHeader"
+        | "FlatListLoadingSpinnerItem"
+        | "ChatListSearch"
+        | "MessagePlaceholder"
+        | "ListMsgModal"
+        | "GroupsV4InviteMsg"
+        | "PaymentInfo"
+        | "PaymentMessageInvite"
+        | "PaymentMessagePlaceholder"
+        | "SendOrRequestPaymentMessage"
+        | "PttAudioBubble"
+        | "PttAudioPlayer"
+        | "MessageSmoothRangeInput"
+        | "MessageStickerMediaControl"
+        | "MessageButtons"
+        | "MessageCheckbox"
+        | "MessageList"
+        | "MessageVcard"
+        | "VcardWidChoiceModal"
+        | "MessageViewOncePendingCancel"
+        | "QuotedMsgAdminGroupName"
+        | "MessageMenu"
+        | "LinkMsg"
+        | "MediaAudio"
+        | "ThumbList"
+        | "ImageCarousel"
+        | "ImageSlide"
+        | "ChatContactMsgInfoCell"
+        | "ImageGallery"
+        | "EditImageDrawer"
+        | "MediaEditor"
+        | "MediaEditorFilmstripAttachMediaThumb"
+        | "MediaEditorImage"
+        | "MediaEditorPreviewCropRotate"
+        | "MediaEditorToolbarColor"
+        | "MediaEditorToolbarColorChip"
+        | "MediaEditorToolbarFontDropdown"
+        | "MediaEditorToolbarTextBackground"
+        | "MediaEditorToolbarCropRotate"
+        | "MediaEditorToolbarThickness"
+        | "AttachMediaDrawerAttachMediaTypeAudio"
+        | "MediaEditorPreview"
+        | "AttachMediaDrawerAttachMediaTypeFile"
+        | "AttachMediaDrawerAttachMediaTypePdf"
+        | "AttachMediaDrawerAttachMediaTypeMedia"
+        | "MediaEditorPreviewVideo";
 
     type InsertData = {
         createLocally: boolean;
@@ -458,9 +602,11 @@ declare namespace WA {
         verifiedName?: string;
         getModel(): WAPI.Contact;
         openChat(): Promise<ChatModel>;
+        fetchProfilePic(): Promise<boolean>;
+        getProfilePicThumb(): ProfilePicThumbModel | null;
     }
 
-    export interface ProfilePicThumb extends Omit<ModelClass, "name"> {
+    export interface ProfilePicThumbModel extends Omit<ModelClass, "name"> {
         eurl: string;
         filehash: string;
         fullDirectPath: string;
@@ -510,6 +656,7 @@ declare namespace WA {
     }
 
     export interface Chat extends BaseClass<ChatModel> {
+        getActive(): ChatModel | undefined;
         clearAllDraft(): void;
     }
     export interface Contact extends BaseClass<ContactModel> {
@@ -519,6 +666,7 @@ declare namespace WA {
     }
     export interface GroupMetadata extends BaseClass<GroupModel> {}
     export interface Message extends BaseClass<MessageModel> {}
+    export interface ProfilePicThumb extends BaseClass<ProfilePicThumbModel> {}
 
     export interface MessageMedia extends BaseClass<MediaModel> {
         processAttachments(files: [{ file: File }], ack: number, chat: ChatModel): Promise<void>;
@@ -541,6 +689,23 @@ declare namespace WA {
             settingTimestamp: number;
         };
     };
+
+    export type WidDomain = {
+        BROADCAST: "broadcast";
+        CALL: "call";
+        C_US: "c.us";
+        G_US: "g.us";
+        LID: "lid";
+        MSGR: "msgr";
+        NEWSLETTER: "newsletter";
+        S_WHATSAPP_NET: "s.whatsapp.net";
+    };
+
+    export type WidParts = {
+        devicePart: string | undefined;
+        serverPart: string | undefined;
+        userPart: string | undefined;
+    };
 }
 
 declare class Store {
@@ -561,6 +726,15 @@ declare class Store {
     };
     /** Original WhatsApp MediaCollection Class */
     MediaCollection: typeof WA.MediaCollection;
+    //
+    MeUtils: {
+        isMeAccount(id: WAPI.wid): boolean;
+        getMaybeMeLid(): { device: number } & WAPI.wid;
+        getMaybeMeLidUser(): WAPI.wid;
+        getMaybeMeUser(): WAPI.wid;
+        getMeUser(): WAPI.wid;
+        getMe(): { device: number } & WAPI.wid;
+    };
     /** Original WhatsApp Msg Object */
     Msg: WA.Message;
     /** Original WhatsApp Message Composing Functions */
@@ -568,17 +742,28 @@ declare class Store {
         addAndSendTextMsg(chat: WA.ChatModel, message: WA.MessageModel): Promise<WA.MessageSendResult>;
         createTextMsgData(chat: WA.ChatModel, body: string): Promise<WA.MessageModel>;
     };
+    Profile: {
+        profilePicResync(id: WAPI.wid): Promise<any>;
+        requestDeletePicture(id: WAPI.wid): Promise<any>;
+        requestProfilePicFromServer(id: WAPI.wid): Promise<any>;
+        sendSetPicture(id: WAPI.wid): Promise<any>;
+    };
+    /** Original WhatsApp ProfilePicThumb Object */
+    ProfilePicThumb: WA.ProfilePicThumb;
     /** Original WhatsApp WapQuery Functions */
     WapQuery: {
         queryPhoneExists(query: string): Promise<WA.WapQueryResult | null>;
+        queryWidExists(query: WAPI.wid): Promise<WA.WapQueryResult | null>;
     };
-    /** HTML classes that web are using */
-    WebClasses1: { [k: string]: string };
-    WebClasses2: { [k: string]: string };
-    WebClasses3: { [k: string]: string };
     /** Original WhatsApp WidFactory Functions */
     WidFactory: {
-        createWid(id: String): WAPI.wid;
+        createWid(id: string): WAPI.wid;
+        createWidFromWidLike(id: string): WAPI.wid;
+    };
+    WidUtils: {
+        Domains: WA.WidDomain;
+        validateAndGetParts(widLike: string, accept: boolean): WA.WidParts;
+        validateWid(widLike: string, accept: boolean): boolean;
     };
 }
 
@@ -591,43 +776,43 @@ declare class WAPI extends Store {
     BUILD_ID: string | undefined;
     DESKTOP_BETA: boolean | undefined;
     /** WhatsApp Web Version */
-    VERSION: String;
+    VERSION: string;
     /** Current contact info */
     ME: WAPI.Contact;
     /** HTML classes that web are using */
-    WebClasses: {
-        [k: string]: { [k: string]: String };
-    };
+    WebClasses: Record<WA.WebSCSSKey, { [k: string]: string }>;
     /** Check given phone number */
-    checkPhone(phone: String): Promise<WA.WapQueryResult | null>;
+    checkPhone(phone: string): Promise<WA.WapQueryResult | null>;
     /** Find chat by Id */
-    findChat(id: String | WAPI.wid): Promise<WAPI.Chat | null>;
+    findChat(id: string | WAPI.wid): Promise<WAPI.Chat | null>;
     /** Find contact by Id */
-    findContact(id: String | WAPI.wid): Promise<WAPI.Contact | null>;
+    findContact(id: string | WAPI.wid): Promise<WAPI.Contact | null>;
     /** Find contact by Id */
-    findCommonGroups(id: String | WAPI.wid): Promise<WAPI.Chat[] | []>;
+    findCommonGroups(id: string | WAPI.wid): Promise<WAPI.Chat[] | []>;
     /** Find contact by Id */
-    findGroup(id: String | WAPI.wid): Promise<WAPI.Group | null>;
+    findGroup(id: string | WAPI.wid): Promise<WAPI.Group | null>;
+    /** find user WID for given id as string or WAPI wid */
+    findUserWid(id: string | WAPI.wid): Promise<WAPI.wid | null>;
     /** Find contact by Id */
     getAllGroups(): WAPI.Group[] | [];
     /** Get current active chat data */
     getActiveChat(): WAPI.Chat | null;
     /** Input text message and send it to chat */
-    inputAndSendTextMsg(chat: WAPI.Chat, text: String): Promise<WAPI.Chat | null>;
-    inputAndSendTextMsg(chat: String, text: String): Promise<WAPI.Chat | null>;
-    inputAndSendTextMsg(chat: WAPI.wid, text: String): Promise<WAPI.Chat | null>;
+    inputAndSendTextMsg(chat: WAPI.Chat, text: string): Promise<WAPI.Chat | null>;
+    inputAndSendTextMsg(chat: string, text: string): Promise<WAPI.Chat | null>;
+    inputAndSendTextMsg(chat: WAPI.wid, text: string): Promise<WAPI.Chat | null>;
     /** Close chat by id */
-    closeChat(id: String | WAPI.Chat): Promise<WA.ChatModel>;
+    closeChat(id: string | WAPI.Chat): Promise<WA.ChatModel>;
     /** Open chat by id */
-    openChat(id: String | WAPI.Chat): Promise<WA.ChatModel>;
+    openChat(id: string | WAPI.Chat): Promise<WA.ChatModel>;
     /** Send message to id */
-    sendMessage(id: String | WAPI.Chat, message: String): Promise<WA.MessageSendResult>;
+    sendMessage(id: string | WAPI.Chat, message: string): Promise<WA.MessageSendResult>;
     sendMessage(
-        id: String | WAPI.Chat,
-        message: String,
+        id: string | WAPI.Chat,
+        message: string,
         option: WAPI.MessageSendOptions
     ): Promise<WA.MessageSendResult>;
-    sendMessage(id: String | WAPI.Chat, message: String, option: { ret: true }): Promise<WAPI.Chat>;
+    sendMessage(id: string | WAPI.Chat, message: string, option: { ret: true }): Promise<WAPI.Chat>;
     /** Delay some function */
     sleep(time: number): Promise<void>;
     /** Static methor for initiating WAPI class */
