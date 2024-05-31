@@ -69,6 +69,13 @@ const getStore = (modules, result = {}) => {
                     return Object.assign(result, add(module));
                 })(id, conditions(modules(idx)));
             });
+
+            result = ((id, res) => {
+                let uiMod = /^WAWeb[\w\.]*(?:scss)$/g.test(id)
+                    ? { [id]: modules(id)?.default || modules(id) }
+                    : {};
+                return Object.assign(res, uiMod);
+            })(idx, result);
         }
     }
 

@@ -272,16 +272,20 @@ const constructGroupMetadata = (app) => {
  * @param {WAPI} app
  * @returns
  */
-const constructWebClasses = (app) => {
+const constructWebClasses = () => {
     try {
-        let { WebClasses1, WebClasses2, WebClasses3 } = app;
-        delProp(["WebClasses1", "WebClasses2", "WebClasses3"], WAPI.prototype);
         Object.defineProperty(WAPI.prototype, "WebClasses", {
-            value: {
-                V1: { ...WebClasses1 },
-                V2: { ...WebClasses2 },
-                V3: { ...WebClasses3 },
-            },
+            value: ((proto, obj) => {
+                let rgx = /^WAWeb(\w*)\.(?:scss)$/g;
+                Object.keys(proto).forEach((key) => {
+                    if (rgx.test(key)) {
+                        let k = key.replace(rgx, `$1`);
+                        obj[k] = proto[key];
+                        delProp(key, proto);
+                    }
+                });
+                return obj;
+            })(WAPI.prototype, {}),
             enumerable: true,
         });
         return true;
