@@ -163,7 +163,7 @@ const constructChat = (app) => {
  * @returns
  */
 const constructContact = (app) => {
-    let { Chat, Contact, WapQuery } = app;
+    let { Chat, Contact, ProfilePicThumb } = app;
     try {
         Object.defineProperties(Contact.constructor.prototype, {
             findContact: {
@@ -211,6 +211,13 @@ const constructContact = (app) => {
                     let chat = await Chat.find(this.id);
                     await chat.open();
                     return chat;
+                },
+                enumerable: true,
+            },
+            fetchProfilePic: {
+                value: async function fetchProfilePic() {
+                    let res = await ProfilePicThumb.find(this.id);
+                    return !!res;
                 },
                 enumerable: true,
             },
