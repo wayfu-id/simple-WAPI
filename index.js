@@ -1,9 +1,4 @@
-import {
-    getStore,
-    constructWAPI,
-    waitLoaderType,
-    constructStore,
-} from "./src/utils/Loader.js";
+import { constructStore, constructWAPI, getStore, waitLoaderType } from "./src/utils/Loader.js";
 
 const WAPI = (function () {
     const _token = Symbol();
