@@ -1,11 +1,20 @@
-import WAPI from "../../types";
+import WAPI from "../../index";
+
+type BaseSerialized<o extends WA.wid> = {
+    id: o;
+    name: string | undefined;
+
+    /** Default properties */
+    [k: string]: any | undefined;
+};
+
 /**
  * Represents a WhatsApp data structure
  */
-export default class Base<T extends Object> implements WAPI.Base<T> {
+export default class Base<T extends Object & { id: WA.wid }, K extends Object> {
     app: WAPI;
     raw: T;
-    _serialized: any;
+    _serialized: BaseSerialized<T["id"]> & K;
 
     constructor(app: WAPI) {
         /**
@@ -14,8 +23,6 @@ export default class Base<T extends Object> implements WAPI.Base<T> {
          * @readonly
          */
         this.app = app;
-
-        this._serialized = {};
         // Object.defineProperty(this, "app", { value: app });
     }
 

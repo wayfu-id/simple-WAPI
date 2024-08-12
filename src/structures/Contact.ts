@@ -1,16 +1,67 @@
 import Base from "./Base";
-import ProfilePicThumb from "./ProfilePictThumb";
-import WAPI from "../../types";
+import ProfilePicThumb, { ProfilePicThumbSerialized } from "./ProfilePictThumb";
+import WAPI from "../../index";
 
 type T = WA.ContactModel;
 
+export type ContactSerialized = {
+    disappearingModeDuration: number | undefined;
+    disappearingModeSettingTimestamp: number | undefined;
+    isBlocked: boolean;
+    isBusiness: boolean;
+    isContactSyncCompleted: number;
+    isEnterprise: boolean;
+    isGroup: boolean;
+    isMe: boolean;
+    isMyContact: boolean;
+    isUser: boolean;
+    isSmb: boolean;
+    labels: Array<string>;
+    privacyMode: {
+        actualActors: number;
+        hostStorage: number;
+        privacyModeTs: number;
+    } | null;
+    pushname: string;
+    phoneNumber: string;
+    profilePicThumb: ProfilePicThumbSerialized;
+    requestedPnTimestamp: number | undefined;
+    sectionHeader: string | undefined;
+    shortName: string | undefined;
+    statusMute: string | boolean | undefined;
+    textStatusLastUpdateTime: number;
+    type: string;
+    username: string | undefined;
+    verifiedLevel: number;
+    verifiedName: string | undefined;
+};
+
 /**
  * Represents a Contact on WhatsApp
- * @type {WAPI.Contact}
+ *
+ * @example
+ * {
+ *   id: {
+ *     server: 'c.us',
+ *     user: '554199999999',
+ *     _serialized: `554199999999@c.us`
+ *   },
+ *   number: '554199999999',
+ *   isBusiness: false,
+ *   isEnterprise: false,
+ *   name: undefined,
+ *   pushname: 'John',
+ *   shortName: undefined,
+ *   isMe: false,
+ *   isUser: true,
+ *   isGroup: false,
+ *   isMyContact: false,
+ *   isBlocked: false
+ * }
  */
-export default class Contact extends Base<T> implements WAPI.Contact {
+export default class Contact extends Base<T, ContactSerialized> {
     formatedName: string;
-    id: WAPI.ContactId;
+    id: WA.ContactId;
     isBlocked: boolean;
     isBusiness: boolean;
     isEnterprise: boolean;
@@ -19,7 +70,7 @@ export default class Contact extends Base<T> implements WAPI.Contact {
     isMyContact: boolean;
     isUser: boolean;
     name?: string | undefined;
-    profilePicThumb: WAPI.ProfilePicThumb;
+    profilePicThumb: ProfilePicThumb;
     phoneNumber: string;
     pushname: string | undefined;
     shortName?: string | undefined;

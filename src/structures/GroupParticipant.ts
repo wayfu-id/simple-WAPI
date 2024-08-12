@@ -1,9 +1,18 @@
-export default class GroupParticipant implements WAPI.GroupParticipant {
-    _serialized: WAPI.GroupParticipantSerialized;
-    contact: WAPI.Contact;
-    id: WAPI.ContactId;
+import Contact, { ContactSerialized } from "./Contact";
+
+export type GroupParticipantSerialized = {
+    id: WA.wid;
+    contact: ContactSerialized;
     isAdmin: boolean;
     isSuperAdmin: boolean;
+};
+
+export default class GroupParticipant {
+    contact: Contact;
+    id: WA.ContactId;
+    isAdmin: boolean;
+    isSuperAdmin: boolean;
+    _serialized: GroupParticipantSerialized;
 
     constructor(data: WA.GroupParticipantModel) {
         return this._patch(data);

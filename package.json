@@ -2,9 +2,8 @@
   "name": "@wayfu/simple-wapi",
   "version": "0.0.14",
   "description": "Simple WhatsApp Web API (WAPI)",
-  "main": "index.js",
-  "type": "module",
-  "types": "index.d.ts",
+  "main": "index.ts",
+  "typings": "index.d.ts",
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode=development -w",
     "build": "webpack --config webpack.config.js --mode=production",
@@ -46,6 +45,8 @@
   "devDependencies": {
     "husky": "^8.0.3",
     "terser-webpack-plugin": "^5.3.9",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3"
   }

@@ -1,22 +1,60 @@
 import Base from "./Base";
 import GroupParticipant from "./GroupParticipant";
-import WAPI from "../../types";
+import WAPI from "../../index";
 
 type T = WA.GroupModel;
 
-/** @type {WAPI.Group} */
-export default class Group extends Base<T> implements WAPI.Group {
+export type GroupSerialized = {
     announce: boolean;
     creation: number;
     desc: string;
     displayedDesc: string;
     groupType: string;
-    id: WAPI.GroupId;
-    name: string;
-    owner: WAPI.ContactId;
-    parentGroupId?: WAPI.GroupId | undefined;
+    owner: WA.ContactId;
+    parentGroupId?: WA.GroupId;
+    participants: GroupParticipant[];
     size: number;
-    subGroupsId: WAPI.GroupId[] | undefined;
+    subGroupsId: WA.GroupId[] | undefined;
+};
+
+/**
+ * Represents a Group from GroupMetadata on WhatsApp
+ *
+ * @example
+ * {
+ *   id: {
+ *     server: 'g.us',
+ *     user: '554199999999',
+ *     _serialized: `554199999999@g.us`
+ *   },
+ *   announce: false,
+ *   creation: 1657054203,
+ *   desc: "John's Group" |
+ *   displayedDesc: 'Lorem Ipsum',
+ *   name: "John's Group" |
+ *   groupType: 'DEFAULT',
+ *   owner: {
+ *     server: 'c.us',
+ *     user: '554199999999',
+ *     _serialized: `554199999999@c.us`
+ *   },
+ *   parentGroupId: undefined,
+ *   size: 10,
+ *   subGroupsId: [],
+ * }
+ */
+export default class Group extends Base<T, GroupSerialized> {
+    announce: boolean;
+    creation: number;
+    desc: string;
+    displayedDesc: string;
+    groupType: string;
+    id: WA.GroupId;
+    name: string;
+    owner: WA.ContactId;
+    parentGroupId?: WA.GroupId | undefined;
+    size: number;
+    subGroupsId: WA.GroupId[] | undefined;
 
     constructor(app: WAPI, data: T) {
         super(app);
@@ -83,7 +121,7 @@ export default class Group extends Base<T> implements WAPI.Group {
     /** Group participants contact */
     get participants() {
         let participants = this.raw.participants,
-            results: WAPI.GroupParticipant[] = [];
+            results: GroupParticipant[] = [];
 
         for (let data of participants.getModelsArray()) {
             results.push(GroupParticipant.create(data));
@@ -92,9 +130,9 @@ export default class Group extends Base<T> implements WAPI.Group {
     }
 
     /** Parent group metadata */
-    get parentGroup() {
+    get parentGroup(): Group | undefined {
         let { parentGroupId: id } = this;
-        if (!id) return null;
+        if (!id) return;
         let result = this.app.GroupMetadata.get(id);
         return result?.getModel();
     }
@@ -102,7 +140,7 @@ export default class Group extends Base<T> implements WAPI.Group {
     /** Child group metadata as array */
     get childGroups() {
         let { subGroupsId } = this,
-            results: WAPI.Group[] = [];
+            results: Group[] = [];
 
         if (!subGroupsId) return undefined;
         for (let id of subGroupsId) {

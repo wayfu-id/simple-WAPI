@@ -1,17 +1,39 @@
 import Base from "./Base";
-import WAPI from "../../types";
+import WAPI from "../../index";
+import Contact, { ContactSerialized } from "./Contact";
 
 type T = WA.ChatModel;
 
+export type ChatSerialized = {
+    isGroup: boolean;
+    active: boolean;
+    hasDraftMessage: boolean;
+    timestamp: number;
+    contact: ContactSerialized;
+};
+
 /**
  * Represents a Chat on WhatsApp
- * @type {WAPI.Chat}
+ *
+ * @example
+ * {
+ *   id: {
+ *     server: 'c.us',
+ *     user: '554199999999',
+ *     _serialized: `554199999999@c.us`
+ *   },
+ *   active: active
+ *   hasDraftMessage: false,
+ *   isGroup: false,
+ *   name: '+55 41 9999-9999',
+ *   timestamp: 1591484087,
+ * }
  */
-export default class Chat extends Base<T> implements WAPI.Chat {
+export default class Chat extends Base<T, ChatSerialized> {
     active: boolean | undefined;
-    contact: WAPI.Contact;
+    contact: Contact;
     hasDraftMessage: boolean;
-    id: WAPI.ChatId;
+    id: WA.ChatId;
     isGroup: boolean;
     name: string;
     timestamp: number;

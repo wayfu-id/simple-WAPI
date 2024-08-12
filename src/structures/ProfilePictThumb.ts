@@ -1,11 +1,20 @@
 type T = WA.ProfilePicThumbModel;
 
-export default class ProfilePicThumb implements WAPI.ProfilePicThumb {
-    _serialized: WAPI.ProfilePicThumbSerialized;
+export type ProfilePicThumbSerialized = {
+    eurl: string;
+    id: WA.wid;
+    img: string;
+    imgFull: string;
+    raw: string;
+    tag: string;
+};
+
+export default class ProfilePicThumb {
+    _serialized: ProfilePicThumbSerialized;
     eurl: string;
     filehash: string;
     fullDirectPath: string;
-    id: WAPI.wid;
+    id: WA.wid;
     img: string;
     imgFull: string;
     previewDirectPath: string;

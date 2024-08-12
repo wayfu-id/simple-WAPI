@@ -3,9 +3,9 @@ import GroupParticipant from "./GroupParticipant";
 
 type T = WA.GroupModel & WA.ChatModel;
 
-export default class GroupChat extends Chat implements WAPI.GroupChat {
+export default class GroupChat extends Chat {
     isGroup: boolean;
-    groupMetadata: WAPI.GroupMetadata;
+    groupMetadata: WA.GroupMetadata;
 
     _patch(data: T) {
         /** This group metadata */
