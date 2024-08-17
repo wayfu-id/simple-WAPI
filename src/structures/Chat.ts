@@ -1,4 +1,4 @@
-import Base from "./Base";
+import Base, { BaseSerialized } from "./Base";
 import WAPI from "../../index";
 import Contact, { ContactSerialized } from "./Contact";
 
@@ -10,7 +10,7 @@ export type ChatSerialized = {
     hasDraftMessage: boolean;
     timestamp: number;
     contact: ContactSerialized;
-};
+} & BaseSerialized<WA.ChatId>;
 
 /**
  * Represents a Chat on WhatsApp

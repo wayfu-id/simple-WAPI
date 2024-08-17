@@ -3,7 +3,7 @@
   "version": "0.0.14",
   "description": "Simple WhatsApp Web API (WAPI)",
   "main": "index.ts",
-  "typings": "index.d.ts",
+  "typings": "types.d.ts",
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode=development -w",
     "build": "webpack --config webpack.config.js --mode=production",

@@ -31,7 +31,7 @@ const reConstruct: (obj: any) => PropertyDescriptorMap = (obj: any) => {
  * @returns
  */
 export function constructWAPI(app: WAPI) {
-    let { Contact, Debug } = app;
+    let { Contact } = app;
 
     try {
         Contact.getMeContact()

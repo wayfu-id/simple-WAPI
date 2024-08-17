@@ -1,6 +1,18 @@
-import Chat from "./Chat";
-import Contact from "./Contact";
-import Group from "./Group";
+import Chat, { ChatSerialized } from "./Chat";
+import Contact, { ContactSerialized } from "./Contact";
+import Group, { GroupSerialized } from "./Group";
 import GroupChat from "./GroupChat";
+import { GroupParticipantSerialized } from "./GroupParticipant";
+import { ProfilePicThumbSerialized } from "./ProfilePictThumb";
 
-export { Chat, Contact, Group, GroupChat };
+export {
+    Chat,
+    ChatSerialized,
+    Contact,
+    ContactSerialized,
+    Group,
+    GroupSerialized,
+    GroupParticipantSerialized,
+    GroupChat,
+    ProfilePicThumbSerialized,
+};

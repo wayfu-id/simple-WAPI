@@ -1,4 +1,4 @@
-import Base from "./Base";
+import Base, { BaseSerialized } from "./Base";
 import GroupParticipant from "./GroupParticipant";
 import WAPI from "../../index";
 
@@ -15,7 +15,7 @@ export type GroupSerialized = {
     participants: GroupParticipant[];
     size: number;
     subGroupsId: WA.GroupId[] | undefined;
-};
+} & BaseSerialized<WA.GroupId>;
 
 /**
  * Represents a Group from GroupMetadata on WhatsApp

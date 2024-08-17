@@ -1,4 +1,4 @@
-import { Chat as WAPIChat, Contact as WAPIContact, Group } from "./src/structures/index";
+import * as WAPI from "./src/structures/index";
 
 declare global {
     export const __VERSION__: string;
@@ -230,7 +230,7 @@ declare global {
             groupMetadata?: GroupMetadata;
             clearDraft(): ChatModel | null;
             close(): Promise<void>;
-            getModel(): WAPIChat;
+            getModel(): WAPI.Chat;
             open(): Promise<void>;
             sendText<T extends boolean>(
                 body: string,
@@ -252,7 +252,7 @@ declare global {
             shortName?: string;
             username?: string;
             verifiedName?: string;
-            getModel(): WAPIContact;
+            getModel(): WAPI.Contact;
             openChat(): Promise<ChatModel>;
             fetchProfilePic(): Promise<boolean>;
             getProfilePicThumb(): ProfilePicThumbModel | null;
@@ -291,9 +291,9 @@ declare global {
             owner: wid;
             parentGroup?: wid;
             size: number;
-            getModel(): Group;
+            getModel(): WAPI.Group;
             getContactModel(): Contact;
-            getChatModel(): WAPIChat;
+            getChatModel(): WAPI.Chat;
             openChat(): Promise<ChatModel>;
         }
 
@@ -411,8 +411,8 @@ export interface Store {
         closeChat(chat: WA.ChatModel): Promise<void>;
     };
     ComposeBox: {
-        paste: (chat: WA.Chat | WAPIChat, text: string) => Promise<void>;
-        send: (chat: WA.Chat | WAPIChat) => Promise<void>;
+        paste: (chat: WA.Chat | WAPI.Chat, text: string) => Promise<void>;
+        send: (chat: WA.Chat | WAPI.Chat) => Promise<void>;
     };
     /** Original WhatsApp Contact Object Collection */
     Contact: WA.Contact;

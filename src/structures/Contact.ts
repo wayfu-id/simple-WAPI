@@ -1,4 +1,4 @@
-import Base from "./Base";
+import Base, { BaseSerialized } from "./Base";
 import ProfilePicThumb, { ProfilePicThumbSerialized } from "./ProfilePictThumb";
 import WAPI from "../../index";
 
@@ -34,7 +34,7 @@ export type ContactSerialized = {
     username: string | undefined;
     verifiedLevel: number;
     verifiedName: string | undefined;
-};
+} & BaseSerialized<WA.ContactId>;
 
 /**
  * Represents a Contact on WhatsApp
@@ -69,12 +69,13 @@ export default class Contact extends Base<T, ContactSerialized> {
     isMe: boolean;
     isMyContact: boolean;
     isUser: boolean;
-    name?: string | undefined;
+    name: string | undefined;
     profilePicThumb: ProfilePicThumb;
     phoneNumber: string;
     pushname: string | undefined;
     shortName?: string | undefined;
     statusMute?: string | boolean | undefined;
+    verifiedName: string | undefined;
 
     constructor(app: WAPI, data: WA.ContactModel) {
         super(app);
