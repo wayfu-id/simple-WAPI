@@ -1,6 +1,10 @@
 import { constructStore, constructWAPI, getStore, waitLoaderType, _token } from "./src/Loader";
 import * as S from "./src/structures/index";
-import { Store } from "./types";
+import { Store } from "./src/whatsapp/index";
+
+declare global {
+    export const __VERSION__: string;
+}
 
 declare namespace WAPI {
     export type Chat = S.Chat;
