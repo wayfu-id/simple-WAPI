@@ -16,9 +16,10 @@ declare namespace WAPI {
     export type GroupParticipantSerialized = S.GroupParticipantSerialized;
     export type GroupSerialized = S.GroupSerialized;
     export type ProfilePicThumbSerialized = S.ProfilePicThumbSerialized;
+    export type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true
+        ? Chat
+        : WA.MessageSendResult;
 }
-
-type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true ? WAPI.Chat : WA.MessageSendResult;
 
 class WAPI implements WAPI {
     /** Create new WAPI Object */
@@ -115,7 +116,7 @@ interface WAPI extends Store {
         id: string | WAPI.Chat | WA.wid,
         message: string,
         option?: WA.MessageSendOptions
-    ): Promise<reportType<T>>;
+    ): Promise<WAPI.reportType<T>>;
     /** Delay some function */
     sleep(time: number): Promise<void>;
     [k: string]: any;

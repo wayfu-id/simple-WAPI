@@ -4,6 +4,7 @@ import chatModel from "./ChatModel/index";
 import contact from "./Contact/index";
 import contactModel from "./ContactModel/index";
 import groupMetadata from "./GroupMetadata/index";
+import { delProp } from "../utils/index";
 
 declare global {
     namespace WA {
@@ -38,7 +39,7 @@ declare global {
             /** Media to be sent */
             media?: File;
             /** Return chat model */
-            ret: boolean;
+            ret?: boolean;
         }
 
         export type MessageSendResult = {
@@ -469,17 +470,6 @@ export interface Store {
         validateAndGetParts(widLike: string, accept: boolean): WA.WidParts;
         validateWid(widLike: string, accept: boolean): boolean;
     };
-}
-
-/**
- * Return deleted properties from an Object
- * @param keys
- * @param obj
- * @returns
- */
-function delProp(keys: string | string[], obj: any) {
-    (Array.isArray(keys) ? keys : [keys]).forEach((key) => delete obj[key]);
-    return obj;
 }
 
 /**
