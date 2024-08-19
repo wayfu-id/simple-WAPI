@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.0...v0.1.1) (2024-08-19)
+
+
+### Features
+
+* **ui:** add WA Web react commponent, move Web Classes to getStore ([26639c8](https://github.com/wayfu-id/simple-WAPI/commit/26639c83b051b6bc5aa995c64dd05870a5043715))
+
 ## [0.1.0](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.14...v0.1.0) (2024-08-19)
 
 
