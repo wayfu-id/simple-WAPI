@@ -47,9 +47,8 @@ You need 1 parameter for initiating WAPI. The parameter should be a `window` ins
 ### #WAPI
 Available properties in `WAPI` class
 ```ts
-BUILD_ID: string; // Current WhatsApp web build ID
-DESKTOP_BETA: boolean; // Is it beta version?
-VERSION: string; // Current WhatsApp Web Version
+WA_VERSION: string; // Current WhatsApp Web Version
+WAPI_VERSION: string; // Current Simple-WAPI lib Version
 /** HTML classes that web are using */
 WebClasses:{
     [k:string]:{ [k:string]: string }

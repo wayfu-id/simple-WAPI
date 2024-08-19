@@ -73,10 +73,10 @@ const storeObjects = [
 ];
 
 // Property descriptor for Version Info
-const Version: PropertyDescriptor = {
+const WAPI_VERSION: PropertyDescriptor = {
     value: __VERSION__,
     enumerable: true,
     configurable: false,
 };
 
-export { storeObjects, Version };
+export { storeObjects, WAPI_VERSION };

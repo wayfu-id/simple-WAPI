@@ -534,31 +534,32 @@ function constructGroupMetadata(app: WAPI) {
 }
 
 /**
+ * @deprecated since v0.1.1
  * Construct Custom Store WebClasses object
  * @returns
  */
-function constructWebClasses() {
-    try {
-        Object.defineProperty(WAPI.prototype, "WebClasses", {
-            value: ((proto: WAPI, obj: any) => {
-                let rgx = /^WAWeb(\w*)\.(?:scss)$/g;
-                Object.keys(proto).forEach((key) => {
-                    if (rgx.test(key)) {
-                        let k = key.replace(rgx, `$1`);
-                        obj[k] = proto[key];
-                        delProp(key, proto);
-                    }
-                });
-                return obj;
-            })(WAPI.prototype, {}),
-            enumerable: true,
-        });
-        return true;
-    } catch (err) {
-        console.error("From: Construct WebClasses", err);
-        return false;
-    }
-}
+// function constructWebClasses() {
+//     try {
+//         Object.defineProperty(WAPI.prototype, "WebClasses", {
+//             value: ((proto: WAPI, obj: any) => {
+//                 let rgx = /^WAWeb(\w*)\.(?:scss)$/g;
+//                 Object.keys(proto).forEach((key) => {
+//                     if (rgx.test(key)) {
+//                         let k = key.replace(rgx, `$1`);
+//                         obj[k] = proto[key];
+//                         delProp(key, proto);
+//                     }
+//                 });
+//                 return obj;
+//             })(WAPI.prototype, {}),
+//             enumerable: true,
+//         });
+//         return true;
+//     } catch (err) {
+//         console.error("From: Construct WebClasses", err);
+//         return false;
+//     }
+// }
 
 /**
  * Construct Custom Store object
@@ -568,12 +569,7 @@ function constructWebClasses() {
 export function constructStore(app: WAPI) {
     let { Chat } = app;
     if (Chat.modelClass.prototype.getModel === undefined) {
-        return (
-            constructChat(app) &&
-            constructContact(app) &&
-            constructGroupMetadata(app) &&
-            constructWebClasses()
-        );
+        return constructChat(app) && constructContact(app) && constructGroupMetadata(app);
     }
     return true;
 }

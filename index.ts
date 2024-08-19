@@ -4,6 +4,9 @@ import { Store } from "./src/whatsapp/index";
 
 declare global {
     export const __VERSION__: string;
+    interface Window {
+        Debug: { VERSION: string };
+    }
 }
 
 declare namespace WAPI {
@@ -33,15 +36,6 @@ class WAPI implements WAPI {
 
         return this._init(store);
     }
-
-    BUILD_ID: string | undefined;
-    DESKTOP_BETA: boolean | undefined;
-    /** WhatsApp Web Version */
-    VERSION: string;
-    /** Current contact info */
-    ME: WAPI.Contact;
-    /** HTML classes that web are using */
-    WebClasses: Record<WA.WebSCSSKey, { [k: string]: string }>;
     /**
      * Initialize store object (Add or remove unused module)
      */
@@ -63,13 +57,13 @@ class WAPI implements WAPI {
                 let modStore = {};
 
                 if (type === "meta") {
-                    getStore(chunk, modStore);
+                    modStore = getStore(chunk, modStore);
                 } else {
                     let mID = `parasite${Date.now()}`;
                     chunk.push([[mID], {}, (o: any) => getStore(o, modStore)]);
                 }
 
-                modStore = Object.assign({}, modStore);
+                modStore = Object.assign({}, modStore, { Debug: target["Debug"] });
                 return new WAPI(_token, modStore);
             } else {
                 console.error("Failed to load WAPI Module!");
@@ -82,13 +76,16 @@ class WAPI implements WAPI {
 }
 
 interface WAPI extends Store {
-    WAPI_VERSION: string | undefined;
-    /** WhatsApp Web Version */
-    VERSION: string;
     /** Current contact info */
     ME: WAPI.Contact;
+    /** WhatsApp Web Version */
+    WA_VERSION: string;
+    /** Simple-WAPI Version */
+    WAPI_VERSION: string;
     /** HTML classes that web are using */
     WebClasses: Record<WA.WebSCSSKey, { [k: string]: string }>;
+    /** All WhatsApp Web React Components */
+    WebComponents: { [k: string]: any };
     /** Check given phone number */
     checkPhone(phone: string): Promise<WA.WapQueryResult | null>;
     /** Find chat by Id */

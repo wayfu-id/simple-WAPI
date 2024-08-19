@@ -60,6 +60,15 @@ const webpackFactory = (target: any): webpackModules => {
  * @returns
  */
 const getStore = (modules: webpackModules, result: any = {}) => {
+    const addOn: Record<"WebClasses" | "WebComponents", any> = {
+        WebClasses: {},
+        WebComponents: {},
+    };
+
+    const rgx = (type: keyof typeof addOn) => {
+        return new RegExp(`WAWeb(\\w*)\\.(?:${type === "WebClasses" ? "scss" : "react"})`, "g");
+    };
+
     for (let idx in modules.m) {
         if (typeof modules(idx) === "object" && modules(idx) !== null) {
             storeObjects.forEach(({ id, conditions }) => {
@@ -73,15 +82,17 @@ const getStore = (modules: webpackModules, result: any = {}) => {
                 })(id, conditions(modules(idx)));
             });
 
-            result = ((id, res) => {
-                let uiMod = /^WAWeb[\w\.]*(?:scss)$/g.test(id)
-                    ? { [id]: modules(id)?.default || modules(id) }
-                    : {};
-                return Object.assign(res, uiMod);
-            })(idx, result);
+            let _idx: keyof typeof addOn;
+            for (_idx in addOn) {
+                if (rgx(_idx).test(idx)) {
+                    let _id = idx.replace(rgx(_idx), `$1`);
+                    addOn[_idx][_id] = modules(idx)?.default || modules(idx);
+                }
+            }
         }
     }
 
+    result = Object.assign({}, result, addOn);
     return result;
 };
 
