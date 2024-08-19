@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.14...v0.1.0) (2024-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Some old typings may not working
+
+### Bug Fixes
+
+* **typings:** Fix error Typings ([063a357](https://github.com/wayfu-id/simple-WAPI/commit/063a357d8db5087d05f40be4a1440844fe8928b7))
+
+
+* We're using TypeScript now ([b05f8ef](https://github.com/wayfu-id/simple-WAPI/commit/b05f8ef0a7847186327d452c1dec7754e6cd8af5))
+
 ### [0.0.14](https://github.com/wayfu-id/simple-WAPI/compare/v0.0.13...v0.0.14) (2024-05-31)
 
 
