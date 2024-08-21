@@ -4,7 +4,6 @@ import chatModel from "./ChatModel/index";
 import contact from "./Contact/index";
 import contactModel from "./ContactModel/index";
 import groupMetadata from "./GroupMetadata/index";
-import { delProp } from "../utils/index";
 
 declare global {
     namespace WA {
@@ -538,6 +537,7 @@ function constructGroupMetadata(app: WAPI) {
  * Construct Custom Store WebClasses object
  * @returns
  */
+declare function constructWebClasses(): boolean;
 // function constructWebClasses() {
 //     try {
 //         Object.defineProperty(WAPI.prototype, "WebClasses", {
