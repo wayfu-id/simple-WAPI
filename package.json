@@ -2,7 +2,7 @@
   "name": "@wayfu/simple-wapi",
   "version": "0.1.1",
   "description": "Simple WhatsApp Web API (WAPI)",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode=development -w",
     "build": "webpack --config webpack.config.js --mode=production",

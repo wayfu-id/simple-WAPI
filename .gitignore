@@ -1,5 +1,6 @@
 package-lock.json
 index.html
+index.js
 
 .husky/_
 node_modules
