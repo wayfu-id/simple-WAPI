@@ -339,7 +339,16 @@ declare global {
                 getModelsArray: () => GroupParticipantModel[];
             };
         }
-        export interface Message extends BaseClass<MessageModel> {}
+
+        export interface MsgsByChat {
+            modelClass: MessageModel;
+            _index: { [k: string]: MessageModel };
+            _key: string;
+            _models: Array<MessageModel>;
+        }
+        export interface Message extends BaseClass<MessageModel> {
+            byChat(chat: ChatModel): MsgsByChat;
+        }
         export interface ProfilePicThumb extends BaseClass<ProfilePicThumbModel> {}
 
         export interface MessageMedia extends BaseClass<MediaModel> {
@@ -410,7 +419,7 @@ export interface Store {
     /** Original WhatsApp Chat Object Collection */
     Chat: WA.Chat;
     Cmd: {
-        openChatAt(chat: WA.ChatModel): Promise<void>;
+        openChatAt(opt: { chat: WA.ChatModel; msgs: WA.MsgsByChat }): Promise<void>;
         closeChat(chat: WA.ChatModel): Promise<void>;
     };
     ComposeBox: {
