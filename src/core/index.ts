@@ -12,6 +12,7 @@ import inputAndSendTextMsg from "./inputAndSendTextMsg";
 import openChat from "./openChat";
 import sendMessage from "./sendMessage";
 import { WAPI_VERSION } from "../Constant";
+import sleep from "./sleep";
 import { delProp } from "../utils/index";
 // import { reConstruct } from "../utils/index";
 
@@ -47,6 +48,7 @@ export function constructWAPI(app: WAPI) {
             inputAndSendTextMsg,
             openChat,
             sendMessage,
+            sleep,
             WA_VERSION: {
                 value: app.Debug.VERSION,
                 configurable: false,
