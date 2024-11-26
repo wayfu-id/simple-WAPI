@@ -116,6 +116,14 @@ interface WAPI extends Store {
     ): Promise<WAPI.reportType<T>>;
     /** Delay some function */
     sleep(time: number): Promise<void>;
+    /** Delay some value */
+    sleep<T extends unknown>(time: number, data: T): Promise<T>;
+    /** Delay some function with return value */
+    sleep<E extends any[], T extends (args: E) => unknown>(
+        time: number,
+        fn: T,
+        ...args: E
+    ): Promise<ReturnType<T>>;
     [k: string]: any;
 }
 
