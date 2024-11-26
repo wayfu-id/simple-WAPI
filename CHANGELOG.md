@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.3...v0.1.5) (2024-11-26)
+
+
+### Features
+
+* **core:** add file utility and preprocessors method ([7dfde2c](https://github.com/wayfu-id/simple-WAPI/commit/7dfde2c29fb0b2402675ba2c81604f3b680b38d9))
+* **core:** add new send message method with more attachmanet options ([5182aa9](https://github.com/wayfu-id/simple-WAPI/commit/5182aa9c9b34d1734314a3b772feb9f982fe5aa9))
+* **factories:** Add factories property to WAPI main class ([e35a7c4](https://github.com/wayfu-id/simple-WAPI/commit/e35a7c4c794390f17121f2be0f5f705013a69253))
+* **Message:** add and modify original WhatsApp message model ([b380cb2](https://github.com/wayfu-id/simple-WAPI/commit/b380cb2691fbdc921512d1bf68245fcc82a383dd))
+* **Message:** add message and message media model, also message factory ([0f7621f](https://github.com/wayfu-id/simple-WAPI/commit/0f7621f5940111b72ea5075836cc3718fb75e21a))
+* **relation:** Add getModel that have relation with current model ([8f2deef](https://github.com/wayfu-id/simple-WAPI/commit/8f2deefb58db59ab17bc0398a4390eef795d1e98))
+
+
+### Bug Fixes
+
+* **core:** error sleep is not a function ([4e87cad](https://github.com/wayfu-id/simple-WAPI/commit/4e87cad2ac86da0f1c5dfd338b2a298f511e08d6))
+* **core:** fix missing isGroup property from Chat & Contact ([92efead](https://github.com/wayfu-id/simple-WAPI/commit/92efeadd3b67f77a8321d1de1e82d959f2bd1c76))
+* **WA:** bring back deleted WAWebCollections module ([f70d13d](https://github.com/wayfu-id/simple-WAPI/commit/f70d13df81b4b76400fc352cc68459d28d47a873))
+
 ### [0.1.4](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.3...v0.1.4) (2024-11-26)
 
 
