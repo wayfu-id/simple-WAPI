@@ -12,6 +12,7 @@ import getAllGroups from "./getAllGroups";
 import inputAndSendTextMsg from "./inputAndSendTextMsg";
 import openChat from "./openChat";
 import sendMessage from "./sendMessage";
+import sendAdvMessage from "./sendAdvMessage";
 import { WAPI_VERSION } from "../Constant";
 import sleep from "./sleep";
 import { delProp } from "../utils/index";
@@ -50,6 +51,7 @@ export function constructWAPI(app: WAPI) {
             getAllGroups,
             inputAndSendTextMsg,
             openChat,
+            sendAdvMessage,
             sendMessage,
             sleep,
             WA_VERSION: {
