@@ -1,75 +1,135 @@
+import { webpackModules } from "./Loader";
 /**
  * WAPI modules that needed to get
  */
-const storeObjects = [
-    {
-        id: "Store",
-        conditions: (module: any) =>
-            module.default && module.default.Chat && module.default.Msg ? module.default : null,
+const storeObjects: { [k: string]: (m: webpackModules) => any } = {
+    ABProps: (m: webpackModules) => {
+        return {
+            ...m("WAWebABProps"),
+            ...m("WAWebABPropsConfigs"),
+        };
     },
-    {
-        id: "ComposeBox",
-        conditions: (module: any) => (module.ComposeBoxActions ? module.ComposeBoxActions : null),
+    ChatState: (m: webpackModules) => {
+        return m("WAWebChatStateBridge");
     },
-    {
-        id: "Cmd",
-        conditions: (module: any) => (module.Cmd ? module.Cmd : null),
+    Cmd: (m: webpackModules) => {
+        return m("WAWebCmd")?.Cmd;
     },
-    {
-        id: "GroupUtils",
-        conditions: (module: any) => (module.findCommonGroups ? module : null),
+    ComposeBox: (m: webpackModules) => {
+        return m("WAWebComposeBoxActions")?.ComposeBoxActions;
     },
-    {
-        id: "WidFactory",
-        conditions: (module: any) => (module.createWid ? module : null),
+    Conn: (m: webpackModules) => {
+        return m("WAWebConnModel")?.Conn;
     },
-    {
-        id: "MsgUtils",
-        conditions: (module: any) => (module.sendTextMsgToChat ? module : null),
+    Downloader: (m: webpackModules) => {
+        return m("WAWebDownloadManager")?.downloadManager;
     },
-    {
-        id: "MediaCollection",
-        conditions: (module: any) =>
-            module.default && module.default.prototype && module.default.prototype.processAttachments
-                ? module.default
-                : null,
+    EphemeralFields: (m: webpackModules) => {
+        return m("WAWebGetEphemeralFieldsMsgActionsUtils");
     },
-    {
-        id: "WapQuery",
-        conditions: (module: any) =>
-            module.queryExist ? module : module.default && module.default.queryExist ? module.default : null,
+    GroupUtils: (m: webpackModules) => {
+        return {
+            ...m("WAWebFindCommonGroupsContactAction"),
+            ...m("WAWebGroupCreateJob"),
+            ...m("WAWebGroupModifyInfoJob"),
+            ...m("WAWebExitGroupAction"),
+        };
     },
-    {
-        id: "Debug",
-        conditions: (module: any) => (module.Debug ? module.Debug : null),
+    JidToWid: (m: webpackModules) => {
+        return m("WAWebJidToWid");
     },
-    // New Store Objects
-    {
-        id: "MeUtils",
-        conditions: (module: any) => (module.getMaybeMeUser ? module : null),
+    LidUtils: (m: webpackModules) => {
+        return m("WAWebApiContact");
     },
-    {
-        id: "MediaUtils",
-        conditions: (module: any) =>
-            module.getOrCreateMediaObject && module.disassociateMediaFromStickerPack ? module : null,
+    LinkPreview: (m: webpackModules) => {
+        return m("WAWebLinkPreviewChatAction");
     },
-    {
-        id: "Profile",
-        conditions: (module: any) => (module.sendSetPicture && module.requestDeletePicture ? module : null),
+    MediaCollection: (m: webpackModules) => {
+        return m("WAWebAttachMediaCollection")?.default;
     },
-    {
-        id: "UploadUtils",
-        conditions: (module: any) =>
-            module.default && module.default.encryptAndUpload ? module.default : null,
+    MediaPrep: (m: webpackModules) => {
+        return {
+            ...m("WAWebMediaPrep"),
+            ...m("WAWebPrepRawMedia"),
+            ...m("WAWebProcessRawMedia"),
+        };
     },
-    {
-        id: "UserPrefsGeneral",
-        conditions: (module: any) => (module.getUserPrivacySettings && module.getPushname ? module : null),
+    MediaData: (m: webpackModules) => {
+        return m("WAWebMediaData")?.default;
     },
-    {
-        id: "WidUtils",
-        conditions: (module: any) => (module.validateWid && module.validateAndGetParts ? module : null),
+    MediaDataUtils: (m: webpackModules) => {
+        return m("WAWebMediaDataUtils");
     },
+    MediaObject: (m: webpackModules) => {
+        return m("WAWebMediaStorage");
+    },
+    MediaUpload: (m: webpackModules) => {
+        return m("WAWebMediaMmsV4Upload");
+    },
+    MediaTypes: (m: webpackModules) => {
+        return m("WAWebMmsMediaTypes");
+    },
+    MeUtils: (m: webpackModules) => {
+        return m("WAWebUserPrefsMeUser");
+    },
+    MsgKey: (m: webpackModules) => {
+        return m("WAWebMsgKey")?.default;
+    },
+    MsgUtils: (m: webpackModules) => {
+        return {
+            ...m("WAWebSendTextMsgChatAction"),
+            ...m("WAWebSendMsgChatAction"),
+            ...m("WAWebApiMessageInfoStore"),
+        };
+    },
+    MsgTypes: (m: webpackModules) => {
+        return m("WAWebMsgType");
+    },
+    OpaqueData: (m: webpackModules) => {
+        return m("WAWebMediaOpaqueData")?.default;
+    },
+    Profile: (m: webpackModules) => {
+        return m("WAWebContactProfilePicThumbBridge");
+    },
+    Settings: (m: webpackModules) => {
+        return m("WAWebUserPrefsGeneral");
+    },
+    StickerTools: (m: webpackModules) => {
+        return {
+            ...m("WAWebImageUtils"),
+            ...m("WAWebAddWebpMetadata"),
+        };
+    },
+    UploadUtils: (m: webpackModules) => {
+        return m("WAWebUploadManager")?.default;
+    },
+    UserConstructor: (m: webpackModules) => {
+        return m("WAWebWid")?.default;
+    },
+    Validators: (m: webpackModules) => {
+        return m("WALinkify");
+    },
+    WapQuery: (m: webpackModules) => {
+        return m("WAWebQueryExistsJob");
+    },
+    WidFactory: (m: webpackModules) => {
+        return m("WAWebWidFactory");
+    },
+    WidToJid: (m: webpackModules) => {
+        return m("WAWebWidToJid");
+    },
+    WidUtils: (m: webpackModules) => {
+        return m("WAWebWidValidator");
+    },
+};
+
+const fileSignature = [
+    { keys: ["FFD8FFDB", "FFD8FFE0", "FFD8FFEE"], result: "image/jpeg" },
+    { keys: ["89504E47"], result: "image/png" },
+    { keys: ["47494638"], result: "image/gif" },
+    { keys: ["52494646"], result: "image/webp" },
+    { keys: ["49492A00", "49492B00", "4D4D002A", "4D4D002B"], result: "image/tiff" },
+    { keys: ["25504446"], result: "application/pdf" },
 ];
 
 // Property descriptor for Version Info
@@ -79,4 +139,4 @@ const WAPI_VERSION: PropertyDescriptor = {
     configurable: false,
 };
 
-export { storeObjects, WAPI_VERSION };
+export { fileSignature, storeObjects, WAPI_VERSION };

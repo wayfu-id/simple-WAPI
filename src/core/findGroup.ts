@@ -1,5 +1,4 @@
 import WAPI from "../../index";
-import { GroupFactory } from "../factories/index";
 
 const findGroup: PropertyDescriptor & ThisType<WAPI> = {
     value: async function findGroup(id: string | WA.wid) {
@@ -20,7 +19,7 @@ const findGroup: PropertyDescriptor & ThisType<WAPI> = {
         } catch (e) {
             console.log(e);
         }
-        return group ? GroupFactory.create(this, group) : null;
+        return group ? this.factories("Group", group) : null;
     },
 };
 

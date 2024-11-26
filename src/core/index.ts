@@ -1,6 +1,7 @@
 import WAPI from "../../index";
 import checkPhone from "./checkPhone";
 import closeChat from "./closeChat";
+import factories from "./factories";
 import findChat from "./findChat";
 import findCommonGroup from "./findCommonGroup";
 import findContact from "./findContact";
@@ -11,8 +12,11 @@ import getAllGroups from "./getAllGroups";
 import inputAndSendTextMsg from "./inputAndSendTextMsg";
 import openChat from "./openChat";
 import sendMessage from "./sendMessage";
+import sendAdvMessage from "./sendAdvMessage";
 import { WAPI_VERSION } from "../Constant";
+import sleep from "./sleep";
 import { delProp } from "../utils/index";
+import { fileUtils, preProcessors } from "../utils/index";
 // import { reConstruct } from "../utils/index";
 
 /**
@@ -37,6 +41,7 @@ export function constructWAPI(app: WAPI) {
             // ...reConstruct(Debug),
             checkPhone,
             closeChat,
+            factories,
             findChat,
             findCommonGroup,
             findContact,
@@ -46,13 +51,21 @@ export function constructWAPI(app: WAPI) {
             getAllGroups,
             inputAndSendTextMsg,
             openChat,
+            sendAdvMessage,
             sendMessage,
+            sleep,
             WA_VERSION: {
                 value: app.Debug.VERSION,
                 configurable: false,
                 enumerable: true,
             },
             WAPI_VERSION,
+            fileUtils: {
+                value: fileUtils,
+            },
+            preProcessors: {
+                value: preProcessors(app),
+            },
         });
 
         delProp("Debug", WAPI.prototype);

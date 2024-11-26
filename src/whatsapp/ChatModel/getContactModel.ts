@@ -1,6 +1,6 @@
 import WAPI from "../../../index";
 
-const getContactModel: (app: WAPI) => PropertyDescriptor & ThisType<WA.GroupModel> = (app: WAPI) => {
+const getContactModel: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (app: WAPI) => {
     return {
         value: async function getContactModel() {
             let contact = await app.Contact.find(this.id);

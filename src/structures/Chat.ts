@@ -62,7 +62,7 @@ export default class Chat extends Base<T, ChatSerialized> {
         this.id = data.id;
 
         /** Indicates if the Chat is a Group Chat */
-        this.isGroup = data.isGroup;
+        this.isGroup = data.groupMetadata ? true : data.id.isGroup();
 
         /** Title of the chat */
         this.name = data.formattedTitle;
@@ -119,5 +119,12 @@ export default class Chat extends Base<T, ChatSerialized> {
      */
     async sendMedia(file: File, caption?: string, model?: boolean) {
         return await this.app.sendMessage(this, "", { media: file, caption, ret: !!model });
+    }
+
+    /**
+     * Send Advanched Message
+     */
+    async sendMessage(message: string, options?: WAPI.SendMessageOptions) {
+        return await this.app.sendAdvMessage(this, message, options);
     }
 }

@@ -1,5 +1,4 @@
 import WAPI from "../../index";
-import { ChatFactory } from "../factories/index";
 import { Contact, GroupChat } from "../structures/index";
 
 const findCommonGroup: PropertyDescriptor & ThisType<WAPI> = {
@@ -16,7 +15,7 @@ const findCommonGroup: PropertyDescriptor & ThisType<WAPI> = {
 
         if (!founded) return null;
         for (let group of founded.getModelsArray()) {
-            results.push(ChatFactory.create(this, group));
+            results.push(this.factories("Chat", group) as WAPI.GroupChat);
         }
 
         return results;

@@ -51,6 +51,9 @@ function createConfig(minify = false) {
                     extractComments: false,
                 }),
             ],
+            splitChunks: {
+                chunks: "all",
+            },
         },
     };
 }
