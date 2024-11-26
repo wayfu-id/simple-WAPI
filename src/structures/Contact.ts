@@ -101,7 +101,7 @@ export default class Contact extends Base<T, ContactSerialized> {
         this.isEnterprise = !!data.isEnterprise;
 
         /** Indicates if the contact is a group contact */
-        this.isGroup = this.id.server === "g.us";
+        this.isGroup = this.id.isGroup();
 
         /** Indicates if the contact is the current user's contact */
         this.isMe = this.id._serialized === this.app.MeUtils.getMaybeMeUser()._serialized;
@@ -110,7 +110,7 @@ export default class Contact extends Base<T, ContactSerialized> {
         this.isMyContact = !!data.isAddressBookContact;
 
         /** Indicates if the contact is a user contact */
-        this.isUser = this.id.server === "c.us";
+        this.isUser = this.id.isUser();
 
         /** The contact's name, as saved by the current user */
         this.name = data.name;
