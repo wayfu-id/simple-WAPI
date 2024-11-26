@@ -1,4 +1,5 @@
 import { constructStore, constructWAPI, getStore, waitLoaderType, _token } from "./src/Loader";
+import { FactoriesType, FactoriesReturn, FactoriesData } from "./src/core/factories";
 import * as S from "./src/structures/index";
 import { Store } from "./src/whatsapp/index";
 
@@ -88,6 +89,8 @@ interface WAPI extends Store {
     WebComponents: { [k: string]: any };
     /** Check given phone number */
     checkPhone(phone: string): Promise<WA.WapQueryResult | null>;
+    /** WAPI Model Factories. Available for Chat, Contact, Group, or Message */
+    factories<T extends FactoriesType>(type: T, data: FactoriesData<T>): FactoriesReturn<T>;
     /** Find chat by Id */
     findChat(id: string | WA.wid): Promise<WAPI.Chat | null>;
     /** Find contact by Id */

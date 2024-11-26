@@ -1,6 +1,7 @@
 import WAPI from "../../index";
 import checkPhone from "./checkPhone";
 import closeChat from "./closeChat";
+import factories from "./factories";
 import findChat from "./findChat";
 import findCommonGroup from "./findCommonGroup";
 import findContact from "./findContact";
@@ -38,6 +39,7 @@ export function constructWAPI(app: WAPI) {
             // ...reConstruct(Debug),
             checkPhone,
             closeChat,
+            factories,
             findChat,
             findCommonGroup,
             findContact,
