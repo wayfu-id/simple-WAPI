@@ -68,6 +68,8 @@ const getStore = (modules: webpackModules, result: any = {}) => {
         return new RegExp(`WAWeb(\\w*)\\.(?:${type === "WebClasses" ? "scss" : "react"})`, "g");
     };
 
+    result = modules("WAWebCollections").default;
+
     for (let idx in modules.m) {
         if (typeof modules(idx) === "object" && modules(idx) !== null) {
             let _idx: keyof typeof addOn;
