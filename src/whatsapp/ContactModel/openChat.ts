@@ -4,9 +4,7 @@ const openChat: (app: WAPI) => PropertyDescriptor & ThisType<WA.ContactModel> = 
     return {
         value: async function openChat() {
             let chat = await app.Chat.find(this.id);
-            if (!chat) return;
-            await chat.open();
-            return chat;
+            return chat ? (await chat.open(), chat) : undefined;
         },
         enumerable: true,
     };
