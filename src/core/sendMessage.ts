@@ -2,11 +2,11 @@ import WAPI from "../../index";
 import { Chat } from "../structures/index";
 
 const sendMessage: PropertyDescriptor & ThisType<WAPI> = {
-    value: async function sendMessage<T extends WA.MessageSendOptions>(
+    value: async function sendMessage(
         id: string | Chat | WA.wid,
         message: string,
-        options?: T
-    ): Promise<WAPI.reportType<T> | undefined> {
+        options?: WAPI.SendMessageOptions
+    ) {
         let chat = await (async (e) => {
             let ct: WA.ChatModel | null;
             try {
@@ -20,14 +20,15 @@ const sendMessage: PropertyDescriptor & ThisType<WAPI> = {
 
         if (!chat) return;
 
-        let { media, caption, ret } = options ?? {},
-            _ret = ret && typeof ret === "boolean" ? ret : false;
+        let { media, attachment, caption, ret } = options ?? {},
+            _ret = ret && typeof ret === "boolean" ? ret : false,
+            _media = media ?? (attachment instanceof File ? attachment : undefined);
 
-        if (media) {
+        if (_media) {
             caption = caption ? caption : message;
-            return (await chat.sendMedia(media, caption, _ret)) as WAPI.reportType<T>;
+            return await chat.sendMedia<typeof _ret>(_media, caption, _ret);
         }
-        return (await chat.sendText(message, _ret)) as WAPI.reportType<T>;
+        return await chat.sendText<typeof _ret>(message, _ret);
     },
 };
 
