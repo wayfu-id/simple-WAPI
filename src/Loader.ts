@@ -2,7 +2,7 @@ import { storeObjects } from "./Constant";
 import { constructStore } from "./whatsapp/index";
 import { constructWAPI } from "./core/index";
 
-type webpackModules = {
+export type webpackModules = {
     (id: string): any;
     readonly m?: any;
 };
@@ -64,24 +64,12 @@ const getStore = (modules: webpackModules, result: any = {}) => {
         WebClasses: {},
         WebComponents: {},
     };
-
     const rgx = (type: keyof typeof addOn) => {
         return new RegExp(`WAWeb(\\w*)\\.(?:${type === "WebClasses" ? "scss" : "react"})`, "g");
     };
 
     for (let idx in modules.m) {
         if (typeof modules(idx) === "object" && modules(idx) !== null) {
-            storeObjects.forEach(({ id, conditions }) => {
-                if (!conditions || result[id]) return;
-
-                result = ((id, module) => {
-                    const mod = (m: any) => (id === "Store" ? m : { [id]: m }),
-                        add = (m: any) => (m !== null ? mod(m) : {});
-
-                    return Object.assign(result, add(module));
-                })(id, conditions(modules(idx)));
-            });
-
             let _idx: keyof typeof addOn;
             for (_idx in addOn) {
                 if (rgx(_idx).test(idx)) {
@@ -90,6 +78,10 @@ const getStore = (modules: webpackModules, result: any = {}) => {
                 }
             }
         }
+    }
+
+    for (let key in storeObjects) {
+        result[key] = storeObjects[key](modules);
     }
 
     result = Object.assign({}, result, addOn);
