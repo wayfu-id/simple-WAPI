@@ -1,28 +1,64 @@
 import { constructStore, constructWAPI, getStore, waitLoaderType, _token } from "./src/Loader";
 import { FactoriesType, FactoriesReturn, FactoriesData } from "./src/core/factories";
 import * as S from "./src/structures/index";
-import { Store } from "./src/whatsapp/index";
+// import { Store } from "./src/whatsapp/index";
+import { fileUtils, preProcessors } from "./src/utils/index";
 
 declare global {
     export const __VERSION__: string;
     interface Window {
         Debug: { VERSION: string };
     }
-}
-
-declare namespace WAPI {
-    export type Chat = S.Chat;
-    export type Contact = S.Contact;
-    export type Group = S.Group;
-    export type GroupChat = S.GroupChat;
-    export type ChatSerialized = S.ChatSerialized;
-    export type ContactSerialized = S.ContactSerialized;
-    export type GroupParticipantSerialized = S.GroupParticipantSerialized;
-    export type GroupSerialized = S.GroupSerialized;
-    export type ProfilePicThumbSerialized = S.ProfilePicThumbSerialized;
-    export type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true
-        ? Chat
-        : WA.MessageSendResult;
+    namespace WAPI {
+        export type Chat = S.Chat;
+        export type Contact = S.Contact;
+        export type Group = S.Group;
+        export type GroupChat = S.GroupChat;
+        export type ChatSerialized = S.ChatSerialized;
+        export type ContactSerialized = S.ContactSerialized;
+        export type GroupParticipantSerialized = S.GroupParticipantSerialized;
+        export type GroupSerialized = S.GroupSerialized;
+        export type Message = S.Message;
+        export type MessageMedia = S.MessageMedia;
+        export type ProfilePicThumbSerialized = S.ProfilePicThumbSerialized;
+        export type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true
+            ? Chat
+            : WA.MessageSendResult;
+        export type MediaInput =
+            | Record<"data" | "mimetype" | "filename", string>
+            | MessageMedia
+            | WA.MediaInfo;
+        export type MediaProcessOptions = {
+            forceVoice?: boolean;
+            forceDocument?: boolean;
+            forceGif?: boolean;
+            forceHD?: boolean;
+        };
+        type LinkMessageOptions = WA.LinkPreviewData & {
+            preview?: boolean;
+            ret?: boolean;
+            url?: string;
+        };
+        type MediaMessageOptions = {
+            attachment?: WA.kindOfAttachment;
+            caption?: string;
+            sendAsHD?: boolean;
+            sendAudioAsVoice?: boolean;
+            sendMediaAsSticker?: boolean;
+            sendMediaAsDocument?: boolean;
+            sendVideoAsGif?: boolean;
+            isViewOnce?: boolean;
+        };
+        type MessageExtraOptions = { [k: string]: any };
+        export type SendMessageOptions = MediaMessageOptions & {
+            [k: string]: any;
+            content: string;
+            extraOptions?: MessageExtraOptions;
+            linkPreview?: boolean;
+            subtype?: string;
+        } & WA.MessageSendOptions &
+            LinkMessageOptions;
+    }
 }
 
 class WAPI implements WAPI {
@@ -76,7 +112,7 @@ class WAPI implements WAPI {
     }
 }
 
-interface WAPI extends Store {
+interface WAPI extends WA.Store {
     /** Current contact info */
     ME: WAPI.Contact;
     /** WhatsApp Web Version */
@@ -91,6 +127,8 @@ interface WAPI extends Store {
     checkPhone(phone: string): Promise<WA.WapQueryResult | null>;
     /** WAPI Model Factories. Available for Chat, Contact, Group, or Message */
     factories<T extends FactoriesType>(type: T, data: FactoriesData<T>): FactoriesReturn<T>;
+    /** A bunch of function for processing file */
+    fileUtils: typeof fileUtils;
     /** Find chat by Id */
     findChat(id: string | WA.wid): Promise<WAPI.Chat | null>;
     /** Find contact by Id */
@@ -111,11 +149,19 @@ interface WAPI extends Store {
     closeChat(id: string | WAPI.Chat | WA.wid): Promise<WA.ChatModel | null>;
     /** Open chat by id */
     openChat(id: string | WAPI.Chat | WA.wid): Promise<WA.ChatModel | null>;
+    /** Process attacment as media data */
+    preProcessors: ReturnType<typeof preProcessors>;
+    /** Send advanched message to id */
+    sendAdvMessage<T extends WAPI.SendMessageOptions>(
+        id: string | WAPI.Chat | WA.wid,
+        message: string,
+        option?: T
+    ): Promise<WAPI.reportType<T>>;
     /** Send message to id */
     sendMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
-        option?: WA.MessageSendOptions
+        option?: T
     ): Promise<WAPI.reportType<T>>;
     /** Delay some function */
     sleep(time: number): Promise<void>;
