@@ -15,6 +15,7 @@ import sendMessage from "./sendMessage";
 import { WAPI_VERSION } from "../Constant";
 import sleep from "./sleep";
 import { delProp } from "../utils/index";
+import { fileUtils, preProcessors } from "../utils/index";
 // import { reConstruct } from "../utils/index";
 
 /**
@@ -57,6 +58,12 @@ export function constructWAPI(app: WAPI) {
                 enumerable: true,
             },
             WAPI_VERSION,
+            fileUtils: {
+                value: fileUtils,
+            },
+            preProcessors: {
+                value: preProcessors(app),
+            },
         });
 
         delProp("Debug", WAPI.prototype);
