@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.5...v0.1.6) (2024-11-28)
+
+
+### Bug Fixes
+
+* **core:** error when calling processMediaData ([e482403](https://github.com/wayfu-id/simple-WAPI/commit/e4824037e6e0fd7bdc662ecefe6f500c4499c365))
+
 ### [0.1.5](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.3...v0.1.5) (2024-11-26)
 
 
