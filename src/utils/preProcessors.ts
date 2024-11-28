@@ -65,7 +65,7 @@ const preProcessors = (app: WAPI) => {
         ) {
             const file = app.fileUtils.mediaInfoToFile(media);
             const mediaPrepOpt = ((hd) => {
-                let configName = `web_image_max${hd ? "_hd_" : "_"}"edge"`,
+                let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
                     maxDimension = app.ABProps.getABPropConfigValue(configName) as number;
                 return {
                     asDocument: forceDocument,
