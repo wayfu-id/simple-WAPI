@@ -44,6 +44,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     LinkPreview: (m: webpackModules) => {
         return m("WAWebLinkPreviewChatAction");
     },
+    MediaModel: (m: webpackModules) => {
+        return m("WAWebAttachMediaModel");
+    },
     MediaCollection: (m: webpackModules) => {
         return m("WAWebAttachMediaCollection")?.default;
     },
