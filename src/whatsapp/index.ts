@@ -304,7 +304,9 @@ declare global {
             /** Image caption */
             caption?: string;
             /** Media to be sent */
-            media?: File;
+            media?: File | Blob;
+            /** Media Quality */
+            quality?: "Standard" | "HD";
             /** Return chat model */
             ret?: boolean;
         };
@@ -389,9 +391,14 @@ declare global {
         }
 
         /** MessageMedia Collection */
+        type mediaAttachment = {
+            file: File | Blob;
+            quality?: "Standard" | "HD";
+        };
+
         export interface MessageMedia extends BaseClass<MediaModel> {
             getActive(): MessageMedia;
-            processAttachments(files: [{ file: File }], ack: number, chat: ChatModel): Promise<void>;
+            processAttachments(files: mediaAttachment[], ack: number, chat: ChatModel): Promise<void>;
         }
 
         /** ProfilePicThub Collection */
@@ -434,6 +441,12 @@ declare global {
             [k: string]: any | undefined;
         }
 
+        type sendMediaOptions = {
+            caption?: string;
+            quality?: "Standard" | "HD";
+            ret?: boolean;
+        };
+
         /** Chat Model */
         export interface ChatModel extends BaseModel {
             id: ChatId;
@@ -449,8 +462,8 @@ declare global {
             open(): Promise<void>;
             sendText<T extends boolean>(body: string, model?: T): Promise<SendMessageResult<T>>;
             sendMedia<T extends boolean>(
-                file: File,
-                caption: string,
+                file: File | Blob,
+                options?: sendMediaOptions,
                 model?: T
             ): Promise<SendMessageResult<T>>;
             sendMessage<T extends boolean>(
@@ -581,7 +594,11 @@ declare global {
             get(query: string | wid): MediaModel | null;
             getModelsArray(): MediaModel[];
             getActive(): MessageMedia;
-            processAttachments(files: [{ file: File }], ack: number, chat: ChatModel): Promise<void>;
+            processAttachments(
+                files: mediaAttachment[],
+                ack: number,
+                chat: ChatModel
+            ): Promise<void>;
         }
 
         // Media Data
