@@ -135,6 +135,15 @@ const fileSignature = [
     { keys: ["25504446"], result: "application/pdf" },
 ];
 
+const mimeToExtension: { [k: string]: string } = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/gif": "gif",
+    "image/webp": "webp",
+    "image/tiff": "tiff",
+    "application/pdf": "pdf",
+};
+
 // Property descriptor for Version Info
 const WAPI_VERSION: PropertyDescriptor = {
     value: __VERSION__,
@@ -142,4 +151,4 @@ const WAPI_VERSION: PropertyDescriptor = {
     configurable: false,
 };
 
-export { fileSignature, storeObjects, WAPI_VERSION };
+export { fileSignature, mimeToExtension, storeObjects, WAPI_VERSION };

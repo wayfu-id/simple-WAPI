@@ -1,5 +1,4 @@
-import { fileSignature } from "../Constant";
-import WAPI from "../../.";
+import { fileSignature, mimeToExtension } from "../Constant";
 
 const fileUtils = {
     /** Convert array buffer to base64 using async method */
@@ -9,6 +8,12 @@ const fileUtils = {
             [, data] = result.split(",");
         console.log(result);
         return data;
+    },
+    /** Convert Blob object to File object */
+    blobToFile: function blobToFile(blob: Blob, name?: string) {
+        let mime = blob.type,
+            filename = name ? name : `file.${mimeToExtension[mime]}`;
+        return new File([blob], filename, { type: mime, lastModified: Date.now() });
     },
     /** Generate random hash with specific length */
     generateHash: async function generateHash(length: number) {
@@ -89,9 +94,11 @@ const fileUtils = {
 
         return null;
     },
-    /** Convert media info to file */
-    mediaInfoToFile: function mediaInfoToFile(media: File | WAPI.MediaInput) {
+    /** Convert media info to File */
+    mediaInfoToFile: function mediaInfoToFile(media: File | Blob | WAPI.MediaInput) {
         if (media instanceof File) return media;
+        if (media instanceof Blob) return this.blobToFile(media);
+
         const { data, mimetype, filename } = media;
 
         const binaryData = window.atob(data);
@@ -103,10 +110,28 @@ const fileUtils = {
         }
 
         const blob = new Blob([buffer], { type: mimetype });
-        return new File([blob], filename ?? "", {
-            type: mimetype,
-            lastModified: Date.now(),
-        });
+        return this.blobToFile(blob, filename);
+    },
+    /** Convert media info to Blob */
+    mediaInfoToBlob: async function mediaInfoToBlob(media: File | Blob | WAPI.MediaInput) {
+        if(media instanceof File) {
+            let buffer = await this.readBuffer(media),
+                mime = await this.getMimeType(buffer) as string;
+            return new Blob([buffer], { type: mime });
+        };
+        if(media instanceof Blob) return media;
+        
+        const { data, mimetype } = media;
+
+        const binaryData = window.atob(data);
+        const buffer = new ArrayBuffer(binaryData.length);
+        const view = new Uint8Array(buffer);
+
+        for (let i = 0; i < binaryData.length; i++) {
+            view[i] = binaryData.charCodeAt(i);
+        }
+
+        return new Blob([buffer], { type: mimetype });
     },
     /** Read file as base64 */
     readBase64: async function readBase64(file: File | Blob) {
