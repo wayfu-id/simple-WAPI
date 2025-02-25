@@ -56,6 +56,7 @@ declare global {
             extraOptions?: MessageExtraOptions;
             linkPreview?: boolean;
             subtype?: string;
+            quality?: "Standard" | "HD"
         } & WA.MessageSendOptions &
             LinkMessageOptions;
     }

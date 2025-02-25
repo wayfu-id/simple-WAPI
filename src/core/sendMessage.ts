@@ -20,13 +20,14 @@ const sendMessage: PropertyDescriptor & ThisType<WAPI> = {
 
         if (!chat) return;
 
-        let { media, attachment, caption, ret } = options ?? {},
+        let { attachment, caption, media, quality, ret } = options ?? {},
             _ret = ret && typeof ret === "boolean" ? ret : false,
-            _media = media ?? (attachment instanceof File ? attachment : undefined);
+            _media = media ?? (attachment instanceof File || attachment instanceof Blob ? attachment : null);
 
         if (_media) {
-            caption = caption ? caption : message;
-            return await chat.sendMedia<typeof _ret>(_media, caption, _ret);
+            // caption = caption ? caption : message;
+            let attcOptions = { caption : caption ?? message, quality : quality ?? "Standard" };
+            return await chat.sendMedia<typeof _ret>(_media, attcOptions, _ret);
         }
         return await chat.sendText<typeof _ret>(message, _ret);
     },

@@ -2,22 +2,24 @@ import WAPI from "../../../index";
 
 const sendMedia: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (app: WAPI) => {
     return {
-        value: async function sendMedia(file: File, caption: string, ret?: boolean) {
+        value: async function sendMedia(file: File | Blob, options?: WA.sendMediaOptions, ret?: boolean) {
             if (this.hasDraftMessage) this.clearDraft();
             if (!this.active) await this.open();
-            caption = typeof caption === "undefined" ? "" : caption;
             ret = !!ret;
 
             return new Promise((done) => {
-                (async (f, c, r) => {
-                    let mc = new app.MediaCollection(this);
-                    await mc.processAttachments([{ file: f }], 1, this);
+                (async (f, o, r) => {
+                    let mc = new app.MediaCollection(this),
+                        caption = o?.caption ?? "",
+                        quality = o?.quality ?? "Standard";
+
+                    await mc.processAttachments([{ file: f, quality }], 1, this);
 
                     let [media] = mc.getModelsArray(),
-                        res = await media.sendToChat(this, { caption: c });
+                        res = await media.sendToChat(this, { caption: caption });
 
                     done(r ? this.getModel() : res);
-                })(file, caption, ret);
+                })(file, options, ret);
             }).catch((err) => {
                 throw new Error(`Couldn't Send Media Message. Reason: ${err.message || "Unknown"}`);
             });
