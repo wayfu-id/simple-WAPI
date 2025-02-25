@@ -1,11 +1,13 @@
 import Chat from "./Chat";
 import GroupParticipant from "./GroupParticipant";
 
-type T = WA.GroupModel & WA.ChatModel;
+type T = {
+    groupMetadata: WA.GroupModel;
+} & WA.groupChat;
 
 export default class GroupChat extends Chat {
-    isGroup: boolean;
-    groupMetadata: WA.GroupMetadata;
+    isGroup: boolean = true;
+    groupMetadata: WA.GroupModel;
 
     _patch(data: T) {
         /** This group metadata */

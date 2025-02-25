@@ -441,7 +441,7 @@ declare global {
             hasDraftMessage: boolean;
             // isGroup: boolean;
             contact: ContactModel;
-            groupMetadata?: GroupMetadata;
+            groupMetadata?: GroupModel;
 
             clearDraft(): ChatModel | null;
             close(): Promise<void>;
@@ -460,7 +460,10 @@ declare global {
         }
 
         /** GroupChat Model */
-        type groupChat = ChatModel & { isGroup: true };
+        type groupChat = {
+            isGroup: true;
+            groupMetadata: GroupModel
+        } & ChatModel;
 
         /** Contact Model */
         export interface ContactModel extends BaseModel {
