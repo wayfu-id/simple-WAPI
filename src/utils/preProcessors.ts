@@ -58,12 +58,46 @@ const preProcessors = (app: WAPI) => {
             }
             return null;
         },
+        processMedia: async function processMedia(media: WA.MediaPreparation) {
+            let [_media, _filehash] = await (async function (m: WA.MediaPreparation) {
+                let media = await m.waitForPrep(),
+                    { mediaBlob, filehash } = media;
+
+                media.mediaBlob = !(mediaBlob instanceof app.OpaqueData)
+                    ? await app.OpaqueData.createFromData(mediaBlob, mediaBlob.type)
+                    : mediaBlob;
+
+                return [media, filehash];
+            })(media);
+
+            if (!_filehash) throw new Error("Filehash not found");
+
+            let mediaObject = app.MediaObject.getOrCreateMediaObject(_filehash),
+                mediaBlob = mediaObject.mediaBlob;
+
+            if (_media.mediaBlob instanceof app.OpaqueData) {
+                _media.mediaBlob.autorelease();
+                _media.mediaBlob = mediaBlob;
+
+                _media.renderableUrl = mediaBlob.url();
+                mediaObject.consolidate(_media.toJSON());
+                _media.mediaBlob.autorelease();
+            }
+
+            // let _media = await media.waitForPrep();
+
+            // if (!(_media.mediaBlob instanceof app.OpaqueData)) {
+            //     _media.mediaBlob = await app.OpaqueData.createFromData(_media.mediaBlob, _media.mediaBlob.type);
+            // }
+
+            // let _fileHash = _media.filehash;
+        },
         /** Process File to Media Data for Message Attachment */
         processMediaData: async function processMediaData(
-            media: File | WAPI.MediaInput,
+            media: File | Blob | WAPI.MediaInput,
             { forceVoice, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
         ) {
-            const file = app.fileUtils.mediaInfoToFile(media);
+            const file = await app.fileUtils.mediaInfoToBlob(media);
             const mediaPrepOpt = ((hd) => {
                 let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
                     maxDimension = app.ABProps.getABPropConfigValue(configName) as number;
@@ -73,10 +107,13 @@ const preProcessors = (app: WAPI) => {
                     maxDimension,
                 };
             })(forceHD);
-
+            console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
             const mData = await app.OpaqueData.createFromData(file, file.type);
-            const mediaPrep = app.MediaPrep.prepRawMedia(mData, mediaPrepOpt);
+            console.log(`mData:`, mData);
+            const mediaPrep = app.MediaPrep.prepRawMedia(mData, mediaPrepOpt); // a, e = WA.ChatModel, f  = msg
+            console.log(`mediaPrep:`, mediaPrep);
             const mediaData = await mediaPrep.waitForPrep();
+            console.log(`mediaData:`, mediaData);
             const mediaObject = app.MediaObject.getOrCreateMediaObject(mediaData.filehash);
 
             const mediaType = app.MediaTypes.msgToMediaType({
@@ -87,7 +124,8 @@ const preProcessors = (app: WAPI) => {
             if (forceVoice && mediaData.type === "audio") {
                 mediaData.type = "ptt" as WA.MessageTypes;
                 const waveform = mediaObject.contentInfo.waveform;
-                mediaData.waveform = waveform ?? (await app.fileUtils.generateWaveform(file));
+                let audioFile = app.fileUtils.blobToFile(file, "audio.ogg");
+                mediaData.waveform = waveform ?? (await app.fileUtils.generateWaveform(audioFile));
             }
 
             if (forceGif && mediaData.type === "video") {
@@ -136,12 +174,33 @@ const preProcessors = (app: WAPI) => {
 
             return mediaData;
         },
+        processMediaMessage: async function processMediaMessage(
+            media: File | Blob | WAPI.MediaInput,
+            { forceVoice, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
+        ) {
+            const file = await app.fileUtils.mediaInfoToBlob(media);
+            const mediaPrepOpt = ((hd) => {
+                let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
+                    maxDimension = app.ABProps.getABPropConfigValue(configName) as number;
+                return {
+                    asDocument: forceDocument,
+                    asGif: forceGif,
+                    maxDimension,
+                };
+            })(forceHD);
+            console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
+            const mData = await app.OpaqueData.createFromData(file, file.type);
+            console.log(`mData:`, mData);
+            return app.MediaPrep.prepRawMedia(mData, mediaPrepOpt); // a, e = WA.ChatModel, f  = msg
+        },
         /** Process File or Media Info 'image/webp' type for Sticker attachment */
-        processStickerData: async function processStickerData(media: File | WAPI.MediaInput) {
+        processStickerData: async function processStickerData(
+            media: File | Blob | WAPI.MediaInput
+        ) {
             const { mediaInfoToFile, getFileHash, generateHash, getMimeType } = app.fileUtils;
 
             let mimetype = await (async (m) => {
-                return m instanceof File ? (await getMimeType(m)) ?? m.type : m.mimetype;
+                return m instanceof Blob ? (await getMimeType(m)) ?? m.type : m.mimetype;
             })(media);
             if (mimetype !== "image/webp") throw new Error("Invalid media type");
 

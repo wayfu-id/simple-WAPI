@@ -639,7 +639,7 @@ declare global {
             new (): OpaqueData;
             (): OpaqueData;
             createFromBase64Jpeg(data: string): Promise<OpaqueData>;
-            createFromData(file: File, type: string): Promise<OpaqueData>;
+            createFromData(file: File | Blob, type: string): Promise<OpaqueData>;
         }
         export class OpaqueData {
             renderableUrl: string;
@@ -769,6 +769,7 @@ declare global {
             contentInfo: { [k: string]: any };
             filehash: string;
             size: number;
+            mediaBlob: OpaqueData;
             consolidate(data: any): any;
         }
 

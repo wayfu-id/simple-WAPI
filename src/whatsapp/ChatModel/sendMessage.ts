@@ -12,7 +12,8 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                     attachment: content,
                 } as WAPI.SendMessageOptions;
             }
-            let attOptions: WA.attcOptions | undefined;
+            let attOptions: WA.attcOptions | undefined,
+                mediaMsgReady: WA.MediaPreparation | undefined;
             /** If 'attachment' options is set */
             if (options?.attachment) {
                 let {
@@ -26,7 +27,7 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                     sendMediaAsDocument,
                 } = options;
 
-                if (attachment instanceof File) {
+                if (attachment instanceof File || attachment instanceof Blob) {
                     let mediaOpt: WAPI.MediaProcessOptions = {
                         forceVoice: Boolean(sendAudioAsVoice),
                         forceDocument: Boolean(sendMediaAsDocument),
@@ -34,34 +35,58 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                         forceHD: Boolean(sendAsHD),
                     };
 
-                    attOptions = (
-                        sendMediaAsSticker
-                            ? await app.preProcessors.processStickerData(attachment)
-                            : await app.preProcessors.processMediaData(attachment, mediaOpt)
-                    ) as WA.attcOptions;
+                    mediaMsgReady = await app.preProcessors.processMediaMessage(
+                        attachment,
+                        mediaOpt
+                    );
+
+                    // attachment = attachment instanceof Blob ? app.fileUtils.blobToFile(attachment) : attachment;
+
+                    // attOptions = (
+                    //     sendMediaAsSticker
+                    //         ? await app.preProcessors.processStickerData(attachment)
+                    //         : await app.preProcessors.processMediaData(attachment, mediaOpt)
+                    // ) as WA.attcOptions;
                 } else {
                     attOptions = attachment as WA.attcOptions;
                 }
 
-                attOptions.caption = caption;
+                attOptions = {
+                    caption: caption,
+                    isViewOnce: Boolean(isViewOnce),
+                } as WA.attcOptions;
 
-                content = (!sendMediaAsSticker && attOptions?.preview) ?? "";
+                // attOptions.caption = caption;
 
-                attOptions.isViewOnce = Boolean(isViewOnce);
+                // content = (!sendMediaAsSticker && attOptions?.preview) ?? "";
+
+                // attOptions.isViewOnce = Boolean(isViewOnce);
 
                 delete options.attachment;
                 // delete options.sendMediaAsSticker;
             }
 
+            if (!mediaMsgReady) return null;
+            console.log(`mediaMsgReady`, mediaMsgReady);
+            if (this.hasDraftMessage) this.clearDraft();
+            if (!this.active) await this.open();
+
+            return await app.MediaPrep.sendMediaMsgToChat(mediaMsgReady, this, attOptions);
+
+            // let [_, res] = await Promise.all(await app.MediaPrep.addAndSendMsgToChat(this, message));
+
+            // return Boolean(options?.ret) ? this.getModel() : res;
+
+            // console.log(`attOptions`, attOptions);
             /** If 'linkPreview' is setted 'true' */
-            if (options?.linkPreview) {
-                content = typeof content === "string" ? content : "";
-                options = {
-                    ...options,
-                    ...(await app.preProcessors.generateLinkPreview(content)),
-                };
-                delete options.linkPreview;
-            }
+            // if (options?.linkPreview) {
+            //     content = typeof content === "string" ? content : "";
+            //     options = {
+            //         ...options,
+            //         ...(await app.preProcessors.generateLinkPreview(content)),
+            //     };
+            //     delete options.linkPreview;
+            // }
 
             /** Not support for Quoted Message yet */
             let quotedMsgOptions = {};
@@ -248,10 +273,10 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
 
             /** Set additional options */
             let extraOptions = {};
-            if (options?.extraOptions) {
-                extraOptions = options.extraOptions;
-                delete options.extraOptions;
-            }
+            // if (options?.extraOptions) {
+            //     extraOptions = options.extraOptions;
+            //     delete options.extraOptions;
+            // }
 
             const baseMessage = await app.preProcessors.generateBaseMessage(content, this);
             const message: WA.MessageModel = {
