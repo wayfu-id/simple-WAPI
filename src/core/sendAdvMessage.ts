@@ -23,6 +23,7 @@ const sendAdvMessage: PropertyDescriptor & ThisType<WAPI> = {
         let { media, attachment, caption, ret } = options ?? {},
             _ret = ret && typeof ret === "boolean" ? ret : false,
             _attc = attachment ?? media;
+            delete options?.media
 
         if (_attc) {
             caption = caption ? caption : message;
