@@ -790,6 +790,7 @@ declare global {
         export interface MediaPrep {
             prepRawMedia(data: OpaqueData, options: { [k: string]: any }): MediaPreparation;
             processRawMedia(data: OpaqueData, options: { [k: string]: any }): Promise<MediaData>;
+            sendMediaMsgToChat(media: MediaPreparation, chat: ChatModel, opt?: attcOptions): Promise<void>;
         }
 
         type UploadedMedia = {
