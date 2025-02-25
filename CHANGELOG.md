@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.6...v0.1.7) (2025-02-25)
+
+
+### Features
+
+* **media:** add quality property when sending media ('HD' or 'Standard') ([21c5b47](https://github.com/wayfu-id/simple-WAPI/commit/21c5b479d16ac1010ecc44c6bc57f74d2eaa261c))
+* **media:** add quality property when sending media ('HD' or 'Standard') ([a0f3a3f](https://github.com/wayfu-id/simple-WAPI/commit/a0f3a3f04c469274a280a7940b65c28687d2e81e))
+
+
+### Bug Fixes
+
+* **type:** fix incorrect groupMetadata type in groupChat ([a59758c](https://github.com/wayfu-id/simple-WAPI/commit/a59758ce1a4ecdf6207e27797443b5a6d77e1157))
+* **type:** fix incorrect groupMetadata type in groupChat ([f6b8524](https://github.com/wayfu-id/simple-WAPI/commit/f6b8524a3f53253d266d2c5d20654b0a40275497))
+* **typings:** missing types for a function ([2eba60a](https://github.com/wayfu-id/simple-WAPI/commit/2eba60a4e2ac6c182d20e1c3823d7f1a795db3d8))
+
 ### [0.1.6](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.5...v0.1.6) (2024-11-28)
 
 
