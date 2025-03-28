@@ -68,11 +68,12 @@ export function constructWAPI(app: WAPI) {
             },
         });
 
+        if (typeof app.sendMessage !== "function") throw new Error("Failed to define WAPI properties");
+
         delProp("Debug", WAPI.prototype);
 
         return true;
-    } catch (err) {
-        console.error("From: Construct WAPI", err);
-        return false;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct WAPI > ${err.message}`);
     }
 }

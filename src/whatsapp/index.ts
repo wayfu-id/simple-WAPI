@@ -14,11 +14,16 @@ function constructChat(app: WAPI) {
             _model_ = chatModel(app);
 
         Object.defineProperties(Chat.constructor.prototype, _proto_);
+        if (typeof Chat.clearAllDraft === "undefined") {
+            throw new Error("Failed to construct Chat!");
+        }
         Object.defineProperties(Chat.modelClass.prototype, _model_);
+        if (typeof Chat.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct Chat Model!");
+        }
         return true;
-    } catch (err) {
-        console.error("From: Construct Chat", err);
-        return false;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Chat > ${err.message}`);
     }
 }
 
@@ -32,11 +37,16 @@ function constructContact(app: WAPI) {
 
         Object.defineProperties(Contact.constructor.prototype, _proto_);
         Object.defineProperties(Contact, _core_);
+        if (typeof Contact.findContact === "undefined") {
+            throw new Error("Failed to construct Contact!");
+        }
         Object.defineProperties(Contact.modelClass.prototype, _model_);
+        if (typeof Contact.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct Contact Model!");
+        }
         return true;
-    } catch (err) {
-        console.error("From: Construct Contact", err);
-        return false;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Contact > ${err.message}`);
     }
 }
 
@@ -48,10 +58,12 @@ function constructGroupMetadata(app: WAPI) {
         let _model_ = groupMetadata(app);
 
         Object.defineProperties(GroupMetadata.modelClass.prototype, _model_);
+        if (typeof GroupMetadata.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct GroupMetadata Model!");
+        }
         return true;
-    } catch (err) {
-        console.error("From: Construct GroupMetadata", err);
-        return false;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct GroupMetadata > ${err.message}`);
     }
 }
 
@@ -63,10 +75,12 @@ function constructMessage(app: WAPI) {
         let _model_ = messageModel(app);
 
         Object.defineProperties(Msg.modelClass.prototype, _model_);
+        if (typeof Msg.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct Msg Model!");
+        }
         return true;
-    } catch (err) {
-        console.error("From: Construct Contact", err);
-        return false;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Message > ${err.message}`);
     }
 }
 

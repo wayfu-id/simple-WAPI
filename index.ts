@@ -78,20 +78,35 @@ class WAPI implements WAPI {
      * Initialize store object (Add or remove unused module)
      */
     _init(store: any) {
-        if (!WAPI.prototype.Chat && store) {
-            Object.assign(WAPI.prototype, store);
-            constructStore(this);
+        try {
+            if (!store || (store && !store.Chat)) {
+                throw new Error("WhatsApp Modules are not found!");
+            }
+            if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
+                Object.assign(WAPI.prototype, store);
+                try {
+                    constructStore(this);
+                } catch (error: Error | any) {
+                    throw new Error(`Failed to construct WAPI Store. ${error.message || "Unknown."}`);
+                }
+            }
+            try {
+                constructWAPI(this);
+            } catch (error: Error | any) {
+                throw new Error(`Failed to construct WAPI. ${error.message || "Unknown."}`);
+            }
+            return this;
+        } catch (error: Error | any) {
+            throw new Error(error.message || "Unknown");
         }
-        constructWAPI(this);
-        return this;
     }
     /** Static methor for initiating WAPI class */
     static init(target?: Window | (Window & typeof globalThis)): WAPI | undefined {
-        target = target && target instanceof Window ? target : window;
-        const { type, chunk } = waitLoaderType(target);
-
-        if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
-            if (!!type && (type === "meta" || type === "webpack")) {
+        try {
+            target = target && target instanceof Window ? target : window;
+            if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
+                const { type, chunk } = waitLoaderType(target);
+                if (!type) throw new Error("LoaderType not found!");
                 let modStore = {};
 
                 if (type === "meta") {
@@ -104,11 +119,10 @@ class WAPI implements WAPI {
                 modStore = Object.assign({}, modStore, { Debug: target["Debug"] });
                 return new WAPI(_token, modStore);
             } else {
-                console.error("Failed to load WAPI Module!");
-                return;
+                return new WAPI(_token);
             }
-        } else {
-            return new WAPI(_token);
+        } catch (error: Error | any) {
+            throw new Error(`Failed to load WAPI Module. ${error.message || "Unknown"}`);
         }
     }
 }
