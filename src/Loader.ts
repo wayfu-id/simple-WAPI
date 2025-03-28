@@ -2,10 +2,16 @@ import { storeObjects } from "./Constant";
 import { constructStore } from "./whatsapp/index";
 import { constructWAPI } from "./core/index";
 
+type webpackLoader = { type: "webpack"; chunk: Array<any> };
+type metaLoader = { type: "meta"; chunk: webpackModules };
+type loaderNotFound = { type: undefined; chunk: undefined };
+
 export type webpackModules = {
     (id: string): any;
     readonly m?: any;
 };
+
+export type loaderResult = webpackLoader | metaLoader | loaderNotFound;
 
 const _token = Symbol();
 
@@ -95,14 +101,14 @@ const getStore = (modules: webpackModules, result: any = {}) => {
  * @param target
  * @returns
  */
-const waitLoaderType = (target: Window | any) => {
+const waitLoaderType = (target: Window | any): loaderResult => {
     target = target && target instanceof Window ? target : window;
     const chunkName = ((t) => webpackKey(t))(target),
         isArray = (e: any) => {
             return Array.isArray(e) && e.every((i) => Array.isArray(i) && i.length > 0);
         };
 
-    const checkObjects = () => {
+    const checkObjects = (): loaderResult => {
         if (target.require || target.__d) {
             let webpackRequire = target.require("__debug");
             if (webpackRequire.modulesMap?.WAWebUserPrefsMeUser) {
