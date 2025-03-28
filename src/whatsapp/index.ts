@@ -489,7 +489,7 @@ declare global {
         /** GroupChat Model */
         type groupChat = {
             isGroup: true;
-            groupMetadata: GroupModel
+            groupMetadata: GroupModel;
         } & ChatModel;
 
         /** Contact Model */
@@ -608,11 +608,7 @@ declare global {
             get(query: string | wid): MediaModel | null;
             getModelsArray(): MediaModel[];
             getActive(): MessageMedia;
-            processAttachments(
-                files: mediaAttachment[],
-                ack: number,
-                chat: ChatModel
-            ): Promise<void>;
+            processAttachments(files: mediaAttachment[], ack: number, chat: ChatModel): Promise<void>;
         }
 
         // Media Data
