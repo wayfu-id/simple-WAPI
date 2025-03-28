@@ -13,14 +13,18 @@ const sendMedia: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (a
                         caption = o?.caption ?? "",
                         quality = o?.quality ?? "Standard";
 
-                    await mc.processAttachments([{ file: f, quality }], 1, this);
+                    try {
+                        await mc.processAttachments([{ file: f, quality }], 1, this);
+                    } catch (error: Error | any) {
+                        throw new Error(error.message ?? (error || "Unknown"));
+                    }
 
                     let [media] = mc.getModelsArray(),
                         res = await media.sendToChat(this, { caption: caption });
 
                     done(r ? this.getModel() : res);
                 })(file, options, ret);
-            }).catch((err) => {
+            }).catch((err: Error | any) => {
                 throw new Error(`Couldn't Send Media Message. Reason: ${err.message || "Unknown"}`);
             });
         },
