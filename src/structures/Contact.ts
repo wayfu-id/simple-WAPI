@@ -104,7 +104,7 @@ export default class Contact extends Base<T, ContactSerialized> {
         this.isGroup = this.id.isGroup();
 
         /** Indicates if the contact is the current user's contact */
-        this.isMe = this.id._serialized === this.app.MeUtils.getMaybeMeUser()._serialized;
+        this.isMe = this.id._serialized === this.app.MeUtils.getMaybeMePnUser()._serialized;
 
         /** Indicates if the number is saved in the current phone's contacts */
         this.isMyContact = !!data.isAddressBookContact;

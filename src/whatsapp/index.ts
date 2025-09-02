@@ -876,11 +876,12 @@ declare global {
         /** Original 'WAWebUserPrefsMeUser' module */
         export interface Profiles {
             isMeAccount(id: wid): boolean;
-            getMaybeMeLid(): { device: number } & wid;
+            // getMaybeMeLid(): { device: number } & wid;
             getMaybeMeLidUser(): wid;
-            getMaybeMeUser(): wid;
-            getMeUser(): wid;
-            getMe(): { device: number } & wid;
+            getMaybeMePnUser(): wid;
+            getMePNandLIDWids(): [devieId, devieId];
+            // getMeUser(): wid;
+            // getMe(): { device: number } & wid;
         }
 
         /** Original 'WAWebContactProfilePicThumbBridge' module */
