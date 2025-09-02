@@ -2,6 +2,7 @@ import WAPI from "../../index";
 import checkPhone from "./checkPhone";
 import closeChat from "./closeChat";
 import factories from "./factories";
+import findBusinessCatalog from "./findBusinessCatalog";
 import findChat from "./findChat";
 import findCommonGroup from "./findCommonGroup";
 import findContact from "./findContact";
@@ -17,6 +18,7 @@ import { WAPI_VERSION } from "../Constant";
 import sleep from "./sleep";
 import { delProp } from "../utils/index";
 import { fileUtils, preProcessors } from "../utils/index";
+import { BusinessContact } from "../structures";
 // import { reConstruct } from "../utils/index";
 
 /**
@@ -30,9 +32,14 @@ export function constructWAPI(app: WAPI) {
     try {
         Contact.getMeContact()
             .fetchProfilePic()
-            .then(() => {
+            .then((c) => {
                 Object.defineProperty(app, "ME", {
-                    value: Contact.getMeContact().getModel(),
+                    value: ((contact) => {
+                        if (contact instanceof BusinessContact) {
+                            contact.fetchAll();
+                        }
+                        return contact;
+                    })(c.getModel()),
                     enumerable: true,
                 });
             });
@@ -42,6 +49,7 @@ export function constructWAPI(app: WAPI) {
             checkPhone,
             closeChat,
             factories,
+            findBusinessCatalog,
             findChat,
             findCommonGroup,
             findContact,

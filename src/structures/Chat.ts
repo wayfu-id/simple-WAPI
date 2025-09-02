@@ -2,7 +2,7 @@ import Base, { BaseSerialized } from "./Base";
 import WAPI from "../../index";
 import Contact, { ContactSerialized } from "./Contact";
 
-type T = WA.ChatModel;
+type T = WA.ChatModel | WA.GroupChat;
 
 export type ChatSerialized = {
     isGroup: boolean;

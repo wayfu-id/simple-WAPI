@@ -15,6 +15,20 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     ChatGetters: (m: webpackModules) => {
         return m("WAWebChatGetters");
     },
+    BusinessUtils: (m: webpackModules) => {
+        return {
+            ...m("WAWebBizProductCatalogAction"),
+            ...m("WAWebBizProductCatalogBridge"),
+            ...m("WAWebBizCreateProductInquiry"),
+            ProductModel: m("WAWebProductModel")?.Product,
+        };
+    },
+    ChatActions: (m: webpackModules) => {
+        return m("WAWebFindChatAction");
+    },
+    // ChatSettings: (m: webpackModules) => {
+    //     return m("WAWebChatPreferenceCollection")?.default;
+    // },
     ChatState: (m: webpackModules) => {
         return m("WAWebChatStateBridge");
     },
@@ -110,6 +124,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     },
     Settings: (m: webpackModules) => {
         return m("WAWebUserPrefsGeneral");
+    },
+    StateUtils: (m: webpackModules) => {
+        return m("WAWebStateUtils");
     },
     StickerTools: (m: webpackModules) => {
         return {

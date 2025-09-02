@@ -3,11 +3,12 @@ import GroupParticipant from "./GroupParticipant";
 
 type T = {
     groupMetadata: WA.GroupModel;
-} & WA.groupChat;
+} & WA.GroupChat;
 
 export default class GroupChat extends Chat {
     isGroup: boolean = true;
     groupMetadata: WA.GroupModel;
+    raw: WA.GroupChat;
 
     _patch(data: T) {
         /** This group metadata */

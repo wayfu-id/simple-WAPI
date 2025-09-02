@@ -1,5 +1,5 @@
 import WAPI from "../..";
-import { Chat } from "../structures";
+import { Chat, Product } from "../structures";
 
 type KindOfChat = WA.ChatModel | WAPI.Chat;
 
@@ -192,6 +192,22 @@ const preProcessors = (app: WAPI) => {
                 type: "sticker",
                 filehash,
             } as WA.StickerData;
+        },
+        processProductMessage: async function processProductMessage(
+            product: WA.ProductModel | WAPI.Product,
+            chat: KindOfChat
+        ) {
+            let baseMessage = await this.generateBaseMessage("", chat),
+                useProduct = product instanceof Product ? product.raw : product,
+                productImage = useProduct.getProductImageCollectionHead(),
+                { _b64 } = productImage ? productImage.preview : { _b64: undefined };
+
+            let msg = {
+                ...baseMessage,
+                type: "product",
+                kind: "product",
+                body: _b64 ?? "",
+            };
         },
     };
 };

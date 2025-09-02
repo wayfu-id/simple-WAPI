@@ -1,6 +1,6 @@
 import WAPI from "../../index";
 
-export type BaseSerialized<o extends WA.wid> = {
+export type BaseSerialized<o extends WA.wid | string> = {
     id: o;
     name: string | undefined;
 

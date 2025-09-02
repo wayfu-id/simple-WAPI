@@ -10,6 +10,9 @@ declare global {
         Debug: { VERSION: string };
     }
     namespace WAPI {
+        export type BusinessContact = S.BusinessContact;
+        export type BusinessProfile = S.BusinessProfile;
+        export type Catalog = S.Catalog;
         export type Chat = S.Chat;
         export type Contact = S.Contact;
         export type Group = S.Group;
@@ -20,6 +23,7 @@ declare global {
         export type GroupSerialized = S.GroupSerialized;
         export type Message = S.Message;
         export type MessageMedia = S.MessageMedia;
+        export type Product = S.Product;
         export type ProfilePicThumbSerialized = S.ProfilePicThumbSerialized;
         export type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true
             ? Chat
@@ -64,6 +68,8 @@ declare global {
     }
 }
 
+type wapiOptions = [Window | (Window & typeof globalThis), boolean];
+
 class WAPI implements WAPI {
     /** Create new WAPI Object */
     private constructor(token: symbol);
@@ -103,19 +109,21 @@ class WAPI implements WAPI {
         }
     }
     /** Static methor for initiating WAPI class */
-    static init(target?: Window | (Window & typeof globalThis)): WAPI | undefined {
+    static init(
+        target: Window | (Window & typeof globalThis) = window,
+        loadUi: boolean = false
+    ): WAPI | undefined {
         try {
-            target = target && target instanceof Window ? target : window;
             if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
                 const { type, chunk } = waitLoaderType(target);
                 if (!type) throw new Error("LoaderType not found!");
                 let modStore = {};
 
                 if (type === "meta") {
-                    modStore = getStore(chunk, modStore);
+                    modStore = getStore(chunk, modStore, loadUi);
                 } else {
                     let mID = `parasite${Date.now()}`;
-                    chunk.push([[mID], {}, (o: any) => getStore(o, modStore)]);
+                    chunk.push([[mID], {}, (o: any) => getStore(o, modStore, loadUi)]);
                 }
 
                 modStore = Object.assign({}, modStore, { Debug: target["Debug"] });
@@ -146,6 +154,8 @@ interface WAPI extends WA.Store {
     factories<T extends FactoriesType>(type: T, data: FactoriesData<T>): FactoriesReturn<T>;
     /** A bunch of function for processing file */
     fileUtils: typeof fileUtils;
+    /** Find catalog by Id */
+    findBusinessCatalog(id: string | WA.wid): Promise<WAPI.Catalog | null>;
     /** Find chat by Id */
     findChat(id: string | WA.wid): Promise<WAPI.Chat | null>;
     /** Find contact by Id */

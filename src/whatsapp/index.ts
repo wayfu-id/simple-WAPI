@@ -1,10 +1,29 @@
 import WAPI from "../../index";
+import businessProfieModel from "./BusinessProfileModel/index";
+import catalogModel from "./CatalogModel/index";
 import chat from "./Chat/index";
 import chatModel from "./ChatModel/index";
 import contact from "./Contact/index";
 import contactModel from "./ContactModel/index";
 import groupMetadata from "./GroupMetadata/index";
 import messageModel from "./MessageModel/index";
+import productModel from "./ProductModel";
+
+/** Construct Custom Store's Catalog object */
+function constructCatalog(app: WAPI) {
+    let { Catalog } = app;
+    try {
+        let _model_ = catalogModel(app);
+
+        Object.defineProperties(Catalog.modelClass.prototype, _model_);
+        if (typeof Catalog.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct Catalog Model!");
+        }
+        return true;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Catalog > ${err.message}`);
+    }
+}
 
 /** Construct Custom Store's Chat object */
 function constructChat(app: WAPI) {
@@ -50,6 +69,22 @@ function constructContact(app: WAPI) {
     }
 }
 
+function constructBusinessPorfile(app: WAPI) {
+    let { BusinessProfile } = app;
+
+    try {
+        let _model_ = businessProfieModel(app);
+
+        Object.defineProperties(BusinessProfile.modelClass.prototype, _model_);
+        if (typeof BusinessProfile.modelClass.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct BusinessProfile Model!");
+        }
+        return true;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct BusinessProfile > ${err.message}`);
+    }
+}
+
 /** Construct Custom Store's GroupMetadata object */
 function constructGroupMetadata(app: WAPI) {
     let { GroupMetadata } = app;
@@ -84,14 +119,35 @@ function constructMessage(app: WAPI) {
     }
 }
 
+/** Construct Costom Store's ProductModel object */
+function constructProductModel(app: WAPI) {
+    let { BusinessUtils } = app,
+        { ProductModel } = BusinessUtils;
+
+    try {
+        let _model_ = productModel(app);
+
+        Object.defineProperties(ProductModel.prototype, _model_);
+        if (typeof ProductModel.prototype.getModel === "undefined") {
+            throw new Error("Failed to construct Product Model!");
+        }
+        return true;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Product > ${err.message}`);
+    }
+}
+
 /** Construct Custom Store object */
 export function constructStore(app: WAPI) {
     let { Chat } = app;
     if (Chat.modelClass.prototype.getModel === undefined) {
         return (
+            constructBusinessPorfile(app) &&
+            constructCatalog(app) &&
             constructChat(app) &&
             constructContact(app) &&
             constructGroupMetadata(app) &&
+            constructProductModel(app) &&
             constructMessage(app)
         );
     }
@@ -369,12 +425,20 @@ declare global {
             /** Get a single data from Collection */
             get(query: string | wid): t | null;
             /** Insert and Get the data from collection */
-            gadd(query: wid): [t];
+            gadd(query: wid | t): [t];
             /** Get all Collection Data */
             getModelsArray(): t[];
 
             prototype: this;
         }
+
+        /** BusinessProfile Collection */
+        export interface BusinessProfile extends BaseClass<BusinessProfileModel> {
+            fetchBizProfile(id: wid): Promise<BusinessProfileModel | null>;
+        }
+
+        /** Catalog Collection */
+        export interface Catalog extends BaseClass<CatalogModel> {}
 
         /** Chat Collection */
         export interface Chat extends BaseClass<ChatModel> {
@@ -415,6 +479,15 @@ declare global {
             processAttachments(files: mediaAttachment[], ack: number, chat: ChatModel): Promise<void>;
         }
 
+        /** Product Collection */
+        export interface Product extends BaseClass<ProductModel> {
+            getProductModels(): ProductModel[];
+            getProductModels(filter?: Set<reviewStatus>): ProductModel[];
+        }
+
+        /** Product Image Collection */
+        export interface ProductImage extends BaseClass<ProductImageModel> {}
+
         /** ProfilePicThub Collection */
         export interface ProfilePicThumb extends BaseClass<ProfilePicThumbModel> {}
 
@@ -439,6 +512,8 @@ declare global {
             isGroup(): boolean;
             /** Is it User wid */
             isUser(): boolean;
+            /** Is it Lid wid */
+            isLid(): boolean;
         }
 
         export interface devieId extends wid {
@@ -446,9 +521,11 @@ declare global {
         }
 
         /** All Wid that inheritance with base wid */
+        export interface BusinessProfileId extends wid {}
         export interface ContactId extends wid {}
         export interface ChatId extends wid {}
         export interface GroupId extends wid {}
+        export interface CatalogId extends wid {}
 
         /** Base Model Class */
         interface BaseModel {
@@ -465,10 +542,85 @@ declare global {
             ret?: boolean;
         } & WAPI.MediaProcessOptions;
 
+        type businessDay = "fri" | "mon" | "sat" | "sun" | "thu" | "tue" | "wed";
+
+        export type businessHours = {
+            [k in businessDay]?: {
+                mode: string;
+                hours: [number, number][];
+            };
+        };
+
+        type fbPage = {
+            displayName: string | undefined;
+            id: string | undefined;
+            likes: number | undefined;
+        };
+
+        type igProfile = {
+            followers: number | undefined;
+            handle: unknown | undefined;
+        };
+
+        type category = {
+            id: string;
+            localized_display_name: string;
+        };
+
+        type businessWebsite = {
+            url: string;
+        };
+
+        type coverPhoto = {
+            id: string;
+            url: URL;
+        };
+
+        export interface BusinessProfileModel extends BaseModel {
+            address: string | undefined;
+            businessHours?: { config: businessHours; timezone: string };
+            categories: category[];
+            coverPhoto: coverPhoto | undefined;
+            dataSource: "db" | "server";
+            description: string;
+            email: string | undefined;
+            fbPage: fbPage | undefined;
+            id: BusinessProfileId;
+            igProfessional: igProfile | undefined;
+            memberSinceText: string | undefined;
+            profileOptions: {
+                commerceExperience: string | undefined;
+                cartEnabled: boolean | undefined;
+                directConnection: boolean | undefined;
+            };
+            stale: boolean;
+            tag: string;
+            website: businessWebsite[] | undefined;
+
+            fetchData(): Promise<BusinessProfileModel | null>;
+            getModel(): WAPI.BusinessProfile;
+        }
+
+        export interface CatalogModel extends Omit<BaseModel, "name"> {
+            afterCursor: string;
+            hasCatalogCategories?: boolean;
+            id: CatalogId;
+            index?: number;
+            isState?: boolean;
+            lastUsedCountryCode?: string;
+            msgProductCollection: Product;
+            productCollection: Product;
+
+            fetchData(): Promise<CatalogModel | null>;
+            fetchProducts(): Promise<ProductModel[]>;
+            getModel(): WAPI.Catalog;
+        }
+
         /** Chat Model */
         export interface ChatModel extends BaseModel {
             id: ChatId;
             active?: boolean;
+            composeQuotedMsg?: MessageModel;
             hasDraftMessage: boolean;
             endOfHistoryTransferType: number;
             // isGroup: boolean;
@@ -493,10 +645,10 @@ declare global {
         }
 
         /** GroupChat Model */
-        type groupChat = {
+        export interface GroupChat extends ChatModel {
             isGroup: true;
             groupMetadata: GroupModel;
-        } & ChatModel;
+        }
 
         /** Contact Model */
         export interface ContactModel extends BaseModel {
@@ -504,16 +656,22 @@ declare global {
             commonGroups?: ChatModel[];
             isBusiness: boolean;
             isContactBlocked: boolean;
-            phonenumber?: string;
+            phoneNumber?: wid;
             pushname?: string;
             shortName?: string;
             username?: string;
             verifiedName?: string;
 
-            getModel(): WAPI.Contact;
+            getModel(): WAPI.Contact | WAPI.BusinessContact;
             openChat(): Promise<ChatModel>;
-            fetchProfilePic(): Promise<boolean>;
+            fetchProfilePic(): Promise<ContactModel>;
             getProfilePicThumb(): ProfilePicThumbModel | null;
+        }
+
+        export interface BusinessContact extends ContactModel {
+            isBusiness: true;
+            businessCatalog?: CatalogModel;
+            businessProfile?: BusinessProfileModel;
         }
 
         /** Group Model */
@@ -580,6 +738,56 @@ declare global {
             sendToChat(chat: ChatModel, opt: { caption: string }): Promise<ChatModel>;
         }
 
+        export enum reviewStatus {
+            "NO_REVIEW",
+            "PENDING",
+            "REJECTED",
+            "APPROVED",
+            "OUTDATED",
+        }
+
+        /** Product Model */
+        export interface ProductModel extends Omit<BaseModel, "id"> {
+            prototype: this;
+
+            additionalImageCdnUrl: string[];
+            availability?: string;
+            catalogWid: CatalogId;
+            currency: string;
+            description?: string;
+            fetchedFromServer: boolean;
+            id: string;
+            index?: number;
+            isHidden: boolean;
+            isSanctioned: boolean;
+            isState: boolean;
+            imageCdnUrl?: string;
+            imageCount?: number;
+            imageHash?: string;
+            maxAvailable: number;
+            old: boolean;
+            priceAmount1000: number;
+            productImageCollection?: ProductImage;
+            retailerId: string;
+            reviewStatus: reviewStatus;
+            url?: string;
+            salePriceAmount1000: number | undefined;
+
+            getModel(): WAPI.Product;
+            getProductImageCollectionHead(): ProductImageModel | null;
+        }
+
+        export interface ProductImageModel extends Omit<BaseModel, "id"> {
+            blobUrl?: string;
+            id: string;
+            mediaData: MediaData;
+            mediaUrl?: string;
+            old: boolean;
+            stale: boolean;
+            type?: string;
+            preview: OpaqueData;
+        }
+
         /** ProfilePicThumb Model */
         export interface ProfilePicThumbModel extends Omit<BaseModel, "name"> {
             eurl: string;
@@ -638,6 +846,8 @@ declare global {
             directPath?: string;
             filehash: string;
             firstFrameSidecar?: any;
+            fullHeight?: number;
+            fullWidth?: number;
             mediaKey?: string;
             mediaKeyTimestamp?: number;
             streamingSidecar?: any;
@@ -659,6 +869,10 @@ declare global {
             formData(): File;
         }
         export class OpaqueData {
+            blob: Blob | undefined;
+            released: boolean;
+            _b64: string | undefined;
+            _mimeType: string | undefined;
             renderableUrl: string;
             autorelease(): void;
             url(): string;
@@ -668,10 +882,80 @@ declare global {
          * Any other Objet
          */
 
-        /** Original '' module */
+        /** Original 'WAWebABProps' and 'WAWebABPropsConfigs'  module */
         export interface ABProps {
             getABPropConfigValue(name: string): string | boolean | number;
             usedBeforeInitializationConfigs: Array<string>;
+        }
+
+        type ProductImageDataKey = "requested" | "full";
+
+        type productImageData = {
+            key: ProductImageDataKey;
+            value: string;
+        }[];
+
+        type productFetchResults = {
+            id: string;
+            retailer_id: string;
+            name: string;
+            description: string;
+            url: string;
+            currency: string;
+            price: string;
+            is_hidden: boolean;
+            is_sanctioned: boolean;
+            max_available: number;
+            availability: string;
+            checkmark: boolean;
+            image_hashes_for_whatsapp: string[];
+            image_cdn_urls: productImageData;
+            additional_image_cdn_urls: productImageData[];
+            whatsapp_product_can_appeal: boolean;
+            capability_to_review_status: { key: string; value: string }[];
+            videos: [];
+        };
+
+        type catalogPagingResults = {
+            cursors: {
+                before: string;
+                after: string;
+            };
+        };
+
+        type catalogFetchResults = {
+            data: productFetchResults[];
+            paging: catalogPagingResults;
+        };
+
+        /** */
+        export interface BusinessUtils {
+            ProductModel: ProductModel;
+
+            addProduct(product: ProductModel, imageWidth?: number, imageHeight?: number): Promise<any>;
+            createProductInquiry(p: ProductModel, b: ChatId, e: wid, f?: MediaData, g?: any): MessageModel;
+            deleteProducts(productIds: string[]): Promise<any>;
+            editProduct(product: ProductModel, imageWidth?: number, imageHeight?: number): Promise<any>;
+            mapMsgToProductModel(message: MessageModel): ProductModel;
+            mapProductResponseToModel(product: productFetchResults, catId: CatalogId): ProductModel;
+            queryCatalog(
+                chatId?: CatalogId,
+                cursorAfter?: string,
+                limit?: number,
+                width?: number,
+                height?: number,
+                s?: any,
+                l?: any
+            ): Promise<catalogFetchResults>;
+            queryProduct(
+                chatId?: ChatId,
+                productId?: any,
+                imageWidth?: number,
+                imageHeight?: number,
+                i?: any,
+                s?: boolean
+            ): any;
+            sendProductToChat(...args: any[]): Promise<any>;
         }
 
         /** Original 'WAWebCmd' module */
@@ -739,7 +1023,7 @@ declare global {
 
         export interface foundedCommonGroups<T extends wid> extends Omit<Chat, "getModelsArray"> {
             contact: T;
-            getModelsArray: () => groupChat[];
+            getModelsArray: () => GroupChat[];
         }
 
         /** Collection of
@@ -756,6 +1040,57 @@ declare global {
 
         export interface HistorySync {
             sendPeerDataOperationRequest: (operation: number, data: { chatId: ChatId }) => Promise<boolean>;
+        }
+
+        type lidMapChache = Map<String, { lid: wid; phoneNumber: wid; phoneNumberCreatedAt: number }>;
+
+        /** Original 'WAWebApiContact' module */
+        export interface LidUtils {
+            CheckPnToLidMappingCaller: {
+                WAWEB_ADV_SYNC_DEVICE_LIST_SEND_DEVICE_SYNC_REQUEST: "waweb-asdl-send-device-sync-request";
+                WAWEB_API_DEVICE_LIST_BULK_CREATE_OR_REPLACE_DEVICE_RECORD: "waweb-adl-bulk-create-or-replace-device-record";
+                WAWEB_API_DEVICE_LIST_BULK_GET_DEVICE_RECORD: "waweb-adl-bulk-get-device-record";
+                WAWEB_API_DEVICE_LIST_CREATE_OR_REPLACE_DEVICE_RECORD: "waweb-adl-create-or-replace-device-record";
+                WAWEB_API_DEVICE_LIST_GET_DEVICE_RECORD: "waweb-adl-get-device-record";
+                WAWEB_CRYPTO_LIBRARY_DB_CALLBACK_API_HANDLE_NEW_SESSION: "waweb-cldca-handle-new-session";
+                WAWEB_CRYPTO_LIBRARY_DB_CALLBACK_API_LOAD_SENDER_KEY_SESSION: "waweb-cldca-load-sender-key-session";
+                WAWEB_CRYPTO_LIBRARY_DB_CALLBACK_API_LOAD_SESSION: "waweb-cldca-load-session";
+                WAWEB_CRYPTO_LIBRARY_DB_CALLBACK_API_SAVE_SENDER_KEY_SESSION: "waweb-cldca-save-sender-key-session";
+                WAWEB_SIGNAL_SESSION_DELETE_DEVICE_SENDER_KEY: "waweb-ss-delete-device-sender-key";
+                WAWEB_SIGNAL_SESSION_DELETE_GROUP_SENDER_KEY_INFO: "waweb-ss-delete-group-sender-key-info";
+                WAWEB_SIGNAL_SESSION_DELETE_REMOTE_INFO: "waweb-ss-delete-remote-info";
+                WAWEB_SIGNAL_SESSION_DELETE_REMOTE_SESSION: "waweb-ss-delete-remote-session";
+                WAWEB_SIGNAL_SESSION_HAS_SAME_BASE_KEY: "waweb-ss-has-same-base-key";
+                WAWEB_SIGNAL_SESSION_HAS_SIGNAL_SESSIONS: "waweb-ss-has-signal-sessions";
+                WAWEB_SIGNAL_SESSION_SAVE_SESSION_BASE_KEY: "waweb-ss-save-session-base-key";
+            };
+            bulkUpdateUsernamesInDb: (a: any) => any;
+            checkPnToLidMapping: (a: any, b: any) => Promise<any>;
+            clearLidPnMappingCache: () => void;
+            createOrMergeAddressBookContacts: (a: any) => Promise<any>;
+            deleteAddressBookContacts: (a: any) => Promise<any>;
+            getAccountLidFromChat: (a: ChatModel) => wid;
+            getAllLidContacts: () => ContactModel[];
+            getAlternateDeviceWid: (a: wid) => wid;
+            getAlternateUserWid: (a: wid) => wid;
+            getAlternateWidBulk_DEPRECATED: (a: wid) => wid;
+            getContactHash: (a: ContactId) => string;
+            getContactRecord: (a: wid) => any;
+            getContactUsername: (a: wid) => string | null;
+            getCurrentLid: (a: wid) => wid;
+            getCurrentLidDevice: (a: wid) => wid;
+            getLatestLid: (a: wid) => wid;
+            getPhoneNumber: (a: wid) => ContactId;
+            getPnIfLidIsLatestMapping: (a: any) => any;
+            hasLidMapping: (a: wid) => boolean;
+            isAddressBookContact: (a: ContactId) => boolean;
+            lidPnCache: { $1: lidMapChache; $2: lidMapChache };
+            lidPnCacheDirtySet: Set<wid>;
+            setNotAddressBookContacts: (a: any) => any;
+            updateContactAdvHostedType: (a: any, b: any) => Promise<any>;
+            updateLidMetadata: (a: wid) => Promise<any>;
+            warmUpAllLidPnMappings: (a: any) => any;
+            warmUpLidPnMapping: (a: any, b: any, c: any) => Promise<any>;
         }
 
         export type LinkPreviewData = {
@@ -960,6 +1295,11 @@ declare global {
             type: MessageTypes.STICKER;
         };
 
+        /** Original 'WAWebStateUtils' module */
+        export interface StateUtils {
+            unproxy<T extends any>(obj: T): T;
+        }
+
         /** Original 'WAWebUploadManager' module */
         export interface UploadUtils {
             encryptAndUpload(file: FileToUpload): Promise<UploadedFile>;
@@ -1049,8 +1389,20 @@ declare global {
         export interface Store {
             /** Original 'WAWebABProps' module */
             ABProps: ABProps;
+            /** Original BusinessProfile Collection */
+            BusinessProfile: BusinessProfile;
+            /** Collection of
+             * 'WAWebBizProductCatalogAction',
+             * 'WAWebBizProductCatalogBridge',
+             * 'WAWebProductModel'
+             * modules */
+            BusinessUtils: BusinessUtils;
+            /** Original WhatsApp Catalog Object Collection */
+            Catalog: Catalog;
             /** Original WhatsApp Chat Object Collection */
             Chat: Chat;
+            /** Original 'WAWebChatPreferenceCollection' Collection */
+            ChatPreference: {};
             /** Original 'WAWebCmd' module */
             Cmd: Cmd;
             /** Original 'WAWebComposeBoxActions' module */
@@ -1076,6 +1428,8 @@ declare global {
             GroupUtils: GroupUtils;
             /** Original "WAWebSendNonMessageDataRequest" module*/
             HistorySync: HistorySync;
+            /** Original 'WAWebApiContact' module */
+            lidUtils: LidUtils;
             /** Original 'WAWebLinkPreviewChatAction' module */
             LinkPreview: LinkPreview;
             /** Original 'WAWebAttachMediaCollection' Class */
@@ -1110,6 +1464,8 @@ declare global {
             Profile: Settings;
             /** Original WhatsApp ProfilePicThumb Object */
             ProfilePicThumb: ProfilePicThumb;
+            /** Original 'WAWebStateUtils' module */
+            StateUtils: StateUtils;
             /** Original 'WAWebUploadManager' module */
             UploadUtils: UploadUtils;
             /** Original 'WALinkify' module */

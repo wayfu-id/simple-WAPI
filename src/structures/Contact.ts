@@ -2,7 +2,7 @@ import Base, { BaseSerialized } from "./Base";
 import ProfilePicThumb, { ProfilePicThumbSerialized } from "./ProfilePictThumb";
 import WAPI from "../../index";
 
-type T = WA.ContactModel;
+type T = WA.ContactModel | WA.BusinessContact;
 
 export type ContactSerialized = {
     disappearingModeDuration: number | undefined;
@@ -76,6 +76,7 @@ export default class Contact extends Base<T, ContactSerialized> {
     shortName?: string | undefined;
     statusMute?: string | boolean | undefined;
     verifiedName: string | undefined;
+    raw: WA.ContactModel;
 
     constructor(app: WAPI, data: WA.ContactModel) {
         super(app);
@@ -119,7 +120,7 @@ export default class Contact extends Base<T, ContactSerialized> {
         this.profilePicThumb = ProfilePicThumb.create(data);
 
         /** Contact's phone number */
-        this.phoneNumber = this.id.user;
+        this.phoneNumber = data?.phoneNumber?.user ?? (this.id.isLid() ? this.app.lidUtils.getPhoneNumber(this.id) : this.id).user;
 
         /** The name that the contact has configured to be shown publically */
         this.pushname = data.pushname;
