@@ -441,6 +441,10 @@ declare global {
             isUser(): boolean;
         }
 
+        export interface devieId extends wid {
+            device: number;
+        }
+
         /** All Wid that inheritance with base wid */
         export interface ContactId extends wid {}
         export interface ChatId extends wid {}
