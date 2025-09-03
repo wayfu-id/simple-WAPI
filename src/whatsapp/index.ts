@@ -794,6 +794,7 @@ declare global {
 
         export interface MediaPreparation {
             waitForPrep(): Promise<MediaData>;
+            sendToChat(chat: ChatModel, options: any): Promise<MessageSendResult>;
         }
 
         /** Collection of
