@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.9...v0.1.10) (2025-09-03)
+
+
+### Bug Fixes
+
+* **chat:** Error while sending media ([228f3b7](https://github.com/wayfu-id/simple-WAPI/commit/228f3b75c797af81422713e349a806943ef7c89e))
+
 ### [0.1.9](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.8...v0.1.9) (2025-09-02)
 
 
