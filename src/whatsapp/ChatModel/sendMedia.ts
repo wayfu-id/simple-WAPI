@@ -9,18 +9,12 @@ const sendMedia: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (a
 
             return new Promise((done) => {
                 (async (f, o, r) => {
-                    let mc = new app.MediaCollection(this),
-                        caption = o?.caption ?? "",
-                        quality = o?.quality ?? "Standard";
+                    let caption = o?.caption ?? "",
+                        quality = o?.quality ?? "Standard",
+                        sendAsHD = quality === "HD";
 
-                    try {
-                        await mc.processAttachments([{ file: f, quality }], 1, this);
-                    } catch (error: Error | any) {
-                        throw new Error(error.message ?? (error || "Unknown"));
-                    }
-
-                    let [media] = mc.getModelsArray(),
-                        res = await media.sendToChat(this, { caption: caption });
+                    let media = await app.preProcessors.processMediaMessage(f, { forceHD: sendAsHD }),
+                        res = await media.sendToChat(this, { caption });
 
                     done(r ? this.getModel() : res);
                 })(file, options, ret);

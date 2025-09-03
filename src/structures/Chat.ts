@@ -117,8 +117,18 @@ export default class Chat extends Base<T, ChatSerialized> {
     /**
      * Send Media with caption (optional)
      */
-    async sendMedia(file: File, caption?: string, model?: boolean) {
-        return await this.app.sendMessage(this, "", { media: file, caption, ret: !!model });
+    async sendMedia(
+        file: File,
+        caption?: string | WA.MessageSendOptions,
+        model?: boolean | WA.MessageSendOptions
+    ) {
+        if (caption === undefined) return;
+        let option: WA.MessageSendOptions = {
+            media: file,
+            ...(caption ? (typeof caption === "string" ? { caption } : caption) : { caption: "" }),
+            ...(typeof model === "boolean" || !model ? { ret: !!model } : model),
+        };
+        return await this.app.sendMessage(this, "", option);
     }
 
     /**
