@@ -262,8 +262,8 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                 // ...extraOptions,
             };
 
-            if (this.hasDraftMessage) this.clearDraft();
-            if (!this.active) await this.open();
+            // if (this.hasDraftMessage) this.clearDraft();
+            // if (!this.active) await this.open();
 
             let [_, res] = await Promise.all(await app.MsgUtils.addAndSendMsgToChat(this, message));
             await this.historySync();

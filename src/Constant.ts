@@ -103,6 +103,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     MeUtils: (m: webpackModules) => {
         return m("WAWebUserPrefsMeUser");
     },
+    MsgDataUtils: (m: webpackModules) => {
+        return m("WAWebMsgDataUtils");
+    },
     MsgKey: (m: webpackModules) => {
         return m("WAWebMsgKey")?.default;
     },

@@ -840,6 +840,7 @@ declare global {
             mediaStage: string;
             type: MessageTypes;
 
+            caption?: string;
             clientUrl?: string;
             encFilehash?: string;
             deprecatedMms3Url?: string;
@@ -848,6 +849,7 @@ declare global {
             firstFrameSidecar?: any;
             fullHeight?: number;
             fullWidth?: number;
+            isViewOnce?: boolean;
             mediaKey?: string;
             mediaKeyTimestamp?: number;
             streamingSidecar?: any;
