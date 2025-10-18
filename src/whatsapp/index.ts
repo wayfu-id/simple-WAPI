@@ -708,6 +708,32 @@ declare global {
             getEphemeralFields(chat: ChatModel): any;
         }
 
+        type FILETYPE = {
+            AUDIO: "audio";
+            DOCUMENT: "document";
+            IMAGE: "image";
+            STICKER: "sticker";
+            STICKER_PACK: "sticker-pack";
+            VIDEO: "video";
+        };
+
+        /** Original 'WAWebFileUtils' module */
+        export interface FileUtilities {
+            FILETYPE: FILETYPE;
+            blobToArrayBuffer(file: Blob): Promise<ArrayBuffer>;
+            blobToText(file: Blob): Promise<String>;
+            createFile(blobPart: BlobPart[], name: string, opt?: BlobPropertyBag): Blob;
+            getAudioDuration(audioBlob: Blob): Promise<number>;
+            getFileExtension(filename: string): string | null;
+            getMimeTypeForFilepath(filepath: string): string;
+            isDocument(file: Blob): boolean;
+            removeTrailingDots(filename: string): string;
+            typeFromMimetype(
+                mimeType: string
+            ): FILETYPE["IMAGE"] | FILETYPE["VIDEO"] | FILETYPE["AUDIO"] | FILETYPE["DOCUMENT"];
+            validateBlob(file: Blob): Promise<boolean>;
+        }
+
         export interface foundedCommonGroups<T extends wid> extends Omit<Chat, "getModelsArray"> {
             contact: T;
             getModelsArray: () => groupChat[];
@@ -1015,6 +1041,8 @@ declare global {
             Downloader: Downloader;
             /** Original 'WAWebGetEphemeralFieldsMsgActionsUtils' module */
             EphemeralFields: EphemeralFields;
+            /** Original 'WAWebFileUtils' module */
+            FileUtilities: FileUtilities;
             /** Original WhatsApp GroupMetadata Object Collection */
             GroupMetadata: GroupMetadata;
             /** Collection of

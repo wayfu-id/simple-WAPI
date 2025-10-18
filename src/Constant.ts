@@ -27,6 +27,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     EphemeralFields: (m: webpackModules) => {
         return m("WAWebGetEphemeralFieldsMsgActionsUtils");
     },
+    FileUtilities: (m: webpackModules) => {
+        return m("WAWebFileUtils");
+    },
     GroupUtils: (m: webpackModules) => {
         return {
             ...m("WAWebFindCommonGroupsContactAction"),
