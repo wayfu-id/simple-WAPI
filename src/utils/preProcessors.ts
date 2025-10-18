@@ -58,6 +58,7 @@ const preProcessors = (app: WAPI) => {
             }
             return null;
         },
+        /** Process Media */
         processMedia: async function processMedia(media: WA.MediaPreparation) {
             let [_media, _filehash] = await (async function (m: WA.MediaPreparation) {
                 let media = await m.waitForPrep(),
@@ -107,13 +108,13 @@ const preProcessors = (app: WAPI) => {
                     maxDimension,
                 };
             })(forceHD);
-            console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
+            // console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
             const mData = await app.OpaqueData.createFromData(file, file.type);
-            console.log(`mData:`, mData);
+            // console.log(`mData:`, mData);
             const mediaPrep = app.MediaPrep.prepRawMedia(mData, mediaPrepOpt); // a, e = WA.ChatModel, f  = msg
-            console.log(`mediaPrep:`, mediaPrep);
+            // console.log(`mediaPrep:`, mediaPrep);
             const mediaData = await mediaPrep.waitForPrep();
-            console.log(`mediaData:`, mediaData);
+            // console.log(`mediaData:`, mediaData);
             const mediaObject = app.MediaObject.getOrCreateMediaObject(mediaData.filehash);
 
             const mediaType = app.MediaTypes.msgToMediaType({
@@ -174,9 +175,10 @@ const preProcessors = (app: WAPI) => {
 
             return mediaData;
         },
+        /** Process File to Media message Attachment */
         processMediaMessage: async function processMediaMessage(
             media: File | Blob | WAPI.MediaInput,
-            { forceVoice, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
+            { forceImage, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
         ) {
             const file = await app.fileUtils.mediaInfoToBlob(media);
             const mediaPrepOpt = ((hd) => {
@@ -188,15 +190,14 @@ const preProcessors = (app: WAPI) => {
                     maxDimension,
                 };
             })(forceHD);
-            console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
-            const mData = await app.OpaqueData.createFromData(file, file.type);
-            console.log(`mData:`, mData);
-            return app.MediaPrep.prepRawMedia(mData, mediaPrepOpt); // a, e = WA.ChatModel, f  = msg
+            const type = forceImage ? "image/jpeg" : file.type; // override the type to `image/*` if setted to `forceImage` is true;
+            // console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
+            const mData = await app.OpaqueData.createFromData(file, type);
+            // console.log(`mData:`, mData);
+            return app.MediaPrep.prepRawMedia(mData, mediaPrepOpt);
         },
         /** Process File or Media Info 'image/webp' type for Sticker attachment */
-        processStickerData: async function processStickerData(
-            media: File | Blob | WAPI.MediaInput
-        ) {
+        processStickerData: async function processStickerData(media: File | Blob | WAPI.MediaInput) {
             const { mediaInfoToFile, getFileHash, generateHash, getMimeType } = app.fileUtils;
 
             let mimetype = await (async (m) => {

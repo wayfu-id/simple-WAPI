@@ -29,6 +29,7 @@ declare global {
             | MessageMedia
             | WA.MediaInfo;
         export type MediaProcessOptions = {
+            forceImage?: boolean;
             forceVoice?: boolean;
             forceDocument?: boolean;
             forceGif?: boolean;
@@ -58,7 +59,8 @@ declare global {
             subtype?: string;
             quality?: "Standard" | "HD";
         } & WA.MessageSendOptions &
-            LinkMessageOptions;
+            LinkMessageOptions &
+            MediaProcessOptions;
     }
 }
 

@@ -463,7 +463,7 @@ declare global {
             caption?: string;
             quality?: "Standard" | "HD";
             ret?: boolean;
-        };
+        } & WAPI.MediaProcessOptions;
 
         /** Chat Model */
         export interface ChatModel extends BaseModel {
