@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.11...v0.1.12) (2025-11-15)
+
+
+### Bug Fixes
+
+* **mimetype:** bypass File and Blob type ([e0c0928](https://github.com/wayfu-id/simple-WAPI/commit/e0c09282d069626d0299a32fdb00ccd9bdb27ceb))
+
 ### [0.1.11](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.10...v0.1.11) (2025-10-18)
 
 ### [0.1.10](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.9...v0.1.10) (2025-09-03)
