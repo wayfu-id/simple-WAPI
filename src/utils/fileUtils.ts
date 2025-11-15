@@ -114,12 +114,7 @@ const fileUtils = {
     },
     /** Convert media info to Blob */
     mediaInfoToBlob: async function mediaInfoToBlob(media: File | Blob | WAPI.MediaInput) {
-        if(media instanceof File) {
-            let buffer = await this.readBuffer(media),
-                mime = await this.getMimeType(buffer) as string;
-            return new Blob([buffer], { type: mime });
-        };
-        if(media instanceof Blob) return media;
+        if(media instanceof Blob || media instanceof File) return media;
         
         const { data, mimetype } = media;
 
