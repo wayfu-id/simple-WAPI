@@ -1,4 +1,4 @@
-import { fileSignature, mimeToExtension } from "../Constant";
+import { mimeToExtension, findMimeType } from "../FileSignature";
 
 const fileUtils = {
     /** Convert array buffer to base64 using async method */
@@ -12,7 +12,7 @@ const fileUtils = {
     /** Convert Blob object to File object */
     blobToFile: function blobToFile(blob: Blob, name?: string) {
         let mime = blob.type,
-            filename = name ? name : `file.${mimeToExtension[mime]}`;
+            filename = name && name !== "" ? name : `file.${mimeToExtension(mime)}`;
         return new File([blob], filename, { type: mime, lastModified: Date.now() });
     },
     /** Generate random hash with specific length */
@@ -62,37 +62,40 @@ const fileUtils = {
         return btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
     },
     /** Check and determine the mimetype of current file/blob/arraybuffer */
-    getMimeType: async function getMimeType(file: File | Blob | ArrayBuffer) {
-        if (!file) return null;
+    getMimeType: async function getMimeType(file: File | Blob | ArrayBuffer | string) {
+        /** No file, return empty string */
+        if (!file) return "";
+        /** If file is a File or a Blob */
+        if (file instanceof File || file instanceof Blob) return file.type;
 
-        let buffer =
-            file instanceof File || file instanceof Blob
-                ? await this.readBuffer(file, { start: 0, end: 4 })
-                : file instanceof ArrayBuffer
-                ? file
-                : null;
-
-        if (!buffer) return null;
-
-        let uint8arr = new Uint8Array(buffer);
-
-        for (let { keys, result } of fileSignature) {
-            let currentSignatureArr: string[] = ((arr) => {
-                let res: string[] = [];
-                for (let val of arr) {
-                    res.push(val.toString(16));
-                    if (res.length == 4) break;
-                }
-                return res;
-            })(uint8arr);
-            const curentSignature = currentSignatureArr.join("").toUpperCase();
-
-            if (keys.some((val) => curentSignature.match(val))) {
-                return result;
+        /** If file is a string */
+        if (typeof file === "string") {
+            let arr = file.split(","),
+                i = 0;
+            for (let _ of arr) {
+                let res = _.match(/:(.*?);/)?.[1] ?? "";
+                if (res !== "") return res;
+                if (res === "" && i === arr.length) return "application/octet-stream";
+                i += 1;
             }
         }
 
-        return null;
+        /** If file is an ArrayBuffer */
+        if (!(file instanceof ArrayBuffer)) return "";
+
+        const uint8arr = new Uint8Array(file),
+            len = 4;
+
+        let signature: string = "";
+        if (uint8arr.length >= len) {
+            let signatureArr = new Array(len);
+            for (let i = 0; i < len; i++) {
+                signatureArr[i] = new Uint8Array(file)[i].toString(16);
+                signature = signatureArr.join("").toUpperCase();
+            }
+        }
+
+        return findMimeType(signature);
     },
     /** Convert media info to File */
     mediaInfoToFile: function mediaInfoToFile(media: File | Blob | WAPI.MediaInput) {

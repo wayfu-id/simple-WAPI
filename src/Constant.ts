@@ -129,24 +129,6 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     },
 };
 
-const fileSignature = [
-    { keys: ["FFD8FFDB", "FFD8FFE0", "FFD8FFEE"], result: "image/jpeg" },
-    { keys: ["89504E47"], result: "image/png" },
-    { keys: ["47494638"], result: "image/gif" },
-    { keys: ["52494646"], result: "image/webp" },
-    { keys: ["49492A00", "49492B00", "4D4D002A", "4D4D002B"], result: "image/tiff" },
-    { keys: ["25504446"], result: "application/pdf" },
-];
-
-const mimeToExtension: { [k: string]: string } = {
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "image/gif": "gif",
-    "image/webp": "webp",
-    "image/tiff": "tiff",
-    "application/pdf": "pdf",
-};
-
 // Property descriptor for Version Info
 const WAPI_VERSION: PropertyDescriptor = {
     value: __VERSION__,
@@ -154,4 +136,4 @@ const WAPI_VERSION: PropertyDescriptor = {
     configurable: false,
 };
 
-export { fileSignature, mimeToExtension, storeObjects, WAPI_VERSION };
+export { storeObjects, WAPI_VERSION };
