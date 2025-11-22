@@ -100,26 +100,26 @@ const fileUtils = {
     /** Convert media info to File */
     mediaInfoToFile: function mediaInfoToFile(media: File | Blob | WAPI.MediaInput) {
         if (media instanceof File) return media;
-        if (media instanceof Blob) return this.blobToFile(media);
 
-        const { data, mimetype, filename } = media;
-
-        const binaryData = window.atob(data);
-        const buffer = new ArrayBuffer(binaryData.length);
-        const view = new Uint8Array(buffer);
-
-        for (let i = 0; i < binaryData.length; i++) {
-            view[i] = binaryData.charCodeAt(i);
+        let filename = "";
+        if (!(media instanceof Blob)) {
+            filename = media.filename ?? "";
+            media = this.mediaInfoToBlob(media);
         }
 
-        const blob = new Blob([buffer], { type: mimetype });
-        return this.blobToFile(blob, filename);
+        return this.blobToFile(media, filename);
     },
     /** Convert media info to Blob */
-    mediaInfoToBlob: async function mediaInfoToBlob(media: File | Blob | WAPI.MediaInput) {
-        if(media instanceof Blob || media instanceof File) return media;
-        
-        const { data, mimetype } = media;
+    mediaInfoToBlob: function mediaInfoToBlob(media: File | Blob | WAPI.MediaInput) {
+        if (media instanceof Blob || media instanceof File) return media;
+
+        let { data, mimetype } = media,
+            arr = data.split(",");
+
+        if (mimetype == null || typeof mimetype == "undefined" || arr.length > 1) {
+            mimetype = arr[0].match(/:(.*?);/)?.[1] || "application/octet-stream";
+            data = arr[1];
+        }
 
         const binaryData = window.atob(data);
         const buffer = new ArrayBuffer(binaryData.length);
