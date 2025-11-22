@@ -9,6 +9,12 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
             ...m("WAWebABPropsConfigs"),
         };
     },
+    BlobCache: (m: webpackModules) => {
+        return m("WAWebMediaInMemoryBlobCache");
+    },
+    ChatGetters: (m: webpackModules) => {
+        return m("WAWebChatGetters");
+    },
     ChatState: (m: webpackModules) => {
         return m("WAWebChatStateBridge");
     },
@@ -36,6 +42,11 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
             ...m("WAWebGroupCreateJob"),
             ...m("WAWebGroupModifyInfoJob"),
             ...m("WAWebExitGroupAction"),
+        };
+    },
+    HistorySync: (m: webpackModules) => {
+        return {
+            ...m("WAWebSendNonMessageDataRequest"),
         };
     },
     JidToWid: (m: webpackModules) => {
