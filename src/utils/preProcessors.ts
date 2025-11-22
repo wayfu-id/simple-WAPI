@@ -5,16 +5,6 @@ type KindOfChat = WA.ChatModel | WAPI.Chat;
 
 const preProcessors = (app: WAPI) => {
     return {
-        /** Generate and get new MsgKey Object */
-        msgKey: async function msgKey(chat: WA.ChatModel) {
-            return new app.MsgKey({
-                from: app.ME.id,
-                to: chat.id,
-                id: await app.MsgKey.newId(),
-                participant: chat.isGroup ? app.ME.id : undefined,
-                selfDir: "out",
-            });
-        },
         /** Generate base WA.Message Object */
         generateBaseMessage: async function generateBaseMessage(content: any, chat: KindOfChat) {
             let useChat = chat instanceof Chat ? chat.raw : chat;
@@ -23,13 +13,13 @@ const preProcessors = (app: WAPI) => {
                 return (await app.MsgUtils.createTextMsgData(useChat, content)) as WA.MessageModel;
             }
 
-            const newMsgKey = await this.msgKey(useChat),
+            const newMsgKey = await this.generateMsgKey(useChat),
                 ephemeralFields = app.EphemeralFields.getEphemeralFields(useChat);
 
             return {
                 id: newMsgKey,
                 ack: 0,
-                body: content,
+                body: "",
                 from: app.ME.id,
                 to: useChat.id,
                 local: true,
@@ -58,48 +48,24 @@ const preProcessors = (app: WAPI) => {
             }
             return null;
         },
-        /** Process Media */
-        processMedia: async function processMedia(media: WA.MediaPreparation) {
-            let [_media, _filehash] = await (async function (m: WA.MediaPreparation) {
-                let media = await m.waitForPrep(),
-                    { mediaBlob, filehash } = media;
-
-                media.mediaBlob = !(mediaBlob instanceof app.OpaqueData)
-                    ? await app.OpaqueData.createFromData(mediaBlob, mediaBlob.type)
-                    : mediaBlob;
-
-                return [media, filehash];
-            })(media);
-
-            if (!_filehash) throw new Error("Filehash not found");
-
-            let mediaObject = app.MediaObject.getOrCreateMediaObject(_filehash),
-                mediaBlob = mediaObject.mediaBlob;
-
-            if (_media.mediaBlob instanceof app.OpaqueData) {
-                _media.mediaBlob.autorelease();
-                _media.mediaBlob = mediaBlob;
-
-                _media.renderableUrl = mediaBlob.url();
-                mediaObject.consolidate(_media.toJSON());
-                _media.mediaBlob.autorelease();
-            }
-
-            // let _media = await media.waitForPrep();
-
-            // if (!(_media.mediaBlob instanceof app.OpaqueData)) {
-            //     _media.mediaBlob = await app.OpaqueData.createFromData(_media.mediaBlob, _media.mediaBlob.type);
-            // }
-
-            // let _fileHash = _media.filehash;
+        /** Generate and get new MsgKey Object */
+        generateMsgKey: async function generateMsgKey(chat: WA.ChatModel) {
+            return new app.MsgKey({
+                from: app.ME.id,
+                to: chat.id,
+                id: await app.MsgKey.newId(),
+                participant: chat.isGroup ? app.ME.id : undefined,
+                selfDir: "out",
+            });
         },
         /** Process File to Media Data for Message Attachment */
         processMediaData: async function processMediaData(
             media: File | Blob | WAPI.MediaInput,
             { forceVoice, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
         ) {
-            const file = await app.fileUtils.mediaInfoToBlob(media);
-            const mediaPrepOpt = ((hd) => {
+            const file = app.fileUtils.mediaInfoToFile(media);
+            const opaqueData = await app.OpaqueData.createFromData(file, file.type);
+            const mediaParams = ((hd) => {
                 let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
                     maxDimension = app.ABProps.getABPropConfigValue(configName) as number;
                 return {
@@ -108,33 +74,22 @@ const preProcessors = (app: WAPI) => {
                     maxDimension,
                 };
             })(forceHD);
-            // console.log(`file`, file, `mediaPrepOpt:`, mediaPrepOpt);
-            const mData = await app.OpaqueData.createFromData(file, file.type);
-            // console.log(`mData:`, mData);
-            const mediaPrep = app.MediaPrep.prepRawMedia(mData, mediaPrepOpt); // a, e = WA.ChatModel, f  = msg
-            // console.log(`mediaPrep:`, mediaPrep);
-            const mediaData = await mediaPrep.waitForPrep();
-            // console.log(`mediaData:`, mediaData);
-            const mediaObject = app.MediaObject.getOrCreateMediaObject(mediaData.filehash);
 
+            const mediaPrep = app.MediaPrep.prepRawMedia(opaqueData, mediaParams);
+            const mediaData = await mediaPrep.waitForPrep();
+            const mediaObject = app.MediaObject.getOrCreateMediaObject(mediaData.filehash);
             const mediaType = app.MediaTypes.msgToMediaType({
                 type: mediaData.type,
                 isGif: mediaData.isGif,
             });
 
-            if (forceVoice && mediaData.type === "audio") {
-                mediaData.type = "ptt" as WA.MessageTypes;
+            if (!mediaData.filehash) {
+                throw new Error("media-fault: sendToChat filehash undefined");
+            }
+
+            if (forceVoice && mediaData.type === "ptt") {
                 const waveform = mediaObject.contentInfo.waveform;
-                let audioFile = app.fileUtils.blobToFile(file, "audio.ogg");
-                mediaData.waveform = waveform ?? (await app.fileUtils.generateWaveform(audioFile));
-            }
-
-            if (forceGif && mediaData.type === "video") {
-                mediaData.isGif = true;
-            }
-
-            if (forceDocument) {
-                mediaData.type = "document" as WA.MessageTypes;
+                mediaData.waveform = waveform || (await app.generateWaveform(file));
             }
 
             if (!(mediaData.mediaBlob instanceof app.OpaqueData)) {
@@ -146,31 +101,42 @@ const preProcessors = (app: WAPI) => {
 
             mediaData.renderableUrl = mediaData.mediaBlob.url();
             mediaObject.consolidate(mediaData.toJSON());
-            mediaData.mediaBlob.autorelease();
 
-            const uploadedMedia = await app.MediaUpload.uploadMedia({
+            mediaData.mediaBlob.autorelease();
+            const shouldUseMediaCache = app.MediaDataUtils.shouldUseMediaCache(
+                app.MediaTypes.castToV4(mediaObject.type)
+            );
+            if (shouldUseMediaCache && mediaData.mediaBlob instanceof app.OpaqueData) {
+                const formData = mediaData.mediaBlob.formData();
+                app.BlobCache.InMemoryMediaBlobCache.put(mediaObject.filehash, formData);
+            }
+
+            const dataToUpload = {
                 mimetype: mediaData.mimetype,
                 mediaObject,
                 mediaType,
-            });
+            };
 
-            const mediaEntry = uploadedMedia.mediaEntry;
+            const uploadedMedia = await app.MediaUpload.uploadMedia(dataToUpload),
+                mediaEntry = uploadedMedia.mediaEntry;
+
             if (!mediaEntry) {
                 throw new Error("upload failed: media entry was not created");
             }
 
             mediaData.set({
+                clientUrl: mediaEntry.mmsUrl,
+                deprecatedMms3Url: mediaEntry.deprecatedMms3Url,
+                directPath: mediaEntry.directPath,
+                mediaKey: mediaEntry.mediaKey,
+                mediaKeyTimestamp: mediaEntry.mediaKeyTimestamp,
+                encFilehash: mediaEntry.encFilehash,
+                uploadhash: mediaEntry.uploadHash,
                 filehash: mediaObject.filehash,
                 size: mediaObject.size,
                 streamingSidecar: mediaEntry.sidecar,
                 firstFrameSidecar: mediaEntry.firstFrameSidecar,
-                clientUrl: mediaEntry.mmsUrl as string,
-                deprecatedMms3Url: mediaEntry.deprecatedMms3Url as string,
-                directPath: mediaEntry.directPath as string,
-                mediaKey: mediaEntry.mediaKey as string,
-                mediaKeyTimestamp: mediaEntry.mediaKeyTimestamp as number,
-                encFilehash: mediaEntry.encFilehash as string,
-                uploadhash: mediaEntry.uploadHash as string,
+                mediaHandle: null,
             });
 
             return mediaData;
@@ -180,7 +146,7 @@ const preProcessors = (app: WAPI) => {
             media: File | Blob | WAPI.MediaInput,
             { forceImage, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
         ) {
-            const file = await app.fileUtils.mediaInfoToBlob(media);
+            const file = app.fileUtils.mediaInfoToFile(media);
             const mediaPrepOpt = ((hd) => {
                 let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
                     maxDimension = app.ABProps.getABPropConfigValue(configName) as number;
@@ -205,16 +171,17 @@ const preProcessors = (app: WAPI) => {
             })(media);
             if (mimetype !== "image/webp") throw new Error("Invalid media type");
 
-            const file = mediaInfoToFile(media),
-                filehash = await getFileHash(file),
+            const file = mediaInfoToFile(media);
+            let filehash = await getFileHash(file),
                 mediaKey = await generateHash(32);
 
-            const uploadedInfo = await app.UploadUtils.encryptAndUpload({
-                blob: file,
-                type: "sticker",
-                signal: new AbortController().signal,
-                mediaKey,
-            });
+            const controller = new AbortController(),
+                uploadedInfo = await app.UploadUtils.encryptAndUpload({
+                    blob: file,
+                    type: "sticker",
+                    signal: controller.signal,
+                    mediaKey,
+                });
 
             return {
                 ...uploadedInfo,
