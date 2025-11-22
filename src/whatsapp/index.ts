@@ -470,6 +470,7 @@ declare global {
             id: ChatId;
             active?: boolean;
             hasDraftMessage: boolean;
+            endOfHistoryTransferType: number;
             // isGroup: boolean;
             contact: ContactModel;
             groupMetadata?: GroupModel;
@@ -477,6 +478,7 @@ declare global {
             clearDraft(): ChatModel | null;
             close(): Promise<void>;
             getModel(): WAPI.Chat;
+            historySync(): Promise<boolean>;
             open(): Promise<void>;
             sendText<T extends boolean>(body: string, model?: T): Promise<SendMessageResult<T>>;
             sendMedia<T extends boolean>(
@@ -749,6 +751,10 @@ declare global {
             findCommonGroups<T extends ContactModel>(
                 contact: T
             ): Promise<foundedCommonGroups<T["id"]> | null>;
+        }
+
+        export interface HistorySync {
+            sendPeerDataOperationRequest: (operation: number, data: { chatId: ChatId }) => Promise<boolean>;
         }
 
         export type LinkPreviewData = {
@@ -1052,6 +1058,8 @@ declare global {
              * 'WAWebExitGroupAction'
              * modules */
             GroupUtils: GroupUtils;
+            /** Original "WAWebSendNonMessageDataRequest" module*/
+            HistorySync: HistorySync;
             /** Original 'WAWebLinkPreviewChatAction' module */
             LinkPreview: LinkPreview;
             /** Original 'WAWebAttachMediaCollection' Class */
