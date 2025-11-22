@@ -12,8 +12,7 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                     attachment: content,
                 } as WAPI.SendMessageOptions;
             }
-            let attOptions: WA.attcOptions | undefined,
-                mediaMsgReady: WA.MediaPreparation | undefined;
+            let mediaMsgReady: WA.attcOptions | undefined;
             /** If 'attachment' options is set */
             if (options?.attachment) {
                 let {
@@ -22,7 +21,6 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                     isViewOnce,
                     sendAsHD,
                     sendAudioAsVoice,
-                    sendMediaAsSticker,
                     sendVideoAsGif,
                     sendMediaAsDocument,
                 } = options;
@@ -35,58 +33,27 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                         forceHD: Boolean(sendAsHD),
                     };
 
-                    mediaMsgReady = await app.preProcessors.processMediaMessage(
+                    mediaMsgReady = (await app.preProcessors.processMediaData(
                         attachment,
                         mediaOpt
-                    );
-
-                    // attachment = attachment instanceof Blob ? app.fileUtils.blobToFile(attachment) : attachment;
-
-                    // attOptions = (
-                    //     sendMediaAsSticker
-                    //         ? await app.preProcessors.processStickerData(attachment)
-                    //         : await app.preProcessors.processMediaData(attachment, mediaOpt)
-                    // ) as WA.attcOptions;
-                } else {
-                    attOptions = attachment as WA.attcOptions;
+                    )) as WA.attcOptions;
+                    mediaMsgReady.caption = caption;
+                    mediaMsgReady.isViewOnce = !!isViewOnce;
                 }
 
-                attOptions = {
-                    caption: caption,
-                    isViewOnce: Boolean(isViewOnce),
-                } as WA.attcOptions;
-
-                // attOptions.caption = caption;
-
-                // content = (!sendMediaAsSticker && attOptions?.preview) ?? "";
-
-                // attOptions.isViewOnce = Boolean(isViewOnce);
-
                 delete options.attachment;
-                // delete options.sendMediaAsSticker;
             }
 
-            if (!mediaMsgReady) return null;
-            console.log(`mediaMsgReady`, mediaMsgReady);
-            if (this.hasDraftMessage) this.clearDraft();
-            if (!this.active) await this.open();
-
-            return await app.MediaPrep.sendMediaMsgToChat(mediaMsgReady, this, attOptions);
-
-            // let [_, res] = await Promise.all(await app.MediaPrep.addAndSendMsgToChat(this, message));
-
-            // return Boolean(options?.ret) ? this.getModel() : res;
-
-            // console.log(`attOptions`, attOptions);
+            if (typeof content !== "string" && !mediaMsgReady) return null;
             /** If 'linkPreview' is setted 'true' */
-            // if (options?.linkPreview) {
-            //     content = typeof content === "string" ? content : "";
-            //     options = {
-            //         ...options,
-            //         ...(await app.preProcessors.generateLinkPreview(content)),
-            //     };
-            //     delete options.linkPreview;
-            // }
+            if (options?.linkPreview) {
+                content = typeof content === "string" ? content : "";
+                options = {
+                    ...options,
+                    ...(await app.preProcessors.generateLinkPreview(content)),
+                };
+                delete options.linkPreview;
+            }
 
             /** Not support for Quoted Message yet */
             let quotedMsgOptions = {};
@@ -279,27 +246,28 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
             // }
 
             const baseMessage = await app.preProcessors.generateBaseMessage(content, this);
+            console.log(baseMessage, mediaMsgReady);
             const message: WA.MessageModel = {
-                ...options,
+                // ...options,
                 ...baseMessage,
-                ...locationOptions, // Not supported yet
-                ..._pollOptions, // Not supported yet
-                ...attOptions,
-                ...(attOptions?.toJSON ? attOptions?.toJSON() : {}),
-                ...quotedMsgOptions, // Not supported yet
-                ...vcardOptions, // Not supported yet
-                ...buttonOptions, // Not supported yet
-                ...listOptions, // Not supported yet
-                ...botOptions, // Not supported yet
-                ...extraOptions,
+                // ...locationOptions, // Not supported yet
+                // ..._pollOptions, // Not supported yet
+                ...mediaMsgReady,
+                ...(mediaMsgReady?.toJSON ? mediaMsgReady?.toJSON() : {}),
+                // ...quotedMsgOptions, // Not supported yet
+                // ...vcardOptions, // Not supported yet
+                // ...buttonOptions, // Not supported yet
+                // ...listOptions, // Not supported yet
+                // ...botOptions, // Not supported yet
+                // ...extraOptions,
             };
 
             if (this.hasDraftMessage) this.clearDraft();
             if (!this.active) await this.open();
 
             let [_, res] = await Promise.all(await app.MsgUtils.addAndSendMsgToChat(this, message));
-
-            return Boolean(options?.ret) ? this.getModel() : res;
+            await this.historySync();
+            return Boolean(options?.ret) ? this.getModel() : [_, res];
         },
         enumerable: true,
     };
