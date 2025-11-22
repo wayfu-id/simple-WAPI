@@ -656,6 +656,7 @@ declare global {
             (): OpaqueData;
             createFromBase64Jpeg(data: string): Promise<OpaqueData>;
             createFromData(file: File | Blob, type: string): Promise<OpaqueData>;
+            formData(): File;
         }
         export class OpaqueData {
             renderableUrl: string;
@@ -816,6 +817,7 @@ declare global {
             filehash: string;
             size: number;
             mediaBlob: OpaqueData;
+            type: string;
             consolidate(data: any): any;
         }
 
@@ -840,6 +842,18 @@ declare global {
             sendMediaMsgToChat(media: MediaPreparation, chat: ChatModel, opt?: attcOptions): Promise<void>;
         }
 
+        type mediaEntry = {
+            mmsUrl: string;
+            deprecatedMms3Url: string;
+            directPath: string;
+            mediaKey: string;
+            mediaKeyTimestamp: number;
+            encFilehash: string;
+            uploadHash: string;
+            sidecar: any;
+            firstFrameSidecar: any;
+        };
+
         type UploadedMedia = {
             clientUrl: string;
             encFilehash: string;
@@ -847,7 +861,8 @@ declare global {
             directPath: string;
             filehash: string;
             firstFrameSidecar: any;
-            mediaEntry?: { [k: string]: string | number };
+            mediaEntry?: mediaEntry;
+            mediaHandle: any | null;
             mediaKey: string;
             mediaKeyTimestamp: number;
             streamingSidecar: any;
@@ -885,6 +900,7 @@ declare global {
         /** Orignial 'WAWebMmsMediaTypes' module */
         export interface MediaTypes {
             msgToMediaType(option: { type: string; isGif: boolean }): string;
+            castToV4(mimeType: string): string;
         }
 
         /** Original 'WAWebMsgKey' module */
