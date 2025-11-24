@@ -20,15 +20,19 @@ const sendAdvMessage: PropertyDescriptor & ThisType<WAPI> = {
 
         if (!chat) return;
 
-        let { media, attachment, caption, ret } = options ?? {},
+        let { media, attachment, forceHD, caption, ret, quality } = options ?? {},
             _ret = ret && typeof ret === "boolean" ? ret : false,
-            _attc = attachment ?? media;
-            delete options?.media
+            _media = media ?? (attachment instanceof File || attachment instanceof Blob ? attachment : null);
+        delete options?.media;
 
-        if (_attc) {
-            caption = caption ? caption : message;
+        if (_media) {
+            let attcOpt = {
+                sendAsHD: forceHD ?? quality ? quality === "HD" : false,
+                caption: caption ?? message,
+                attachment: _media,
+            };
             message = "";
-            options = Object.assign({}, options, { caption, attachment: _attc });
+            options = Object.assign({}, options, attcOpt);
         }
         return await chat.sendMessage<typeof _ret>(message, options);
     },
