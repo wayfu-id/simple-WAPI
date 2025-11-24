@@ -1,6 +1,6 @@
 {
   "name": "@wayfu/simple-wapi",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Simple WhatsApp Web API (WAPI)",
   "main": "index.js",
   "scripts": {
