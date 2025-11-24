@@ -28,6 +28,9 @@ declare global {
         export type reportType<T extends WA.MessageSendOptions> = T["ret"] extends true
             ? Chat
             : WA.MessageSendResult;
+        export type responseType<T extends WA.MessageSendOptions> = T["ret"] extends true
+            ? Chat
+            : [WA.MessageModel, WA.MessageSendResult];
         export type MediaInput =
             | Record<"data" | "mimetype" | "filename", string>
             | MessageMedia
@@ -179,11 +182,11 @@ interface WAPI extends WA.Store {
     /** Process attacment as media data */
     preProcessors: ReturnType<typeof preProcessors>;
     /** Send advanched message to id */
-    sendAdvMessage<T extends WAPI.SendMessageOptions>(
+    sendAdvMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
         option?: T
-    ): Promise<WAPI.reportType<T>>;
+    ): Promise<WAPI.responseType<T>>;
     /** Send message to id */
     sendMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
