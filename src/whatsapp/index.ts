@@ -396,6 +396,9 @@ declare global {
             };
 
         type SendMessageResult<T extends boolean> = Promise<T extends true ? WAPI.Chat : MessageSendResult>;
+        type SendMessageResponse<T extends boolean> = Promise<
+            T extends true ? WAPI.Chat : [MessageModel, MessageSendResult]
+        >;
 
         export type kindOfAttachment = WAPI.MediaInput | File | StickerData | MediaData;
 
@@ -641,7 +644,7 @@ declare global {
             sendMessage<T extends boolean>(
                 content: string | kindOfAttachment,
                 options?: WAPI.SendMessageOptions
-            ): Promise<SendMessageResult<T>>;
+            ): Promise<SendMessageResponse<T>>;
         }
 
         /** GroupChat Model */
@@ -1254,7 +1257,10 @@ declare global {
          * 'WAWebApiMessageInfoStore'
          * modules */
         export interface MsgUtils {
-            addAndSendMsgToChat(chat: ChatModel, message: MessageModel): Promise<any>;
+            addAndSendMsgToChat(
+                chat: ChatModel,
+                message: MessageModel
+            ): [Promise<MessageModel>, Promise<MessageSendResult>];
             addAndSendTextMsg(chat: ChatModel, message: MessageModel): Promise<MessageSendResult>;
             createTextMsgData(chat: ChatModel, body: string): Promise<MessageModel>;
         }
