@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.12...v0.1.13) (2025-11-24)
+
+
+### Features
+
+* **chat:** Add Chat history sync feature ([82f274f](https://github.com/wayfu-id/simple-WAPI/commit/82f274fb88b0cb4622e4ea2940883d24910e3b6b))
+* **file:** Add and Improve file type detection based on file signature ([3d07a5d](https://github.com/wayfu-id/simple-WAPI/commit/3d07a5dabdafa1cdfa483e91cc4c4b083d91c820))
+
 ### [0.1.12](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.11...v0.1.12) (2025-11-15)
 
 
