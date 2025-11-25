@@ -1000,6 +1000,20 @@ declare global {
             getEphemeralFields(chat: ChatModel): any;
         }
 
+        /** Original 'WAWebFindChatAction' module */
+        export interface FindAndCreateChat {
+            findExistingChatC(
+                chatId: ChatId,
+                t?: any,
+                n?: any
+            ): Promise<{ chat: ChatModel; created: boolean }> | null;
+            findOrCreateLatestChat(
+                chatId: ChatId,
+                t?: any,
+                n?: any
+            ): Promise<{ chat: ChatModel; created: boolean }> | null;
+        }
+
         type FILETYPE = {
             AUDIO: "audio";
             DOCUMENT: "document";
@@ -1423,6 +1437,8 @@ declare global {
             Downloader: Downloader;
             /** Original 'WAWebGetEphemeralFieldsMsgActionsUtils' module */
             EphemeralFields: EphemeralFields;
+            /** Original 'WAWebFindChatAction' module */
+            FindAndCreateChat: FindAndCreateChat;
             /** Original 'WAWebFileUtils' module */
             FileUtilities: FileUtilities;
             /** Original WhatsApp GroupMetadata Object Collection */
