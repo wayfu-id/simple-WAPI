@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.13...v0.1.14) (2025-11-25)
+
+
+### Bug Fixes
+
+* **chat:** add 'WAWebFindChatAction' fix chat finding issue' ([1972882](https://github.com/wayfu-id/simple-WAPI/commit/19728828d72fcb1448db31701f9159145445f96c))
+
 ### [0.1.13](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.12...v0.1.13) (2025-11-24)
 
 
