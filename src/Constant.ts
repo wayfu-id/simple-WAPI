@@ -153,7 +153,10 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
         return m("WAWebQueryExistsJob");
     },
     WidFactory: (m: webpackModules) => {
-        return m("WAWebWidFactory");
+        return {
+            ...m("WAWebWidFactory"),
+            modelClass: m("WAWebWid")?.default,
+        };
     },
     WidToJid: (m: webpackModules) => {
         return m("WAWebWidToJid");

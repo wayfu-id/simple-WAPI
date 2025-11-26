@@ -496,6 +496,7 @@ declare global {
 
         /** Base Wid Interface */
         export interface wid {
+            prototype: this;
             /**
              * Whatsapp server domain
              * @example `c.us`
@@ -1378,6 +1379,7 @@ declare global {
         export interface WidFactory {
             createWid(id: string): wid;
             createWidFromWidLike(id: string): wid;
+            modelClass: wid;
         }
 
         export type WidDomain = {
