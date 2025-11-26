@@ -1452,7 +1452,7 @@ declare global {
             /** Original "WAWebSendNonMessageDataRequest" module*/
             HistorySync: HistorySync;
             /** Original 'WAWebApiContact' module */
-            lidUtils: LidUtils;
+            LidUtils: LidUtils;
             /** Original 'WAWebLinkPreviewChatAction' module */
             LinkPreview: LinkPreview;
             /** Original 'WAWebAttachMediaCollection' Class */
