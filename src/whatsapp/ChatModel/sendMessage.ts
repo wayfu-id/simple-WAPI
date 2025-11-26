@@ -70,7 +70,7 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
             if (!this.active) await this.open();
 
             let results = await Promise.all(app.MsgUtils.addAndSendMsgToChat(this, message));
-            await this.historySync();
+            // await this.historySync();
             return Boolean(options?.ret) ? this.getModel() : results;
         },
         enumerable: true,

@@ -21,7 +21,7 @@ const sendMedia: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (a
                         }),
                         res = await media.sendToChat(this, { caption: caption ?? "" });
 
-                    await this.historySync();
+                    // await this.historySync();
                     done(r ? this.getModel() : res);
                 })(file, options, ret);
             }).catch((err: Error | any) => {

@@ -12,7 +12,7 @@ const sendText: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (ap
                     let msg = await f.createTextMsgData(this, e),
                         res = await f.addAndSendTextMsg(this, msg);
 
-                    await this.historySync();
+                    // await this.historySync();
                     done(ret ? this.getModel() : res);
                 })(app, body);
             }).catch((err) => {
