@@ -8,6 +8,7 @@ import contactModel from "./ContactModel/index";
 import groupMetadata from "./GroupMetadata/index";
 import messageModel from "./MessageModel/index";
 import productModel from "./ProductModel";
+import widModel from "./WidModel";
 
 /** Construct Custom Store's Catalog object */
 function constructCatalog(app: WAPI) {
@@ -137,6 +138,23 @@ function constructProductModel(app: WAPI) {
     }
 }
 
+/** Construct Custom Store's Wid object */
+function constructWidModel(app: WAPI) {
+    let { WidFactory } = app,
+        { modelClass } = WidFactory;
+
+    try {
+        let _model_ = widModel(app);
+        Object.defineProperties(modelClass.prototype, _model_);
+        if (typeof modelClass.prototype.toLid === "undefined") {
+            throw new Error("Failed to construct Wid Model!");
+        }
+        return true;
+    } catch (err: Error | any) {
+        throw new Error(`From: Construct Wid > ${err.message}`);
+    }
+}
+
 /** Construct Custom Store object */
 export function constructStore(app: WAPI) {
     let { Chat } = app;
@@ -148,7 +166,8 @@ export function constructStore(app: WAPI) {
             constructContact(app) &&
             constructGroupMetadata(app) &&
             constructProductModel(app) &&
-            constructMessage(app)
+            constructMessage(app) &&
+            constructWidModel(app)
         );
     }
     return true;
@@ -518,10 +537,18 @@ declare global {
             isUser(): boolean;
             /** Is it Lid wid */
             isLid(): boolean;
+            /** To Lid Format */
+            toLid(): Lid;
         }
 
         export interface devieId extends wid {
             device: number;
+        }
+
+        export interface Lid extends wid {
+            server: "lid";
+            /** Is it Lid wid */
+            isLid(): boolean;
         }
 
         /** All Wid that inheritance with base wid */
@@ -1094,9 +1121,9 @@ declare global {
             getContactHash: (a: ContactId) => string;
             getContactRecord: (a: wid) => any;
             getContactUsername: (a: wid) => string | null;
-            getCurrentLid: (a: wid) => wid;
-            getCurrentLidDevice: (a: wid) => wid;
-            getLatestLid: (a: wid) => wid;
+            getCurrentLid: (a: wid) => Lid;
+            getCurrentLidDevice: (a: wid) => Lid;
+            getLatestLid: (a: wid) => Lid;
             getPhoneNumber: (a: wid) => ContactId;
             getPnIfLidIsLatestMapping: (a: any) => any;
             hasLidMapping: (a: wid) => boolean;
