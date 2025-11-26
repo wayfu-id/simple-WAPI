@@ -5,8 +5,7 @@ const findImpl: (app: WAPI) => PropertyDescriptor & ThisType<WA.Chat> = (app: WA
         value: async function findImpl(e: string) {
             let wid = await app.findUserWid(e);
             if (!wid) return null;
-            let result = await app.FindAndCreateChat.findOrCreateLatestChat(wid);
-            return result?.chat ?? null;
+            return (await app.FindChatAction.findOrCreateLatestChat(wid))?.chat ?? null;
         },
         enumerable: true,
     };

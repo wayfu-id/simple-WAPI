@@ -47,7 +47,7 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     EphemeralFields: (m: webpackModules) => {
         return m("WAWebGetEphemeralFieldsMsgActionsUtils");
     },
-    FindAndCreateChat: (m: webpackModules) => {
+    FindChatAction: (m: webpackModules) => {
         return m("WAWebFindChatAction");
     },
     FileUtilities: (m: webpackModules) => {

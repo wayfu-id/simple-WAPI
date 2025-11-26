@@ -1000,18 +1000,15 @@ declare global {
             getEphemeralFields(chat: ChatModel): any;
         }
 
+        type findChatResult = {
+            chat: ChatModel;
+            created: boolean;
+        };
+
         /** Original 'WAWebFindChatAction' module */
-        export interface FindAndCreateChat {
-            findExistingChatC(
-                chatId: ChatId,
-                t?: any,
-                n?: any
-            ): Promise<{ chat: ChatModel; created: boolean }> | null;
-            findOrCreateLatestChat(
-                chatId: ChatId,
-                t?: any,
-                n?: any
-            ): Promise<{ chat: ChatModel; created: boolean }> | null;
+        export interface FindChatAction {
+            findExistingChatC(chatId: ChatId, t?: any, n?: any): Promise<findChatResult> | null;
+            findOrCreateLatestChat(chatId: ChatId, t?: any, n?: any): Promise<findChatResult> | null;
         }
 
         type FILETYPE = {
@@ -1438,7 +1435,7 @@ declare global {
             /** Original 'WAWebGetEphemeralFieldsMsgActionsUtils' module */
             EphemeralFields: EphemeralFields;
             /** Original 'WAWebFindChatAction' module */
-            FindAndCreateChat: FindAndCreateChat;
+            FindChatAction: FindChatAction;
             /** Original 'WAWebFileUtils' module */
             FileUtilities: FileUtilities;
             /** Original WhatsApp GroupMetadata Object Collection */
