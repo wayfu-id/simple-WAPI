@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.15](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.14...v0.1.15) (2025-11-26)
+
+
+### Bug Fixes
+
+* **docs:** wrong module name, it should be PascalCase ([38cc084](https://github.com/wayfu-id/simple-WAPI/commit/38cc084dcc55a96c5dc0a557a14c9d132904058a))
+
 ### [0.1.14](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.13...v0.1.14) (2025-11-25)
 
 
