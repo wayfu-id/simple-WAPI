@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.15...v0.1.16) (2025-11-27)
+
+
+### Bug Fixes
+
+* **chat:** bring back hasDraftMessage property in Chat ([cb0ed9a](https://github.com/wayfu-id/simple-WAPI/commit/cb0ed9af3781ed90a178c5ec770318f9ac0491dc))
+
 ### [0.1.15](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.14...v0.1.15) (2025-11-26)
 
 
