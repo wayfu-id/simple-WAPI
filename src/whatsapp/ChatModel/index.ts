@@ -3,6 +3,7 @@ import clearDraft from "./clearDraft";
 import close from "./close";
 import getContactModel from "./getContactModel";
 import getModel from "./getModel";
+import hasDraftMessage from "./hasDraftMessage";
 import historySync from "./historySync";
 import open from "./open";
 import sendMedia from "./sendMedia";
@@ -15,6 +16,7 @@ const chatModel: (app: WAPI) => PropertyDescriptorMap = (app: WAPI) => {
         close: close(app),
         getContactModel: getContactModel(app),
         getModel: getModel(app),
+        hasDraftMessage: hasDraftMessage(app),
         historySync: historySync(app),
         open: open(app),
         sendMedia: sendMedia(app),
