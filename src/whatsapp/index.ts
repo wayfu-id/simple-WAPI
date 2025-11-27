@@ -573,6 +573,9 @@ declare global {
             prototype: this;
             /** Default properties */
             [k: string]: any | undefined;
+
+            set(key: string, value: any): void;
+            unset(key: string): void;
         }
 
         type sendMediaOptions = {
