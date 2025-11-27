@@ -1016,6 +1016,44 @@ declare global {
             send: (chat: ChatModel | WAPI.Chat) => Promise<void>;
         }
 
+        /** Original 'WAWebChatGetters' module */
+        export interface ChatGetters {
+            clearChatGetterCacheFor: (t: ChatModel) => any;
+            getArchive: (t: ChatModel) => ChatModel | false;
+            getCanUnread: (t: ChatModel) => boolean;
+            getCapiThreadControl: (t: ChatModel) => any;
+            getChangeNumberNewJid: (t: ChatModel) => any;
+            getChangeNumberOldJid: (t: ChatModel) => any;
+            getChatUnsafe: (t: ChatModel) => ChatModel;
+            getChatlistPreview: (t: ChatModel) => any;
+            getDraftMessage: (t: ChatModel) => DraftMessage | undefined;
+            getEndOfHistoryTransferType: (t: ChatModel) => any;
+            getHasUnread: (t: ChatModel) => boolean;
+            getId: (t: ChatModel) => wid;
+            getIsAutoMuted: (t: ChatModel) => boolean;
+            getIsBot: (t: ChatModel) => boolean;
+            getIsBroadcast: (t: ChatModel) => boolean;
+            getIsEligibleForContactSync: (t: ChatModel) => boolean;
+            getIsGroup: (t: ChatModel) => boolean;
+            getIsIAS: (t: ChatModel) => boolean;
+            getIsLocked: (t: ChatModel) => boolean;
+            getIsNewsletter: (t: ChatModel) => boolean;
+            getIsPSA: (t: ChatModel) => boolean;
+            getIsReadOnly: (t: ChatModel) => boolean;
+            getIsUser: (t: ChatModel) => boolean;
+            getLabels: (t: ChatModel) => any;
+            getLastReactionPreview: (t: ChatModel) => any;
+            getMuteExpiration: (t: ChatModel) => any;
+            getName: (t: ChatModel) => any;
+            getPendingInitialLoading: (t: ChatModel) => any;
+            getPin: (t: ChatModel) => any;
+            getPreviewT: (t: ChatModel) => any;
+            getT: (t: ChatModel) => any;
+            getTcToken: (t: ChatModel) => any;
+            getTcTokenTimestamp: (t: ChatModel) => any;
+            getUnreadCount: (t: ChatModel) => any;
+        }
+
         type downloadMediaOpt = {
             downloadEvenIfExpensive: boolean;
             rmrReason: number;
@@ -1462,6 +1500,8 @@ declare global {
             Catalog: Catalog;
             /** Original WhatsApp Chat Object Collection */
             Chat: Chat;
+            /** Original 'WAWebChatGetters' module */
+            ChatGetters: ChatGetters;
             /** Original 'WAWebChatPreferenceCollection' Collection */
             ChatPreference: {};
             /** Original 'WAWebCmd' module */
