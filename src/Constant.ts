@@ -23,9 +23,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
             ProductModel: m("WAWebProductModel")?.Product,
         };
     },
-    ChatActions: (m: webpackModules) => {
-        return m("WAWebFindChatAction");
-    },
+    // ChatActions: (m: webpackModules) => {
+    //     return m("WAWebFindChatAction");
+    // },
     // ChatSettings: (m: webpackModules) => {
     //     return m("WAWebChatPreferenceCollection")?.default;
     // },
