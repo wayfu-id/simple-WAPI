@@ -484,6 +484,14 @@ declare global {
             };
         }
 
+        type DraftMessage = {
+            ctwaContext?: string;
+            ctwaContextLinkData?: string;
+            omittedUrl?: string;
+            text: string;
+            timestamp: number;
+        };
+
         /** Message Collection */
         export interface Message extends BaseClass<MessageModel> {
             byChat(chat: ChatModel): MsgsByChat;
@@ -652,6 +660,7 @@ declare global {
             id: ChatId;
             active?: boolean;
             composeQuotedMsg?: MessageModel;
+            draftMessage?: DraftMessage;
             hasDraftMessage: boolean;
             endOfHistoryTransferType: number;
             // isGroup: boolean;
@@ -673,6 +682,7 @@ declare global {
                 content: string | kindOfAttachment,
                 options?: WAPI.SendMessageOptions
             ): Promise<SendMessageResponse<T>>;
+            setComposeContents: (draft: DraftMessage) => void;
         }
 
         /** GroupChat Model */
