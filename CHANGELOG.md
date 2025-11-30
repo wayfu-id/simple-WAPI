@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.16...v0.1.17) (2025-11-30)
+
+
+### Bug Fixes
+
+* **Contact:** Error when constructing WAPI Contact model ([97de6f5](https://github.com/wayfu-id/simple-WAPI/commit/97de6f50ef7de490cfe688e3021b573cb5bd37d1))
+
 ### [0.1.16](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.15...v0.1.16) (2025-11-27)
 
 
