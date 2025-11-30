@@ -389,6 +389,91 @@ declare global {
             "UNKNOWN" = "unknown",
         }
 
+        export enum MessageKinds {
+            "Album" = "album",
+            "AssociatedImage" = "associatedImage",
+            "AssociatedUnknown" = "associatedUnknown",
+            "AssociatedVideo" = "associatedVideo",
+            "Audio" = "audio",
+            "AutomatedGreetingMessage" = "automatedGreetingMessage",
+            "BizContentPlaceholder" = "bizContentPlaceholder",
+            "BizCoverPhoto" = "bizCoverPhoto",
+            "BroadcastNotification" = "broadcastNotification",
+            "ButtonsResponse" = "buttonsResponse",
+            "CallLog" = "callLog",
+            "Chat" = "chat",
+            "Ciphertext" = "ciphertext",
+            "CommentDecrypted" = "commentDecrypted",
+            "CommentEncrypted" = "commentEncrypted",
+            "Debug" = "debug",
+            "DebugPlaceholder" = "debugPlaceholder",
+            "Document" = "document",
+            "E2eNotification" = "e2eNotification",
+            "EventCreation" = "eventCreation",
+            "EventEditDecrypted" = "eventEditDecrypted",
+            "EventEditEncrypted" = "eventEditEncrypted",
+            "EventResponseDecrypted" = "eventResponseDecrypted",
+            "EventResponseEncrypted" = "eventResponseEncrypted",
+            "Gp2" = "gp2",
+            "GroupsV4Invite" = "groupsV4Invite",
+            "Historybundle" = "historyBundle",
+            "Hsm" = "hsm",
+            "Image" = "image",
+            "Interactive" = "interactive",
+            "InteractiveResponse" = "interactiveResponse",
+            "KeepInChat" = "keepInChat",
+            "List" = "list",
+            "ListResponse" = "listResponse",
+            "Location" = "location",
+            "LocationLive" = "locationLive",
+            "MessageEditEncrypted" = "messageEditEncrypted",
+            "MessageEditDecrypted" = "messageEditDecrypted",
+            "MessageHistoryBundle" = "messageHistoryBundle",
+            "MessageHistoryNotice" = "messageHistoryNotice",
+            "MultiVcard" = "multiVcard",
+            "NativeFlow" = "nativeFlow",
+            "NewsletterAdminInvite" = "newsletterAdminInvite",
+            "NewsletterFollowerInvite" = "newsletterFollowerInvite",
+            "NewsletterNotification" = "newsletterNotification",
+            "NewsletterQuestionResponse" = "newsletterQuestionResponse",
+            "Notification" = "notification",
+            "NotificationTemplate" = "notificationTemplate",
+            "Order" = "order",
+            "Oversized" = "oversized",
+            "Payment" = "payment",
+            "PeerMessage" = "peerMessage",
+            "PinInChat" = "pinInChat",
+            "PlaceholderMessage" = "placeholderMessage",
+            "PlaceholderAddon" = "placeholderAddon",
+            "PinnedMessage" = "pinnedMessage",
+            "PollCreation" = "pollCreation",
+            "PollResultSnapshot" = "pollResultSnapshot",
+            "PollVoteDecrypted" = "pollVoteDecrypted",
+            "PollVoteEncrypted" = "pollVoteEncrypted",
+            "Product" = "product",
+            "Protocol" = "protocol",
+            "ProtocolAddonRevoke" = "protocolAddonRevoke",
+            "ProtocolEventEdit" = "protocolEventEdit",
+            "ProtocolRevoke" = "protocolRevoke",
+            "Ptt" = "ptt",
+            "Ptv" = "ptv",
+            "QuarantinedMessage" = "quarantinedMessage",
+            "ReactionDecrypted" = "reactionDecrypted",
+            "ReactionEncrypted" = "reactionEncrypted",
+            "RequestPhoneNumber" = "requestPhoneNumber",
+            "RevokedAddon" = "revokedAddon",
+            "RevokedMessage" = "revokedMessage",
+            "RichResponse" = "richResponse",
+            "Sticker" = "sticker",
+            "StickerPack" = "stickerPack",
+            "Status" = "status",
+            "SystemMsgUpsell" = "systemMsgUpsell",
+            "TemplateButtonReply" = "templateButtonReply",
+            "Unknown" = "unknown",
+            "Vcard" = "vcard",
+            "Video" = "video",
+        }
+
         export type MessageSendOptions = {
             /** Image caption */
             caption?: string;
@@ -1355,6 +1440,12 @@ declare global {
             createTextMsgData(chat: ChatModel, body: string): Promise<MessageModel>;
         }
 
+        /** Original "WAWebMsgType" module */
+        export interface MsgTypes {
+            MSG_TYPE: typeof MessageTypes;
+            MsgKind: typeof MessageKinds;
+        }
+
         /** Original 'WAWebUserPrefsMeUser' module */
         export interface Profiles {
             isMeAccount(id: wid): boolean;
@@ -1561,6 +1652,8 @@ declare global {
              * 'WAWebApiMessageInfoStore'
              * modules */
             MsgUtils: MsgUtils;
+            /** Original "WAWebMsgType" module */
+            MsgTypes: MsgTypes;
             /** Original 'WAWebMediaOpaqueData' Class */
             OpaqueData: OpaqueData;
             /** Original 'WAWebContactProfilePicThumbBridge' module */
