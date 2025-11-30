@@ -100,24 +100,25 @@ export default class Product extends Base<T, productSerialized> {
         return this.raw.getProductImageCollectionHead();
     }
 
-    async sendToChat(chat: WA.wid | string | WAPI.Chat): Promise<void> {
-        let toChat = chat instanceof Chat ? chat.raw : await this.app.Chat.find(chat);
-        if (!toChat) {
-            throw new Error("Chat not found");
-        }
-        if (!toChat.active) {
-            await toChat.open();
-        }
-        let productImage = this.getProductImageCollectionHead(),
-            catId = this.catalogWid,
-            productMedia = productImage ? productImage.mediaData : undefined;
+    async sendToChat(chat: WA.wid | string | WAPI.Chat) {
+        return await this.app.sendAdvMessage(chat, "", { product: this });
+        // let toChat = chat instanceof Chat ? chat.raw : await this.app.Chat.find(chat);
+        // if (!toChat) {
+        //     throw new Error("Chat not found");
+        // }
+        // if (!toChat.active) {
+        //     await toChat.open();
+        // }
+        // let productImage = this.getProductImageCollectionHead(),
+        //     catId = this.catalogWid,
+        //     productMedia = productImage ? productImage.mediaData : undefined;
 
-        let productMsg = this.app.BusinessUtils.createProductInquiry(
-            this.raw,
-            toChat.id,
-            catId,
-            productMedia
-        );
+        // let productMsg = this.app.BusinessUtils.createProductInquiry(
+        //     this.raw,
+        //     toChat.id,
+        //     catId,
+        //     productMedia
+        // );
         // productMsg.caption = "Test Caption";
         // this.app.Msg.gadd(productMsg);
         // console.log("Product message created:", productMsg);

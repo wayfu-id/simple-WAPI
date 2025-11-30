@@ -479,6 +479,8 @@ declare global {
             caption?: string;
             /** Media to be sent */
             media?: File | Blob;
+            /** Product to be sent */
+            product?: WAPI.Product;
             /** Media Quality */
             quality?: "Standard" | "HD";
             /** Return chat model */
@@ -632,6 +634,8 @@ declare global {
             isLid(): boolean;
             /** To Lid Format */
             toLid(): Lid;
+            /** To Jid String Format */
+            toJid(): string;
         }
 
         export interface devieId extends wid {
@@ -842,6 +846,8 @@ declare global {
 
         /** Message Model */
         export interface MessageModel extends Omit<BaseModel, "id"> {
+            new (data: any): this;
+
             [k: string]: any;
             ack: number;
             body: string;
@@ -894,6 +900,7 @@ declare global {
             imageCount?: number;
             imageHash?: string;
             maxAvailable: number;
+            name: string;
             old: boolean;
             priceAmount1000: number;
             productImageCollection?: ProductImage;
@@ -903,7 +910,9 @@ declare global {
             salePriceAmount1000: number | undefined;
 
             getModel(): WAPI.Product;
+            getHeadImageFile(): File | null;
             getProductImageCollectionHead(): ProductImageModel | null;
+            getPreviewImage(): ProductImageModel | null;
         }
 
         export interface ProductImageModel extends Omit<BaseModel, "id"> {
@@ -981,13 +990,14 @@ declare global {
             isViewOnce?: boolean;
             mediaKey?: string;
             mediaKeyTimestamp?: number;
+            preview?: OpaqueData;
             streamingSidecar?: any;
             size?: number;
             uploadhash?: string;
 
             waveform: any;
 
-            set(data: UploadedMedia): this;
+            set(data: UploadedMedia | this): this;
             toJSON(): { [k: string]: any };
         }
 
@@ -1006,6 +1016,7 @@ declare global {
             _mimeType: string | undefined;
             renderableUrl: string;
             autorelease(): void;
+            getBase64(): String;
             url(): string;
         }
 
@@ -1087,6 +1098,7 @@ declare global {
                 s?: boolean
             ): any;
             sendProductToChat(...args: any[]): Promise<any>;
+            isSalePriceActive(product: ProductModel): boolean;
         }
 
         /** Original 'WAWebCmd' module */

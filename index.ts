@@ -50,6 +50,7 @@ declare global {
         type MediaMessageOptions = {
             attachment?: WA.kindOfAttachment;
             caption?: string;
+            product?: WA.ProductModel | Product;
             sendAsHD?: boolean;
             sendAudioAsVoice?: boolean;
             sendMediaAsSticker?: boolean;

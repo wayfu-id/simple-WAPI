@@ -20,6 +20,7 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
             ...m("WAWebBizProductCatalogAction"),
             ...m("WAWebBizProductCatalogBridge"),
             ...m("WAWebBizCreateProductInquiry"),
+            ...m("WAWebProductSelectors"),
             ProductModel: m("WAWebProductModel")?.Product,
         };
     },
@@ -46,6 +47,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     },
     Downloader: (m: webpackModules) => {
         return m("WAWebDownloadManager")?.downloadManager;
+    },
+    DraftMessageUtils: (m: webpackModules) => {
+        return m("WAWebUpdateDraftMessageChatAction");
     },
     EphemeralFields: (m: webpackModules) => {
         return m("WAWebGetEphemeralFieldsMsgActionsUtils");
