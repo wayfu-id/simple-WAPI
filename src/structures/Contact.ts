@@ -120,7 +120,9 @@ export default class Contact extends Base<T, ContactSerialized> {
         this.profilePicThumb = ProfilePicThumb.create(data);
 
         /** Contact's phone number */
-        this.phoneNumber = data?.phoneNumber?.user ?? (this.id.isLid() ? this.app.lidUtils.getPhoneNumber(this.id) : this.id).user;
+        this.phoneNumber =
+            data?.phoneNumber?.user ??
+            (this.id.isLid() ? this.app.LidUtils.getPhoneNumber(this.id) : this.id)?.user;
 
         /** The name that the contact has configured to be shown publically */
         this.pushname = data.pushname;
