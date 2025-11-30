@@ -5,6 +5,7 @@ export type GroupParticipantSerialized = {
     contact: ContactSerialized;
     isAdmin: boolean;
     isSuperAdmin: boolean;
+    phoneNumber: string;
 };
 
 export default class GroupParticipant {
@@ -12,6 +13,7 @@ export default class GroupParticipant {
     id: WA.ContactId;
     isAdmin: boolean;
     isSuperAdmin: boolean;
+    phoneNumber: string;
     _serialized: GroupParticipantSerialized;
 
     constructor(data: WA.GroupParticipantModel) {
@@ -31,12 +33,16 @@ export default class GroupParticipant {
         /** Is the participant Super Admin */
         this.isSuperAdmin = data.isSuperAdmin;
 
+        /** Participant's phone number */
+        this.phoneNumber = this.contact.phoneNumber;
+
         /** Get serialized GroupParticipant object */
         this._serialized = {
             contact: this.contact._serialized,
             id: this.id,
             isAdmin: this.isAdmin,
             isSuperAdmin: this.isSuperAdmin,
+            phoneNumber: this.phoneNumber,
         };
 
         return this;
