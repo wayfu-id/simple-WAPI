@@ -1139,6 +1139,21 @@ declare global {
             getUnreadCount: (t: ChatModel) => any;
         }
 
+        /** Original 'WAWebChatStateBridge' and 'WAWebPresenceChatAction' Modules */
+        export interface ChatState {
+            clearPresence: (e: wid) => void;
+            getChatIdentifier: (t: ChatModel) => Lid;
+            markComposing: (e: wid) => void;
+            markPaused: (e: wid) => void;
+            markRecording: (e: wid) => void;
+            presenceOnlineChanged: (e: wid) => void;
+            sendChatStateComposing: (e: ChatModel) => Promise<void>;
+            sendChatStatePaused: (e: ChatModel) => Promise<void>;
+            sendChatStateRecording: (e: ChatModel) => Promise<void>;
+            sendPresenceAvailable: () => Promise<void>;
+            sendPresenceUnavailable: () => Promise<void>;
+        }
+
         type downloadMediaOpt = {
             downloadEvenIfExpensive: boolean;
             rmrReason: number;
@@ -1593,8 +1608,13 @@ declare global {
             Chat: Chat;
             /** Original 'WAWebChatGetters' module */
             ChatGetters: ChatGetters;
-            /** Original 'WAWebChatPreferenceCollection' Collection */
-            ChatPreference: {};
+            /**
+             * Collection of
+             * 'WAWebChatStateBridge',
+             * 'WAWebPresenceChatAction'
+             * modules
+             */
+            ChatState: ChatState;
             /** Original 'WAWebCmd' module */
             Cmd: Cmd;
             /** Original 'WAWebComposeBoxActions' module */

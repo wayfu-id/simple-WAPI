@@ -30,7 +30,10 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     //     return m("WAWebChatPreferenceCollection")?.default;
     // },
     ChatState: (m: webpackModules) => {
-        return m("WAWebChatStateBridge");
+        return {
+            ...m("WAWebChatStateBridge"),
+            ...m("WAWebPresenceChatAction"),
+        };
     },
     Cmd: (m: webpackModules) => {
         return m("WAWebCmd")?.Cmd;
