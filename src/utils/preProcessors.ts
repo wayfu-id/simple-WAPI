@@ -26,8 +26,6 @@ const preProcessors = (app: WAPI) => {
                 self: "out",
                 t: parseInt(`${new Date().getTime() / 1000}`),
                 isNewMsg: true,
-                type: "chat",
-                viewMode: "VISIBLE",
                 ...ephemeralFields,
             } as WA.MessageModel;
         },
@@ -60,10 +58,11 @@ const preProcessors = (app: WAPI) => {
         },
         /** Process File to Media Data for Message Attachment */
         processMediaData: async function processMediaData(
-            media: File | Blob | WAPI.MediaInput,
+            media: File | Blob | WAPI.MediaInput | WAPI.Product,
             { forceVoice, forceDocument, forceGif, forceHD }: WAPI.MediaProcessOptions = {}
         ) {
-            const file = app.fileUtils.mediaInfoToFile(media);
+            const file = media instanceof Product ? media.getFile() : app.fileUtils.mediaInfoToFile(media);
+            if (!file) throw new Error("Invalid media input");
             const opaqueData = await app.OpaqueData.createFromData(file, file.type);
             const mediaParams = ((hd) => {
                 let configName = `web_image_max${hd ? "_hd_" : "_"}edge`,
@@ -194,47 +193,25 @@ const preProcessors = (app: WAPI) => {
             } as WA.StickerData;
         },
         /** Process Product Object into Message */
-        processProductMessage: async function processProductMessage(
-            product: WA.ProductModel | WAPI.Product,
-            chat: KindOfChat
-        ) {
-            const { MsgTypes, ME, BusinessUtils, Msg } = app;
-            let useChat = chat instanceof Chat ? chat.raw : chat,
-                useProduct = product instanceof Product ? product.raw : product,
-                productImage = useProduct.getHeadImageFile(),
-                productPreview = useProduct.getProductImageCollectionHead()?.mediaData;
+        processProductMessage: function processProductMessage(product: WA.ProductModel | WAPI.Product) {
+            let useProduct = product instanceof Product ? product.raw : product;
+            const { ME, MsgTypes, BusinessUtils } = app;
 
-            if (!productImage) throw new Error("Product has no Image");
-            if (!productPreview) throw new Error("Product has no Preview Image");
-
-            const newMsgKey = await this.generateMsgKey(useChat),
-                ephemeralFields = app.EphemeralFields.getEphemeralFields(useChat);
-
-            let msg = new Msg.modelClass({
-                id: newMsgKey,
-                ack: 0,
-                from: app.ME.id,
-                to: useChat.id,
-                t: parseInt(`${new Date().getTime() / 1000}`),
-                title: useProduct.name,
-                description: useProduct.description,
-                businessOwnerJid: ME.id.toJid(),
+            return {
                 type: MsgTypes.MSG_TYPE.PRODUCT,
-                kind: MsgTypes.MsgKind.Product,
+                businessOwnerJid: ME.id.toJid(),
                 productId: useProduct.id.toString(),
                 url: useProduct.url,
                 productImageCount: useProduct.getProductImageCollectionCount(),
-                body: productPreview.preview?.getBase64(),
+                title: useProduct.name,
+                description: useProduct.description,
                 currencyCode: useProduct.currency,
                 priceAmount1000: useProduct.priceAmount1000,
                 salePriceAmount1000: BusinessUtils.isSalePriceActive(useProduct)
                     ? useProduct.salePriceAmount1000
                     : null,
-                retailerId: useProduct.retailerId,
-                // ...ephemeralFields,
-            });
-
-            return msg.mediaData?.set(productPreview), msg;
+                // caption: useProduct.description,
+            };
         },
     };
 };

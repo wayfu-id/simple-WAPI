@@ -506,7 +506,7 @@ declare global {
             T extends true ? WAPI.Chat : [MessageModel, MessageSendResult]
         >;
 
-        export type kindOfAttachment = WAPI.MediaInput | File | StickerData | MediaData;
+        export type kindOfAttachment = WAPI.MediaInput | File | StickerData | MediaData | WAPI.Product;
 
         export type MediaInfo = {
             data: string;
@@ -994,6 +994,10 @@ declare global {
             streamingSidecar?: any;
             size?: number;
             uploadhash?: string;
+
+            forceVoice: boolean;
+            forceGif: boolean;
+            forceDocument: boolean;
 
             waveform: any;
 

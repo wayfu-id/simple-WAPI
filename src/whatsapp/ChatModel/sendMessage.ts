@@ -4,7 +4,7 @@ import { Product } from "../../structures";
 const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (app: WAPI) => {
     return {
         value: async function sendMessage(
-            content: string | WA.kindOfAttachment | WAPI.Product | WA.ProductModel,
+            content: string | WA.kindOfAttachment,
             options?: WAPI.SendMessageOptions
         ) {
             if (typeof content !== "string") {
@@ -41,10 +41,17 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                         mediaOpt
                     )) as WA.attcOptions;
                     mediaMsgReady.caption = caption;
+                    mediaMsgReady.forceVoice = !!sendAudioAsVoice;
+                    mediaMsgReady.forceGif = !!sendVideoAsGif;
+                    mediaMsgReady.forceDocument = !!sendMediaAsDocument;
                     mediaMsgReady.isViewOnce = !!isViewOnce;
                 }
 
                 delete options.attachment;
+                delete options.sendAsHD;
+                delete options.sendAudioAsVoice;
+                delete options.sendVideoAsGif;
+                delete options.sendMediaAsDocument;
             }
 
             /** If 'linkPreview' is setted 'true' */
@@ -57,14 +64,16 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                 delete options.linkPreview;
             }
 
-            let productMedia: WA.MessageModel | undefined;
+            let productMsgOpt;
             if (options?.product) {
-                productMedia = await app.preProcessors.processProductMessage(options.product, this);
+                productMsgOpt = app.preProcessors.processProductMessage(options.product);
+                mediaMsgReady = (await app.preProcessors.processMediaData(
+                    options?.product
+                )) as WA.attcOptions;
                 delete options.product;
             }
-            console.log(productMedia);
 
-            if (typeof content !== "string" && !mediaMsgReady && !productMedia) {
+            if (typeof content !== "string" && !mediaMsgReady) {
                 throw new Error("No messege to be sent!");
             }
 
@@ -73,14 +82,14 @@ const sendMessage: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = 
                 ...baseMessage,
                 ...mediaMsgReady,
                 ...(mediaMsgReady?.toJSON ? mediaMsgReady?.toJSON() : {}),
-                // ...productMedia,
+                ...productMsgOpt,
             } as WA.MessageModel;
 
             if (this.hasDraftMessage) this.clearDraft();
             if (!this.active) await this.open();
 
-            let results = await Promise.all(app.MsgUtils.addAndSendMsgToChat(this, productMedia ?? message));
-            // await this.historySync();
+            message.type = message.type || "chat";
+            let results = await Promise.all(app.MsgUtils.addAndSendMsgToChat(this, message));
             return Boolean(options?.ret) ? this.getModel() : results;
         },
         enumerable: true,

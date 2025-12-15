@@ -66,6 +66,8 @@ declare global {
             linkPreview?: boolean;
             subtype?: string;
             quality?: "Standard" | "HD";
+            delay?: number;
+            product?: Product;
         } & WA.MessageSendOptions &
             LinkMessageOptions &
             MediaProcessOptions;
