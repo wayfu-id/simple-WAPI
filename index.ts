@@ -150,8 +150,11 @@ interface WAPI extends WA.Store {
     WA_VERSION: string;
     /** Simple-WAPI Version */
     WAPI_VERSION: string;
-    /** HTML classes that web are using */
-    WebClasses: Record<WA.WebSCSSKey, { [k: string]: string }>;
+    /**
+     * HTML classes that web are using
+     * @deprecated completely gone
+     * */
+    WebClasses: {};
     /** All WhatsApp Web React Components */
     WebComponents: { [k: string]: any };
     /** Check given phone number */
