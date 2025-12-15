@@ -19,8 +19,9 @@ const sendAdvMessage: PropertyDescriptor & ThisType<WAPI> = {
         })(id);
 
         if (!chat) return;
-
-        let { media, attachment, forceHD, caption, ret, quality } = options ?? {},
+        const { ChatState: State, sleep } = this;
+        State.sendChatStateComposing(chat.id);
+        let { media, attachment, forceHD, caption, ret, quality, delay } = options ?? {},
             _ret = ret && typeof ret === "boolean" ? ret : false,
             _media = media ?? (attachment instanceof File || attachment instanceof Blob ? attachment : null);
         delete options?.media;
@@ -34,6 +35,8 @@ const sendAdvMessage: PropertyDescriptor & ThisType<WAPI> = {
             message = "";
             options = Object.assign({}, options, attcOpt);
         }
+        State.markComposing(chat);
+        if (delay) await sleep(delay);
         return await chat.sendMessage<typeof _ret>(message, options);
     },
 };

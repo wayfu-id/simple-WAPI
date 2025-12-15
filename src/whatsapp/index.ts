@@ -1018,13 +1018,13 @@ declare global {
         export interface ChatState {
             clearPresence: (e: wid) => void;
             getChatIdentifier: (t: ChatModel) => Lid;
-            markComposing: (e: wid) => void;
-            markPaused: (e: wid) => void;
-            markRecording: (e: wid) => void;
+            markComposing: (e: ChatModel) => void;
+            markPaused: (e: ChatModel) => void;
+            markRecording: (e: ChatModel) => void;
             presenceOnlineChanged: (e: wid) => void;
-            sendChatStateComposing: (e: ChatModel) => Promise<void>;
-            sendChatStatePaused: (e: ChatModel) => Promise<void>;
-            sendChatStateRecording: (e: ChatModel) => Promise<void>;
+            sendChatStateComposing: (e: wid) => Promise<void>;
+            sendChatStatePaused: (e: wid) => Promise<void>;
+            sendChatStateRecording: (e: wid) => Promise<void>;
             sendPresenceAvailable: () => Promise<void>;
             sendPresenceUnavailable: () => Promise<void>;
         }

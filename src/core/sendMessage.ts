@@ -19,12 +19,16 @@ const sendMessage: PropertyDescriptor & ThisType<WAPI> = {
         })(id);
 
         if (!chat) return;
+        const { ChatState: State, sleep } = this;
+        State.sendChatStateComposing(chat.id);
         let msgOpts = options ?? ({} as WAPI.SendMessageOptions);
-        let { attachment, caption, media, quality, ret } = msgOpts,
+        let { attachment, caption, media, quality, ret, delay } = msgOpts,
             { forceDocument, forceGif, forceHD, forceImage } = msgOpts,
             _ret = ret && typeof ret === "boolean" ? ret : false,
             _media = media ?? (attachment instanceof File || attachment instanceof Blob ? attachment : null);
 
+        State.markComposing(chat);
+        if (delay) await sleep(delay);
         if (_media) {
             // caption = caption ? caption : message;
             let attcOptions = { caption: caption ?? message, quality: quality ?? "Standard" },

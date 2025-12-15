@@ -2,35 +2,32 @@ import WAPI from "../../index";
 import { Chat } from "../structures/index";
 
 const inputAndSendTextMsg: PropertyDescriptor & ThisType<WAPI> = {
-    value: async function inputAndSendTextMsg(chatId: Chat | string, text: string) {
-        let [_id, chat] = ((idx) => {
-            if (idx instanceof Chat) {
-                return [idx.id, idx];
+    value: async function inputAndSendTextMsg(chatId: string | Chat | WA.wid, text: string, delay?: number) {
+        let chat = await (async (e) => {
+            let ct: WA.ChatModel | null;
+            try {
+                ct = await this.Chat.find(e instanceof Chat ? e.id : e);
+                if (ct) return ct;
+            } catch (err: any) {
+                throw new Error(`Can't find Chat. Reason: ${err.message || "Unknown"}`);
             }
-            return [idx, null];
+            return null;
         })(chatId);
 
-        try {
-            if (!chat) {
-                chat = await this.findChat(_id);
-                if (!chat) return null;
-            }
+        if (!chat) return;
 
-            if (!chat.active) {
-                if (chat.hasDraftMessage) chat.clearDraft();
-                await chat.open();
-                await this.sleep(250);
-            }
-
-            let { ComposeBox: Act } = this;
-            await Act.paste(chat, `${text}`);
-            await Act.send(chat);
-
-            return chat;
-        } catch (e) {
-            console.log(e);
+        const { ComposeBox: Act, ChatState: State, sleep } = this;
+        State.sendChatStateComposing(chat.id);
+        if (!chat.active) {
+            if (chat.hasDraftMessage) chat.clearDraft();
+            await chat.open();
         }
-        return null;
+        await sleep(delay ?? 250);
+        State.markComposing(chat);
+        await Act.paste(chat, `${text}`);
+        await Act.send(chat);
+
+        return chat;
     },
 };
 
