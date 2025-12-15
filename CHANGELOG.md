@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.17...v0.1.18) (2025-12-15)
+
+
+### Bug Fixes
+
+* **chat:** Resolve product message issue ([816bd77](https://github.com/wayfu-id/simple-WAPI/commit/816bd7721b915b8c8973281e6dbeed6af0872e6e))
+* **group:** ignore broadcast type when collecting group ([440e5ff](https://github.com/wayfu-id/simple-WAPI/commit/440e5ffb37afb3ea4a3c8a2c491a0ccb2910e473))
+* **ui:** WebClasses info are no longer available ([c2d00d4](https://github.com/wayfu-id/simple-WAPI/commit/c2d00d4a7b8a782689fd7b020d63e836d6da4f9b))
+
 ### [0.1.17](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.16...v0.1.17) (2025-11-30)
 
 
