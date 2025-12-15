@@ -7,6 +7,7 @@ const getAllGroups: PropertyDescriptor & ThisType<WAPI> = {
             results: Group[] = [];
 
         for (let group of groups) {
+            if (!group.id.isGroup()) continue;
             results.push(this.factories("Group", group));
         }
         return results;
