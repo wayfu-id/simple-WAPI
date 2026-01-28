@@ -68,6 +68,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
             ...m("WAWebExitGroupAction"),
         };
     },
+    GroupMetadata: (m: webpackModules) => {
+        return m("WAWebGroupMetadataCollection")?.default;
+    },
     HistorySync: (m: webpackModules) => {
         return {
             ...m("WAWebSendNonMessageDataRequest"),
