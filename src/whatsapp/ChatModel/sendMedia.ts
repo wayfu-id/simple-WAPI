@@ -19,7 +19,7 @@ const sendMedia: (app: WAPI) => PropertyDescriptor & ThisType<WA.ChatModel> = (a
                             forceDocument,
                             forceGif,
                         }),
-                        res = await media.sendToChat(this, { caption: caption ?? "" });
+                        res = await media.sendToChat({chat:this, options:{ caption: caption ?? "" }});
 
                     // await this.historySync();
                     done(r ? this.getModel() : res);
