@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.19...v0.1.20) (2026-02-23)
+
+
+### Bug Fixes
+
+* sendMessage error when sending media ([a29a637](https://github.com/wayfu-id/simple-WAPI/commit/a29a6374a788d7af9c877a2ae283bb8f4b3a88d8))
+
 ### [0.1.19](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.18...v0.1.19) (2026-01-28)
 
 
