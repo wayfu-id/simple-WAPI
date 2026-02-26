@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.20...v0.1.21) (2026-02-26)
+
+
+### Bug Fixes
+
+* Possibly missing message sender ID. ([861f220](https://github.com/wayfu-id/simple-WAPI/commit/861f220971f35d19bf14e0f44cb71eeb68414734))
+
 ### [0.1.20](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.19...v0.1.20) (2026-02-23)
 
 
