@@ -192,7 +192,7 @@ interface WAPI extends WA.Store {
     /** Process attacment as media data */
     preProcessors: ReturnType<typeof preProcessors>;
     /** Send advanched message to id */
-    sendAdvMessage<T extends WAPI.SendMessageOptions>(
+    sendAdvMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
         option?: T,
