@@ -1,8 +1,9 @@
 import WAPI from "../..";
-import { Product } from "../structures/index";
+import { _authToken } from "../Loader";
 
 export default class ProductFactory {
     static create(app: WAPI, data: WA.ProductModel) {
-        return new Product(app, data);
+        const { Product } = app.ModelClass;
+        return new Product(_authToken, app, data);
     }
 }

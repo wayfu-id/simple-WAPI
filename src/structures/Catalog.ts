@@ -1,4 +1,5 @@
 import WAPI from "../..";
+import { _authToken } from "../Loader";
 import Base from "./Base";
 import Product from "./Product";
 
@@ -16,7 +17,11 @@ export default class Catalog extends Base<T, {}> {
 
     raw: WA.CatalogModel;
 
-    constructor(app: WAPI, data: WA.CatalogModel) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use CatalogFactory.create() instead");
+        }
+
         super(app);
         if (!data) throw new Error("No Data Objct");
         this._patch(data);

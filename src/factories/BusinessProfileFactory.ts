@@ -1,8 +1,9 @@
 import WAPI from "../..";
-import { BusinessProfile } from "../structures/index";
+import { _authToken } from "../Loader";
 
 export default class BusinessProfileFactory {
     static create(app: WAPI, data: WA.BusinessProfileModel) {
-        return new BusinessProfile(app, data);
+        const { BusinessProfile } = app.ModelClass;
+        return new BusinessProfile(_authToken, app, data);
     }
 }

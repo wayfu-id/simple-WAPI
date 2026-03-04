@@ -1,6 +1,7 @@
 import Base, { BaseSerialized } from "./Base";
 import WAPI from "../../index";
 import Contact, { ContactSerialized } from "./Contact";
+import { _authToken } from "../Loader";
 
 type T = WA.ChatModel | WA.GroupChat;
 
@@ -38,7 +39,11 @@ export default class Chat extends Base<T, ChatSerialized> {
     name: string;
     timestamp: number;
 
-    constructor(app: WAPI, data: T) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use ChatFactory.create() instead");
+        }
+
         super(app);
 
         if (data) this._patch(data);
@@ -120,7 +125,7 @@ export default class Chat extends Base<T, ChatSerialized> {
     async sendMedia(
         file: File,
         caption?: string | WA.MessageSendOptions,
-        model?: boolean | WA.MessageSendOptions
+        model?: boolean | WA.MessageSendOptions,
     ) {
         if (caption === undefined) return;
         let option: WA.MessageSendOptions = {

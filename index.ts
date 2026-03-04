@@ -1,4 +1,4 @@
-import { constructStore, constructWAPI, getStore, waitLoaderType, _token } from "./src/Loader";
+import { constructStore, constructWAPI, getStore, waitLoaderType, _mainToken } from "./src/Loader";
 import { FactoriesType, FactoriesReturn, FactoriesData } from "./src/core/factories";
 import * as S from "./src/structures/index";
 // import { Store } from "./src/whatsapp/index";
@@ -82,7 +82,7 @@ class WAPI implements WAPI {
     /** Create new WAPI with store Object */
     private constructor(token: symbol, store?: any);
     private constructor(token: symbol, store?: any) {
-        if (_token !== token) {
+        if (_mainToken !== token) {
             throw new TypeError("WAPI is not constructable. Use WAPI.init() instead");
         }
 
@@ -133,9 +133,9 @@ class WAPI implements WAPI {
                 }
 
                 modStore = Object.assign({}, modStore, { Debug: target["Debug"] });
-                return new WAPI(_token, modStore);
+                return new WAPI(_mainToken, modStore);
             } else {
-                return new WAPI(_token);
+                return new WAPI(_mainToken);
             }
         } catch (error: Error | any) {
             throw new Error(`Failed to load WAPI Module. ${error.message || "Unknown"}`);

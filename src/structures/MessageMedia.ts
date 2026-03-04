@@ -52,7 +52,7 @@ export default class MessageMedia {
         return new MessageMedia({ mimetype: mimetype ?? "application/octet-stream", data, filename });
     }
 
-    static async fromMsg(message: Message | WA.MessageModel) {
+    static async fromMsg(message: WAPI.Message | WA.MessageModel) {
         let msg = message instanceof Message ? message : message.getModel();
         return await msg.downloadMedia();
     }

@@ -1,6 +1,7 @@
 import Base, { BaseSerialized } from "./Base";
 import GroupParticipant from "./GroupParticipant";
 import WAPI from "../../index";
+import { _authToken } from "../Loader";
 
 type T = WA.GroupModel;
 
@@ -56,7 +57,11 @@ export default class Group extends Base<T, GroupSerialized> {
     size: number;
     subGroupsId: WA.GroupId[] | undefined;
 
-    constructor(app: WAPI, data: T) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use GroupFactory.create() instead");
+        }
+
         super(app);
 
         if (data) this._patch(data);

@@ -1,6 +1,7 @@
 import Base, { BaseSerialized } from "./Base";
 import ProfilePicThumb, { ProfilePicThumbSerialized } from "./ProfilePictThumb";
 import WAPI from "../../index";
+import { _authToken } from "../Loader";
 
 type T = WA.ContactModel | WA.BusinessContact;
 
@@ -78,7 +79,11 @@ export default class Contact extends Base<T, ContactSerialized> {
     verifiedName: string | undefined;
     raw: WA.ContactModel;
 
-    constructor(app: WAPI, data: WA.ContactModel) {
+    constructor(_token: symbol, app: WAPI, data: WA.ContactModel) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use ContactFactory.create() instead");
+        }
+
         super(app);
 
         if (data) this._patch(data);

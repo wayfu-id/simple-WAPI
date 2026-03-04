@@ -1,3 +1,4 @@
+import { _justToken } from "../Loader";
 import Contact, { ContactSerialized } from "./Contact";
 
 export type GroupParticipantSerialized = {
@@ -16,7 +17,10 @@ export default class GroupParticipant {
     phoneNumber: string;
     _serialized: GroupParticipantSerialized;
 
-    constructor(data: WA.GroupParticipantModel) {
+    private constructor(_token: symbol, data: WA.GroupParticipantModel) {
+        if (_token !== _justToken) {
+            throw new TypeError("Class is is not constructable. Use GroupParticipant.create() instead");
+        }
         return this._patch(data);
     }
 
@@ -49,6 +53,6 @@ export default class GroupParticipant {
     }
 
     static create(data: WA.GroupParticipantModel) {
-        return new GroupParticipant(data);
+        return new GroupParticipant(_justToken, data);
     }
 }

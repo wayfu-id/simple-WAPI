@@ -1,6 +1,6 @@
 import WAPI from "../..";
+import { _authToken } from "../Loader";
 import Base, { BaseSerialized } from "./Base";
-import { Chat } from "../structures";
 
 type T = WA.ProductModel;
 
@@ -44,7 +44,11 @@ export default class Product extends Base<T, productSerialized> {
     url?: string;
     salePriceAmount1000: number | undefined;
 
-    constructor(app: WAPI, data: T) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use ProductFactory.create() instead");
+        }
+
         super(app);
 
         if (data) this._patch(data);

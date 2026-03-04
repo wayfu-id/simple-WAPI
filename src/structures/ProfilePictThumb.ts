@@ -1,3 +1,5 @@
+import { _justToken } from "../Loader";
+
 type T = WA.ProfilePicThumbModel;
 
 export type ProfilePicThumbSerialized = {
@@ -24,7 +26,11 @@ export default class ProfilePicThumb {
     tag: string;
     timestamp: number;
 
-    constructor(data: WA.ContactModel) {
+    private constructor(_token: symbol, data: WA.ContactModel) {
+        if (_token !== _justToken) {
+            throw new TypeError("Class is is not constructable. Use ProfilePicThumb.create() instead");
+        }
+
         if (!data) throw new Error("No Data Objct");
         let _data = data.getProfilePicThumb();
         if (!_data) throw new Error("No Profile Picture Found");
@@ -59,6 +65,6 @@ export default class ProfilePicThumb {
     }
 
     static create(data: WA.ContactModel) {
-        return new ProfilePicThumb(data);
+        return new ProfilePicThumb(_justToken, data);
     }
 }
