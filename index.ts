@@ -117,7 +117,7 @@ class WAPI implements WAPI {
     /** Static methor for initiating WAPI class */
     static init(
         target: Window | (Window & typeof globalThis) = window,
-        loadUi: boolean = false
+        loadUi: boolean = false,
     ): WAPI | undefined {
         try {
             if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
@@ -146,6 +146,8 @@ class WAPI implements WAPI {
 interface WAPI extends WA.Store {
     /** Current contact info */
     ME: WAPI.Contact;
+    /** WAPI Model Classes. Available for Chat, Contact, Group, or Message */
+    ModelClass: typeof S;
     /** WhatsApp Web Version */
     WA_VERSION: string;
     /** Simple-WAPI Version */
@@ -173,6 +175,8 @@ interface WAPI extends WA.Store {
     findCommonGroups(id: string | WA.wid): Promise<WAPI.GroupChat[] | []>;
     /** Find contact by Id */
     findGroup(id: string | WA.wid): Promise<WAPI.Group | null>;
+    /** Find product by Id */
+    findProduct(id: string): Promise<WAPI.Product | null>;
     /** find user WID for given id as string or WAPI wid */
     findUserWid(id: string | WA.wid): Promise<WA.wid | null>;
     /** Find contact by Id */
@@ -188,16 +192,16 @@ interface WAPI extends WA.Store {
     /** Process attacment as media data */
     preProcessors: ReturnType<typeof preProcessors>;
     /** Send advanched message to id */
-    sendAdvMessage<T extends WA.MessageSendOptions>(
+    sendAdvMessage<T extends WAPI.SendMessageOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
-        option?: T
+        option?: T,
     ): Promise<WAPI.responseType<T>>;
     /** Send message to id */
     sendMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
-        option?: T
+        option?: T,
     ): Promise<WAPI.reportType<T>>;
     /** Delay some function */
     sleep(time: number): Promise<void>;
