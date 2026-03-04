@@ -29,19 +29,12 @@ import * as S from "../structures";
  * @returns
  */
 export function constructWAPI(app: WAPI) {
-    let { Contact } = app;
-
     try {
-        Contact.getMeContact()
+        app.Contact.getMeContact()
             .fetchProfilePic()
             .then((c) => {
                 Object.defineProperty(app, "ME", {
-                    value: ((contact) => {
-                        if (contact instanceof BusinessContact) {
-                            contact.fetchAll();
-                        }
-                        return contact;
-                    })(c.getModel()),
+                    value: c.getModel(),
                     enumerable: true,
                 });
             });
@@ -69,6 +62,7 @@ export function constructWAPI(app: WAPI) {
                 value: app.Debug.VERSION,
                 configurable: false,
                 enumerable: true,
+                writable: false,
             },
             WAPI_VERSION,
             fileUtils: {

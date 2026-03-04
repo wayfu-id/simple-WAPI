@@ -74,7 +74,7 @@ declare global {
     }
 }
 
-type wapiOptions = [Window | (Window & typeof globalThis), boolean];
+// type wapiOptions = [Window | (Window & typeof globalThis), boolean];
 
 class WAPI implements WAPI {
     /** Create new WAPI Object */

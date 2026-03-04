@@ -1,7 +1,6 @@
 import WAPI from "../..";
 import { _authToken } from "../Loader";
 import Base from "./Base";
-import Product from "./Product";
 
 type T = WA.CatalogModel;
 
