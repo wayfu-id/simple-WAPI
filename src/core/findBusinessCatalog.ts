@@ -1,8 +1,8 @@
 import WAPI from "../../index";
-import { BusinessContact } from "../structures";
 
 const findBusinessCatalog: PropertyDescriptor & ThisType<WAPI> = {
     value: async function findBusinessCatalog(id: string | WA.wid) {
+        const { BusinessContact } = this.ModelClass;
         let contact: WA.ContactModel | WAPI.Contact | WAPI.BusinessContact | null;
         try {
             contact = await this.Contact.find(id);

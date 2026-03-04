@@ -19,6 +19,7 @@ import sleep from "./sleep";
 import { delProp } from "../utils/index";
 import { fileUtils, preProcessors } from "../utils/index";
 import { BusinessContact } from "../structures";
+import * as S from "../structures";
 // import { reConstruct } from "../utils/index";
 
 /**
@@ -73,6 +74,12 @@ export function constructWAPI(app: WAPI) {
             },
             preProcessors: {
                 value: preProcessors(app),
+            },
+            ModelClass: {
+                value: S,
+                enumerable: true,
+                configurable: false,
+                writable: false,
             },
         });
 
