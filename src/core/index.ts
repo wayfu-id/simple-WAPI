@@ -7,6 +7,7 @@ import findChat from "./findChat";
 import findCommonGroup from "./findCommonGroup";
 import findContact from "./findContact";
 import findGroup from "./findGroup";
+import findMyProduct from "./findMyProduct";
 import findUserWid from "./findUserWid";
 import getActiveChat from "./getActiveChat";
 import getAllGroups from "./getAllGroups";
@@ -55,6 +56,7 @@ export function constructWAPI(app: WAPI) {
             findCommonGroup,
             findContact,
             findGroup,
+            findMyProduct,
             findUserWid,
             getActiveChat,
             getAllGroups,

@@ -49,6 +49,11 @@ export default class Catalog extends Base<T, {}> {
         return await this.raw.fetchProducts();
     }
 
+    async findProductById(id: string) {
+        let result = id ? await this.productCollection.find(id) : null;
+        return result ? result.getModel() : null;
+    }
+
     get Products() {
         if (!this.productCollection) return null;
         return this.productCollection.getProductModels().map((p) => {
