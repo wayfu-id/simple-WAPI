@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.21...v0.1.22) (2026-03-04)
+
+
+### Features
+
+* **core:** add 'findMyProduct' feature ([fff7475](https://github.com/wayfu-id/simple-WAPI/commit/fff7475aa877d761541d38d4d531bc0c85e014c2))
+* **core:** Add Structure classes for better validating instance ([25088ae](https://github.com/wayfu-id/simple-WAPI/commit/25088ae3293983a2e86efae00990baf485745e65))
+
 ### [0.1.21](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.20...v0.1.21) (2026-02-26)
 
 
