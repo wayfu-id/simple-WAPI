@@ -7,6 +7,7 @@ import findChat from "./findChat";
 import findCommonGroup from "./findCommonGroup";
 import findContact from "./findContact";
 import findGroup from "./findGroup";
+import findMyProduct from "./findMyProduct";
 import findUserWid from "./findUserWid";
 import getActiveChat from "./getActiveChat";
 import getAllGroups from "./getAllGroups";
@@ -19,6 +20,7 @@ import sleep from "./sleep";
 import { delProp } from "../utils/index";
 import { fileUtils, preProcessors } from "../utils/index";
 import { BusinessContact } from "../structures";
+import * as S from "../structures";
 // import { reConstruct } from "../utils/index";
 
 /**
@@ -27,19 +29,12 @@ import { BusinessContact } from "../structures";
  * @returns
  */
 export function constructWAPI(app: WAPI) {
-    let { Contact } = app;
-
     try {
-        Contact.getMeContact()
+        app.Contact.getMeContact()
             .fetchProfilePic()
             .then((c) => {
                 Object.defineProperty(app, "ME", {
-                    value: ((contact) => {
-                        if (contact instanceof BusinessContact) {
-                            contact.fetchAll();
-                        }
-                        return contact;
-                    })(c.getModel()),
+                    value: c.getModel(),
                     enumerable: true,
                 });
             });
@@ -54,6 +49,7 @@ export function constructWAPI(app: WAPI) {
             findCommonGroup,
             findContact,
             findGroup,
+            findMyProduct,
             findUserWid,
             getActiveChat,
             getAllGroups,
@@ -66,6 +62,7 @@ export function constructWAPI(app: WAPI) {
                 value: app.Debug.VERSION,
                 configurable: false,
                 enumerable: true,
+                writable: false,
             },
             WAPI_VERSION,
             fileUtils: {
@@ -73,6 +70,12 @@ export function constructWAPI(app: WAPI) {
             },
             preProcessors: {
                 value: preProcessors(app),
+            },
+            ModelClass: {
+                value: S,
+                enumerable: true,
+                configurable: false,
+                writable: false,
             },
         });
 

@@ -1,8 +1,8 @@
 import WAPI from "../../index";
-import { Chat } from "../structures/index";
 
 const openChat: PropertyDescriptor & ThisType<WAPI> = {
-    value: async function openChat(id: string | Chat | WA.wid) {
+    value: async function openChat(id: string | WAPI.Chat | WA.wid) {
+        const { Chat } = this.ModelClass;
         let [_id, chat] = ((idx) => {
             if (idx instanceof Chat) {
                 let { id, raw: chat } = idx;

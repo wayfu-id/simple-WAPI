@@ -1,4 +1,5 @@
 import WAPI from "../..";
+import { _authToken } from "../Loader";
 import Base from "./Base";
 import MessageMedia from "./MessageMedia";
 
@@ -38,7 +39,11 @@ export default class Message extends Base<T, { [k: string]: any }> {
     token?: string;
     type: WA.MessageTypes;
 
-    constructor(app: WAPI, data: T) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use MessageFactory.create() instead");
+        }
+
         super(app);
 
         if (data) this._patch(data);

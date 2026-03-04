@@ -1,8 +1,9 @@
 import WAPI from "../..";
-import { Catalog } from "../structures/index";
+import { _authToken } from "../Loader";
 
 export default class CatalogFactory {
     static create(app: WAPI, data: WA.CatalogModel) {
-        return new Catalog(app, data);
+        const { Catalog } = app.ModelClass;
+        return new Catalog(_authToken, app, data);
     }
 }

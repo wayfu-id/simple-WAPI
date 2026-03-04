@@ -13,7 +13,9 @@ export type webpackModules = {
 
 export type loaderResult = webpackLoader | metaLoader | loaderNotFound;
 
-const _token = Symbol();
+const _mainToken = Symbol(),
+    _authToken = Symbol(),
+    _justToken = Symbol();
 
 /**
  * Get webpack chunk key
@@ -127,4 +129,4 @@ const waitLoaderType = (target: Window | any): loaderResult => {
     return checkObjects();
 };
 
-export { constructStore, constructWAPI, getStore, _token, waitLoaderType };
+export { constructStore, constructWAPI, getStore, _mainToken, _authToken, _justToken, waitLoaderType };

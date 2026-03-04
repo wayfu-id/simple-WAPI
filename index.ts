@@ -1,4 +1,4 @@
-import { constructStore, constructWAPI, getStore, waitLoaderType, _token } from "./src/Loader";
+import { constructStore, constructWAPI, getStore, waitLoaderType, _mainToken } from "./src/Loader";
 import { FactoriesType, FactoriesReturn, FactoriesData } from "./src/core/factories";
 import * as S from "./src/structures/index";
 // import { Store } from "./src/whatsapp/index";
@@ -74,7 +74,7 @@ declare global {
     }
 }
 
-type wapiOptions = [Window | (Window & typeof globalThis), boolean];
+// type wapiOptions = [Window | (Window & typeof globalThis), boolean];
 
 class WAPI implements WAPI {
     /** Create new WAPI Object */
@@ -82,7 +82,7 @@ class WAPI implements WAPI {
     /** Create new WAPI with store Object */
     private constructor(token: symbol, store?: any);
     private constructor(token: symbol, store?: any) {
-        if (_token !== token) {
+        if (_mainToken !== token) {
             throw new TypeError("WAPI is not constructable. Use WAPI.init() instead");
         }
 
@@ -117,7 +117,7 @@ class WAPI implements WAPI {
     /** Static methor for initiating WAPI class */
     static init(
         target: Window | (Window & typeof globalThis) = window,
-        loadUi: boolean = false
+        loadUi: boolean = false,
     ): WAPI | undefined {
         try {
             if (!WAPI.prototype.Chat || !WAPI.prototype.Contact) {
@@ -133,9 +133,9 @@ class WAPI implements WAPI {
                 }
 
                 modStore = Object.assign({}, modStore, { Debug: target["Debug"] });
-                return new WAPI(_token, modStore);
+                return new WAPI(_mainToken, modStore);
             } else {
-                return new WAPI(_token);
+                return new WAPI(_mainToken);
             }
         } catch (error: Error | any) {
             throw new Error(`Failed to load WAPI Module. ${error.message || "Unknown"}`);
@@ -146,6 +146,8 @@ class WAPI implements WAPI {
 interface WAPI extends WA.Store {
     /** Current contact info */
     ME: WAPI.Contact;
+    /** WAPI Model Classes. Available for Chat, Contact, Group, or Message */
+    ModelClass: typeof S;
     /** WhatsApp Web Version */
     WA_VERSION: string;
     /** Simple-WAPI Version */
@@ -173,6 +175,8 @@ interface WAPI extends WA.Store {
     findCommonGroups(id: string | WA.wid): Promise<WAPI.GroupChat[] | []>;
     /** Find contact by Id */
     findGroup(id: string | WA.wid): Promise<WAPI.Group | null>;
+    /** Find product by Id */
+    findProduct(id: string): Promise<WAPI.Product | null>;
     /** find user WID for given id as string or WAPI wid */
     findUserWid(id: string | WA.wid): Promise<WA.wid | null>;
     /** Find contact by Id */
@@ -191,13 +195,13 @@ interface WAPI extends WA.Store {
     sendAdvMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
-        option?: T
+        option?: T,
     ): Promise<WAPI.responseType<T>>;
     /** Send message to id */
     sendMessage<T extends WA.MessageSendOptions>(
         id: string | WAPI.Chat | WA.wid,
         message: string,
-        option?: T
+        option?: T,
     ): Promise<WAPI.reportType<T>>;
     /** Delay some function */
     sleep(time: number): Promise<void>;

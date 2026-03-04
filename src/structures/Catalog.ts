@@ -1,6 +1,6 @@
 import WAPI from "../..";
+import { _authToken } from "../Loader";
 import Base from "./Base";
-import Product from "./Product";
 
 type T = WA.CatalogModel;
 
@@ -16,7 +16,11 @@ export default class Catalog extends Base<T, {}> {
 
     raw: WA.CatalogModel;
 
-    constructor(app: WAPI, data: WA.CatalogModel) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("Class is is not constructable. Use CatalogFactory.create() instead");
+        }
+
         super(app);
         if (!data) throw new Error("No Data Objct");
         this._patch(data);
@@ -42,6 +46,11 @@ export default class Catalog extends Base<T, {}> {
 
     async fetchProducts() {
         return await this.raw.fetchProducts();
+    }
+
+    async findProductById(id: string) {
+        let result = id ? await this.productCollection.find(id) : null;
+        return result ? result.getModel() : null;
     }
 
     get Products() {

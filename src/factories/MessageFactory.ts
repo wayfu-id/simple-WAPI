@@ -1,8 +1,9 @@
 import WAPI from "../../index";
-import { Message } from "../structures/index";
+import { _authToken } from "../Loader";
 
 export default class MessageFactory {
     static create(app: WAPI, data: WA.MessageModel) {
-        return new Message(app, data);
+        const { Message } = app.ModelClass;
+        return new Message(_authToken, app, data);
     }
 }

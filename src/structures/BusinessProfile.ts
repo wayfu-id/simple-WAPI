@@ -1,5 +1,6 @@
 import Base, { BaseSerialized } from "./Base";
 import { businessHours } from "../utils/index";
+import { _authToken } from "../Loader";
 import WAPI from "../..";
 
 type T = WA.BusinessProfileModel;
@@ -27,7 +28,10 @@ export default class BusinessProfile extends Base<T, BusinessProfileSerialized> 
     website?: string[] = undefined;
     welcomeMsgProtocolMode: any;
 
-    constructor(app: WAPI, data: T) {
+    constructor(_token: symbol, app: WAPI, data: T) {
+        if (_token !== _authToken) {
+            throw new TypeError("WAPI is not constructable. Use WAPI.init() instead");
+        }
         super(app);
         if (data) this._patch(data);
         return this;

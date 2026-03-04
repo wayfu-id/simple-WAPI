@@ -1,8 +1,12 @@
 import WAPI from "../../index";
-import { Chat } from "../structures/index";
 
 const inputAndSendTextMsg: PropertyDescriptor & ThisType<WAPI> = {
-    value: async function inputAndSendTextMsg(chatId: string | Chat | WA.wid, text: string, delay?: number) {
+    value: async function inputAndSendTextMsg(
+        chatId: string | WAPI.Chat | WA.wid,
+        text: string,
+        delay?: number,
+    ) {
+        const { Chat } = this.ModelClass;
         let chat = await (async (e) => {
             let ct: WA.ChatModel | null;
             try {

@@ -1,9 +1,9 @@
 import WAPI from "../../index";
-import { Contact, GroupChat } from "../structures/index";
 
 const findCommonGroup: PropertyDescriptor & ThisType<WAPI> = {
-    value: async function findCommonGroup(id: string | Contact) {
-        const { GroupUtils: fn } = this;
+    value: async function findCommonGroup(id: string | WAPI.Contact) {
+        const { GroupUtils: fn, ModelClass } = this,
+            { Contact } = ModelClass;
         let contact = await (async (e) => {
             return await this.Contact.find(e instanceof Contact ? e.id : e);
         })(id);
@@ -11,7 +11,7 @@ const findCommonGroup: PropertyDescriptor & ThisType<WAPI> = {
         if (!contact) return [];
 
         let founded = await fn.findCommonGroups(contact),
-            results: GroupChat[] = [];
+            results: WAPI.GroupChat[] = [];
 
         if (!founded) return null;
         for (let group of founded.getModelsArray()) {
