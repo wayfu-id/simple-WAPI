@@ -8,8 +8,8 @@ import GroupChat from "./GroupChat";
 import Message from "./Message";
 import MessageMedia from "./MessageMedia";
 import Product from "./Product";
-import { GroupParticipantSerialized } from "./GroupParticipant";
-import { ProfilePicThumbSerialized } from "./ProfilePictThumb";
+import GroupParticipant, { GroupParticipantSerialized } from "./GroupParticipant";
+import ProfilePicThumb, { ProfilePicThumbSerialized } from "./ProfilePictThumb";
 
 export {
     BusinessContact,
@@ -21,10 +21,12 @@ export {
     ContactSerialized,
     Group,
     GroupSerialized,
+    GroupParticipant,
     GroupParticipantSerialized,
     GroupChat,
     Message,
     MessageMedia,
     Product,
+    ProfilePicThumb,
     ProfilePicThumbSerialized,
 };
