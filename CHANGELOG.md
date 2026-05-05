@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.23](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.22...v0.1.23) (2026-05-05)
+
+
+### Bug Fixes
+
+* **BusinessContact:** Fetch function only do console warn instead of throw error to prevent logic break ([6cadff6](https://github.com/wayfu-id/simple-WAPI/commit/6cadff61afea4940080ff0fe13b457ce44b5ff99))
+* **BusinessProfile:** Add 'mode' guard to prevent empty 'hours' ([5516247](https://github.com/wayfu-id/simple-WAPI/commit/55162476526caa49a02727d583ab8e970ec7de68))
+* **BusinessProfile:** isEmpty business hours guard ([a4bda80](https://github.com/wayfu-id/simple-WAPI/commit/a4bda809e381cf9e8a861d3773d35d05d6c21e90))
+
 ### [0.1.22](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.21...v0.1.22) (2026-03-04)
 
 
