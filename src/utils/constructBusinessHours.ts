@@ -1,6 +1,6 @@
 function constrtBusinessHours(businessHours?: WA.businessHours) {
     if (!businessHours) return undefined; // Return undefined if businessHours is not provided
-
+    if (isEmpty(businessHours)) return undefined;
     let results: { [k: string]: string | string[] | "Closed" } = {};
 
     daysName.forEach((day) => (results[day] = "Closed")); // Set all day to closed first
@@ -8,17 +8,22 @@ function constrtBusinessHours(businessHours?: WA.businessHours) {
     // Then rewrite the business hours per day if any.
     for (const [key, value] of Object.entries(businessHours)) {
         const expandedDay = expandBusinessDay(key),
+            mode = value?.mode,
             hours = value?.hours;
 
         if (expandedDay) {
             let hoursMap = [];
-            for (const hour of hours) {
-                let open = formatTime(hour[0]),
-                    close = formatTime(hour[1]);
+            if (hours && hours.length != 0) {
+                for (const hour of hours) {
+                    let open = formatTime(hour[0]),
+                        close = formatTime(hour[1]);
 
-                if (open !== undefined && close !== undefined) {
-                    hoursMap.push(`${open} - ${close}`);
+                    if (open !== undefined && close !== undefined) {
+                        hoursMap.push(`${open} - ${close}`);
+                    }
                 }
+            } else if (mode === "open_24h") {
+                hoursMap.push("Open 24h");
             }
 
             results[expandedDay] = hoursMap;
@@ -27,6 +32,10 @@ function constrtBusinessHours(businessHours?: WA.businessHours) {
 
     return results;
 }
+
+const isEmpty = (obj: any) => {
+    return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+};
 
 function formatTime(time: number) {
     let hours = Math.floor(time / 60),

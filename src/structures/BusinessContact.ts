@@ -23,12 +23,14 @@ export default class BusinessContact extends Contact {
         if (this.businessProfile) return Promise.resolve(this.businessProfile);
         try {
             let profile = await this.app.BusinessProfile.fetchBizProfile(this.id);
-            if (!profile) throw new Error("Business profile not found");
-            this.businessProfile = profile.getModel();
-            this.raw.businessProfile = profile;
-            return this.businessProfile;
+            if (profile) {
+                this.businessProfile = profile.getModel();
+                this.raw.businessProfile = profile;
+                return this.businessProfile;
+            }
+            return undefined;
         } catch (err: Error | any) {
-            console.error(err?.message || "Error fetching business profile: Profile not found");
+            console.warn(err?.message || "Error fetching business profile: Profile not found");
             return undefined;
         }
     }
@@ -37,12 +39,14 @@ export default class BusinessContact extends Contact {
         if (this.businessCatalog) return Promise.resolve(this.businessCatalog);
         try {
             let catalog = await this.app.Catalog.find(this.id);
-            if (!catalog) throw new Error("Catalog not found");
-            this.businessCatalog = catalog.getModel();
-            this.raw.businessCatalog = catalog;
-            return this.businessCatalog;
+            if (catalog) {
+                this.businessCatalog = catalog.getModel();
+                this.raw.businessCatalog = catalog;
+                return this.businessCatalog;
+            }
+            return undefined;
         } catch (err: Error | any) {
-            console.error(err?.message || "Error fetching catalog: Catalog not found");
+            console.warn(err?.message || "Error fetching catalog: Catalog not found");
             return undefined;
         }
     }
