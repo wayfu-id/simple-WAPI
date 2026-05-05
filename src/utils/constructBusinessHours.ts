@@ -8,17 +8,22 @@ function constrtBusinessHours(businessHours?: WA.businessHours) {
     // Then rewrite the business hours per day if any.
     for (const [key, value] of Object.entries(businessHours)) {
         const expandedDay = expandBusinessDay(key),
+            mode = value?.mode,
             hours = value?.hours;
 
         if (expandedDay) {
             let hoursMap = [];
-            for (const hour of hours) {
-                let open = formatTime(hour[0]),
-                    close = formatTime(hour[1]);
+            if (hours && hours.length != 0) {
+                for (const hour of hours) {
+                    let open = formatTime(hour[0]),
+                        close = formatTime(hour[1]);
 
-                if (open !== undefined && close !== undefined) {
-                    hoursMap.push(`${open} - ${close}`);
+                    if (open !== undefined && close !== undefined) {
+                        hoursMap.push(`${open} - ${close}`);
+                    }
                 }
+            } else if (mode === "open_24h") {
+                hoursMap.push("Open 24h");
             }
 
             results[expandedDay] = hoursMap;
