@@ -1,6 +1,6 @@
 function constrtBusinessHours(businessHours?: WA.businessHours) {
     if (!businessHours) return undefined; // Return undefined if businessHours is not provided
-
+    if (isEmpty(businessHours)) return undefined;
     let results: { [k: string]: string | string[] | "Closed" } = {};
 
     daysName.forEach((day) => (results[day] = "Closed")); // Set all day to closed first
@@ -27,6 +27,10 @@ function constrtBusinessHours(businessHours?: WA.businessHours) {
 
     return results;
 }
+
+const isEmpty = (obj: any) => {
+    return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+};
 
 function formatTime(time: number) {
     let hours = Math.floor(time / 60),
