@@ -524,6 +524,7 @@ declare global {
 
             set(key: string, value: any): void;
             unset(key: string): void;
+            isIdType<T extends wid | string>(id: T): boolean;
         }
 
         type sendMediaOptions = {
