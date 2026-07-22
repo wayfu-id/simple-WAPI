@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.23...v0.1.24) (2026-07-22)
+
+
+### Bug Fixes
+
+* **Contact:** deprecated some function by WA, replace with custom function ([562f16d](https://github.com/wayfu-id/simple-WAPI/commit/562f16ddceec36dd09a78577ea44cee1fb9088f9))
+
 ### [0.1.23](https://github.com/wayfu-id/simple-WAPI/compare/v0.1.22...v0.1.23) (2026-05-05)
 
 
