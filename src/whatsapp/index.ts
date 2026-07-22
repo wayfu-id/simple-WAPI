@@ -414,11 +414,17 @@ declare global {
             getActive(): ChatModel | undefined;
         }
 
+        export interface filterOpt {
+            groupOnly?: boolean;
+            showMe?: boolean;
+            showGroup?: boolean;
+        }
+
         /** Contact Collection */
         export interface Contact extends BaseClass<ContactModel> {
             findContact(query: string): Promise<ContactModel | null>;
             getMeContact(): ContactModel;
-            getFilteredContacts(opt: { showMe: boolean }): ContactModel[];
+            getFilteredContacts(opt: filterOpt): ContactModel[];
             getGroupContacts(): ContactModel[];
         }
 
@@ -485,6 +491,8 @@ declare global {
              * @example `554199999999@c.us`
              */
             _serialized: string;
+            /** Is it a bot wid */
+            isBot(): boolean;
             /** Is it group wid */
             isGroup(): boolean;
             /** Is it User wid */
@@ -628,11 +636,11 @@ declare global {
             sendMedia<T extends boolean>(
                 file: File | Blob,
                 options?: sendMediaOptions,
-                model?: T
+                model?: T,
             ): Promise<SendMessageResult<T>>;
             sendMessage<T extends boolean>(
                 content: string | kindOfAttachment,
-                options?: WAPI.SendMessageOptions
+                options?: WAPI.SendMessageOptions,
             ): Promise<SendMessageResponse<T>>;
             setComposeContents: (draft: DraftMessage) => void;
         }
@@ -951,7 +959,7 @@ declare global {
                 width?: number,
                 height?: number,
                 s?: any,
-                l?: any
+                l?: any,
             ): Promise<catalogFetchResults>;
             queryProduct(
                 chatId?: ChatId,
@@ -959,7 +967,7 @@ declare global {
                 imageWidth?: number,
                 imageHeight?: number,
                 i?: any,
-                s?: boolean
+                s?: boolean,
             ): any;
             sendProductToChat(...args: any[]): Promise<any>;
             isSalePriceActive(product: ProductModel): boolean;
@@ -975,6 +983,51 @@ declare global {
         export interface ComposeBox {
             paste: (chat: ChatModel | WAPI.Chat, text: string) => Promise<void>;
             send: (chat: ChatModel | WAPI.Chat) => Promise<void>;
+        }
+
+        /** Original 'WAWebContactGetters' module */
+        export interface ContactGetters {
+            getBusinessProfile: (c: ContactModel) => BusinessProfileModel;
+            getCalculatedStatusMute: (c: ContactModel) => any;
+            getCanRequestPhoneNumber: (c: ContactModel) => boolean | null;
+            getContactUnsafe: (c: ContactModel) => any;
+            getId: (c: ContactModel) => ContactId;
+            getIsAiHub: (c: ContactModel) => boolean;
+            getIsBot: (c: ContactModel) => boolean;
+            getIsBroadcast: (c: ContactModel) => boolean;
+            getIsBusiness: (c: ContactModel) => boolean;
+            getIsCAPISupportAccount: (c: ContactModel) => boolean;
+            getIsContactDeactivated: (c: ContactModel) => boolean;
+            getIsDisplayNameApproved: (c: ContactModel) => boolean;
+            getIsEnterprise: (c: ContactModel) => boolean;
+            getIsGroup: (c: ContactModel) => boolean;
+            getIsHosted: (c: ContactModel) => boolean;
+            getIsIAS: (c: ContactModel) => boolean;
+            getIsMe: (c: ContactModel) => boolean;
+            getIsNewsletter: (c: ContactModel) => boolean;
+            getIsPSA: (c: ContactModel) => boolean;
+            getIsSmb: (c: ContactModel) => boolean;
+            getIsSupportAccount: (c: ContactModel) => boolean;
+            getIsUser: (c: ContactModel) => boolean;
+            getIsWAContact: (c: ContactModel) => boolean;
+            getLabels: (c: ContactModel) => string | null;
+            getName: (c: ContactModel) => string | null;
+            getNotifyName: (c: ContactModel) => any;
+            getPremiumMessageName: (c: ContactModel) => any;
+            getPrivacyMode: (c: ContactModel) => any;
+            getPushname: (c: ContactModel) => string | null;
+            getRequestedPnTimestamp: (c: ContactModel) => any;
+            getShortName: (c: ContactModel) => string | null;
+            getShouldForceBusinessUpdate: (c: ContactModel) => any;
+            getShowAsMetaVerified: (c: ContactModel) => any;
+            getShowBusinessCheckmarkAsPrimary: (c: ContactModel) => any;
+            getShowBusinessCheckmarkAsSecondary: (c: ContactModel) => any;
+            getShowBusinessCheckmarkInChatlist: (c: ContactModel) => any;
+            getStatusMute: (c: ContactModel) => any;
+            getUserhash: (c: ContactModel) => any;
+            getUserid: (c: ContactModel) => any;
+            getVerifiedLevel: (c: ContactModel) => any;
+            getVerifiedName: (c: ContactModel) => string | null;
         }
 
         /** Original 'WAWebChatGetters' module */
@@ -1087,7 +1140,7 @@ declare global {
             isDocument(file: Blob): boolean;
             removeTrailingDots(filename: string): string;
             typeFromMimetype(
-                mimeType: string
+                mimeType: string,
             ): FILETYPE["IMAGE"] | FILETYPE["VIDEO"] | FILETYPE["AUDIO"] | FILETYPE["DOCUMENT"];
             validateBlob(file: Blob): Promise<boolean>;
         }
@@ -1104,9 +1157,7 @@ declare global {
          * 'WAWebExitGroupAction'
          * modules */
         export interface GroupUtils {
-            findCommonGroups<T extends ContactModel>(
-                contact: T
-            ): Promise<foundedCommonGroups<T["id"]> | null>;
+            findCommonGroups<T extends ContactModel>(contact: T): Promise<foundedCommonGroups<T["id"]> | null>;
         }
 
         export interface HistorySync {
@@ -1325,7 +1376,7 @@ declare global {
         export interface MsgUtils {
             addAndSendMsgToChat(
                 chat: ChatModel,
-                message: MessageModel
+                message: MessageModel,
             ): [Promise<MessageModel>, Promise<MessageSendResult>];
             addAndSendTextMsg(chat: ChatModel, message: MessageModel): Promise<MessageSendResult>;
             createTextMsgData(chat: ChatModel, body: string): Promise<MessageModel>;
@@ -1497,7 +1548,9 @@ declare global {
             ComposeBox: ComposeBox;
             /** Original WhatsApp Contact Object Collection */
             Contact: Contact;
-            /** Original WhatsApp Contact Object Collection */
+            /** Original 'WAWebContactGetters' module */
+            ContactGetters: ContactGetters;
+            /** Original Debug property */
             Debug: { VERSION: string };
             /** Original 'WAWebDownloadManager' module */
             Downloader: Downloader;

@@ -45,6 +45,9 @@ const storeObjects: { [k: string]: (m: webpackModules) => any } = {
     Conn: (m: webpackModules) => {
         return m("WAWebConnModel")?.Conn;
     },
+    ContactGetters: (m: webpackModules) => {
+        return m("WAWebContactGetters");
+    },
     Downloader: (m: webpackModules) => {
         return m("WAWebDownloadManager")?.downloadManager;
     },
